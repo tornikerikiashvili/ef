@@ -4,7 +4,6 @@
 @section('meta_description', 'Our projects - Ef Photography Agency')
 
 @section('content')
-    <x-hero :title="__('messages.nav.projects')" :subtitle="'Portfolio'" />
-    <x-projects-section />
+    <x-projects-listing :projects="$projects" :categories="$categories" />
     <x-cta />
 @endsection

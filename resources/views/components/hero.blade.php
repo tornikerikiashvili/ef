@@ -1,36 +1,71 @@
 @props([
-    'title' => 'California Fall Fashion Week',
-    'subtitle' => 'Fashion Photography',
-    'ctaText' => 'Learn Details',
-    'ctaUrl' => null,
+    'services' => collect(),
 ])
+@php
+    $slides = $services->isNotEmpty() ? $services : null;
+@endphp
 <section class="wptb-slider style16">
     <div class="container">
         <div class="swiper-container wptb-swiper-slider-sixteen">
             <div class="swiper-wrapper">
-                @foreach ([45, 46, 47] as $num)
-                <div class="swiper-slide">
-                    <div class="wptb-slider--item" style="background-image: url('{{ asset('assets/img/slider/' . $num . '.jpg') }}');">
-                        <div class="wptb-slider--inner">
-                            <div class="wptb-heading">
-                                <h6 class="wptb-item--subtitle">{{ $subtitle }}</h6>
-                                <h1 class="wptb-item--title">{{ $title }}</h1>
-                                <div class="wptb-item--button">
-                                    <a class="btn" href="{{ $ctaUrl ?? route('projects') }}">
-                                        <span class="btn-wrap">
-                                            <span class="text-first">{{ $ctaText }}</span>
-                                            <span class="text-second"><span class="line"></span><span class="circle"></span><span class="dot"></span></span>
-                                        </span>
-                                    </a>
+                @if($slides && $slides->isNotEmpty())
+                    @foreach ($slides as $service)
+                    @php
+                        $coverUrl = $service->cover_photo
+                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($service->cover_photo)
+                            : asset('assets/img/slider/45.jpg');
+                        $serviceUrl = route('services.show', ['slug' => $service->id]);
+                    @endphp
+                    <div class="swiper-slide">
+                        <div class="wptb-slider--item" style="background-image: url('{{ $coverUrl }}');">
+                            <div class="wptb-slider--inner">
+                                <div class="wptb-heading">
+                                    <h6 class="wptb-item--subtitle">{{ __('messages.nav.services') }}</h6>
+                                    <h1 class="wptb-item--title">{{ $service->title }}</h1>
+                                    @if($service->short_teaser)
+                                        <p class="wptb-item--description mt-3">{{ \Illuminate\Support\Str::limit(strip_tags($service->short_teaser), 120) }}</p>
+                                    @endif
+                                    <div class="wptb-item--button">
+                                        <a class="btn" href="{{ $serviceUrl }}">
+                                            <span class="btn-wrap">
+                                                <span class="text-first">{{ __('messages.hero.learn_details') }}</span>
+                                                <span class="text-second"><span class="line"></span><span class="circle"></span><span class="dot"></span></span>
+                                            </span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                            @if($service->cover_photo)
+                                <a class="wptb-image-popup" href="{{ $coverUrl }}" data-fancybox="gallery">
+                                    <i class="bi bi-arrows-fullscreen"></i>
+                                </a>
+                            @endif
                         </div>
-                        <a class="wptb-image-popup" href="{{ asset('assets/img/slider/' . $num . '.jpg') }}" data-fancybox="gallery">
-                            <i class="bi bi-arrows-fullscreen"></i>
-                        </a>
                     </div>
-                </div>
-                @endforeach
+                    @endforeach
+                @else
+                    <div class="swiper-slide">
+                        <div class="wptb-slider--item" style="background-image: url('{{ asset('assets/img/slider/45.jpg') }}');">
+                            <div class="wptb-slider--inner">
+                                <div class="wptb-heading">
+                                    <h6 class="wptb-item--subtitle">{{ __('messages.nav.services') }}</h6>
+                                    <h1 class="wptb-item--title">Welcome</h1>
+                                    <div class="wptb-item--button">
+                                        <a class="btn" href="{{ route('services') }}">
+                                            <span class="btn-wrap">
+                                                <span class="text-first">{{ __('messages.hero.view_services') }}</span>
+                                                <span class="text-second"><span class="line"></span><span class="circle"></span><span class="dot"></span></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="wptb-image-popup" href="{{ asset('assets/img/slider/45.jpg') }}" data-fancybox="gallery">
+                                <i class="bi bi-arrows-fullscreen"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

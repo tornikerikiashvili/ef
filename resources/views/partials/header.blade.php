@@ -36,9 +36,6 @@
                         </div>
                     </div>
                     <div class="header_search wptb-element">
-                        <a href="#" class="modal_search_icon" data-bs-toggle="modal" data-bs-target="#modalSearch"><i class="bi bi-search"></i></a>
-                    </div>
-                    <div class="header_search wptb-element ms-2">
                         <a href="#" class="modal_search_icon" data-bs-toggle="modal" data-bs-target="#modalLanguage" title="{{ __('messages.language') }}"><i class="bi bi-globe"></i></a>
                     </div>
                     <button type="button" class="mr_menu_toggle wptb-element d-xl-none">
@@ -61,7 +58,6 @@
                 <div class="d-flex flex-column gap-2">
                     <a href="{{ url('en' . ($pathWithoutLocale ? '/' . $pathWithoutLocale : '')) }}" class="btn btn-outline-secondary">{{ __('messages.english') }}</a>
                     <a href="{{ url('ka' . ($pathWithoutLocale ? '/' . $pathWithoutLocale : '')) }}" class="btn btn-outline-secondary">{{ __('messages.georgian') }}</a>
-                    <a href="{{ url('ru' . ($pathWithoutLocale ? '/' . $pathWithoutLocale : '')) }}" class="btn btn-outline-secondary">{{ __('messages.russian') }}</a>
                 </div>
             </div>
         </div>

@@ -13,4 +13,16 @@ return [
     'english' => 'English',
     'georgian' => 'Georgian',
     'russian' => 'Russian',
+    'hero' => [
+        'learn_details' => 'Learn Details',
+        'view_services' => 'View Services',
+    ],
+    'project' => [
+        'details' => 'Project Details',
+        'client' => 'Client',
+        'location' => 'Location',
+        'area' => 'Area',
+        'category' => 'Category',
+        'status' => 'Status',
+    ],
 ];

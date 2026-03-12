@@ -16,7 +16,7 @@ class SetAppLocale
     {
         $locale = $request->segment(1);
 
-        if (in_array($locale, config('cms.supported_locales', ['en', 'ka', 'ru']), true)) {
+        if (in_array($locale, config('cms.supported_locales', ['en', 'ka']), true)) {
             app()->setLocale($locale);
             URL::defaults(['locale' => $locale]);
         }

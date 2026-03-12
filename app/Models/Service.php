@@ -15,11 +15,14 @@ class Service extends Model
         'text_content',
         'cover_photo',
         'gallery',
+        'is_featured_in_hero',
+        'hero_order',
         'resourceTranslations',
     ];
 
     protected $casts = [
         'gallery' => 'array',
+        'is_featured_in_hero' => 'boolean',
     ];
 
     public array $translatable = [
@@ -33,5 +36,10 @@ class Service extends Model
         static::saving(function (Service $model): void {
             unset($model->attributes['resourceTranslations']);
         });
+    }
+
+    public function scopeFeaturedInHero($query)
+    {
+        return $query->where('is_featured_in_hero', true);
     }
 }

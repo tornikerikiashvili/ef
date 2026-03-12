@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Project;
+use App\Models\Service;
+
 class PageController extends Controller
 {
     public function home()
     {
-        return view('pages.home');
+        $featuredServices = Service::featuredInHero()
+            ->orderBy('hero_order')
+            ->get();
+
+        $featuredProjects = Project::featured()
+            ->orderBy('featured_order')
+            ->get();
+
+        return view('pages.home', compact('featuredServices', 'featuredProjects'));
     }
 
     public function about()
@@ -19,19 +31,37 @@ class PageController extends Controller
         return view('pages.services');
     }
 
-    public function serviceSingle(string $slug)
+    public function serviceSingle(string $locale, string $slug)
     {
         return view('pages.service-single', compact('slug'));
     }
 
     public function projects()
     {
-        return view('pages.projects');
+        $projects = Project::with('category')->orderBy('created_at', 'desc')->get();
+        $categories = Category::orderBy('name')->get();
+
+        return view('pages.projects', compact('projects', 'categories'));
     }
 
-    public function projectSingle(string $slug)
+    public function projectSingle(string $locale, string $slug)
     {
-        return view('pages.project-single', compact('slug'));
+        $project = Project::with(['category', 'status'])
+            ->where('slug', $slug)
+            ->first();
+
+        if (! $project && ctype_digit((string) $slug)) {
+            $project = Project::with(['category', 'status'])->find((int) $slug);
+        }
+
+        if (! $project) {
+            abort(404);
+        }
+
+        $prevProject = Project::where('id', '<', $project->id)->orderBy('id', 'desc')->first();
+        $nextProject = Project::where('id', '>', $project->id)->orderBy('id')->first();
+
+        return view('pages.project-single', compact('project', 'prevProject', 'nextProject'));
     }
 
     public function news()
@@ -39,7 +69,7 @@ class PageController extends Controller
         return view('pages.news');
     }
 
-    public function newsSingle(string $slug)
+    public function newsSingle(string $locale, string $slug)
     {
         return view('pages.news-single', compact('slug'));
     }

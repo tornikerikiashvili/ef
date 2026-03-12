@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     @stack('styles')
 </head>
-<body class="theme-style--olive">
+<body class="{{ request()->routeIs('home') ? 'theme-style--olive theme-style--light' : 'theme-style--light' }}">
 
     <div id="preloader">
         <div class="preloader-inner">

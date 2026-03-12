@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Services\Schemas;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -37,16 +38,35 @@ class ServiceForm
                     ->schema([
                         FileUpload::make('cover_photo')
                             ->label('Cover photo')
+                            ->disk('public')
                             ->directory('services')
+                            ->visibility('public')
                             ->image()
                             ->columnSpanFull(),
                         FileUpload::make('gallery')
                             ->label('Gallery')
+                            ->disk('public')
                             ->directory('services')
+                            ->visibility('public')
                             ->image()
                             ->multiple()
                             ->reorderable()
                             ->columnSpanFull(),
+                    ])
+                    ->columnSpan(1),
+
+                Section::make('Homepage Hero')
+                    ->description('Show this service in the homepage hero slider.')
+                    ->schema([
+                        Toggle::make('is_featured_in_hero')
+                            ->label('Featured in hero slider')
+                            ->default(false),
+                        TextInput::make('hero_order')
+                            ->label('Hero order')
+                            ->numeric()
+                            ->minValue(0)
+                            ->placeholder('Lower = first')
+                            ->helperText('Optional. Lower numbers appear first.'),
                     ])
                     ->columnSpan(1),
             ]);

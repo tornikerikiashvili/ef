@@ -9,7 +9,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('{locale}')
-    ->where(['locale' => 'en|ka|ru'])
+    ->where(['locale' => 'en|ka'])
     ->middleware(SetAppLocale::class)
     ->group(function () {
         Route::get('/', [PageController::class, 'home'])->name('home');

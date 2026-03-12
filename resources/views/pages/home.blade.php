@@ -4,12 +4,11 @@
 @section('meta_description', 'Ef - Photography Agency')
 
 @section('content')
-    <x-hero />
+    <x-hero :services="$featuredServices" />
     <x-services-section />
     <x-about-section />
-    <x-funfacts />
-    <x-projects-section />
-    <x-testimonial />
+    <x-partners />
+    <x-projects-section :projects="$featuredProjects" />
     <x-blog-section />
     <x-cta />
     <x-instagram-gallery />

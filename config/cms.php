@@ -4,6 +4,5 @@ return [
     'supported_locales' => [
         'en',
         'ka',
-        'ru',
     ],
 ];
