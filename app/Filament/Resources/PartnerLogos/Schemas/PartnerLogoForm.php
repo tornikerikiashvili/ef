@@ -47,12 +47,16 @@ class PartnerLogoForm
                 ->maxLength(65535),
             FileUpload::make('logo_white')
                 ->label('Logo (white / default)')
+                ->disk('public')
                 ->directory('partner_logos')
+                ->visibility('public')
                 ->image()
                 ->helperText('Used as default logo.'),
             FileUpload::make('logo_colorful')
                 ->label('Logo (colorful / hover)')
+                ->disk('public')
                 ->directory('partner_logos')
+                ->visibility('public')
                 ->image()
                 ->helperText('Shown on hover.'),
         ];

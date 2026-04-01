@@ -4,6 +4,6 @@
 @section('meta_description', 'Our services - Ef Photography Agency')
 
 @section('content')
-    <x-services-section />
+    <x-services-listing :services="$services" />
     <x-cta />
 @endsection

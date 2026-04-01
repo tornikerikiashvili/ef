@@ -4,6 +4,5 @@
 @section('meta_description', 'News and blog - Ef Photography Agency')
 
 @section('content')
-    <x-blog-section />
-    <x-cta />
+    <x-news-listing :news="$news" />
 @endsection

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\News;
+use App\Models\PartnerLogo;
 use App\Models\Project;
 use App\Models\Service;
 
@@ -18,7 +20,13 @@ class PageController extends Controller
             ->orderBy('featured_order')
             ->get();
 
-        return view('pages.home', compact('featuredServices', 'featuredProjects'));
+        $featuredNews = News::featured()
+            ->orderBy('featured_order')
+            ->get();
+
+        $partnerLogos = PartnerLogo::orderBy('id')->get();
+
+        return view('pages.home', compact('featuredServices', 'featuredProjects', 'featuredNews', 'partnerLogos'));
     }
 
     public function about()
@@ -28,12 +36,24 @@ class PageController extends Controller
 
     public function services()
     {
-        return view('pages.services');
+        $services = Service::orderBy('created_at', 'desc')->get();
+
+        return view('pages.services', compact('services'));
     }
 
     public function serviceSingle(string $locale, string $slug)
     {
-        return view('pages.service-single', compact('slug'));
+        $service = Service::where('slug', $slug)->first();
+
+        if (! $service && ctype_digit((string) $slug)) {
+            $service = Service::find((int) $slug);
+        }
+
+        if (! $service) {
+            abort(404);
+        }
+
+        return view('pages.service-single', compact('service'));
     }
 
     public function projects()
@@ -66,12 +86,24 @@ class PageController extends Controller
 
     public function news()
     {
-        return view('pages.news');
+        $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+
+        return view('pages.news', compact('news'));
     }
 
     public function newsSingle(string $locale, string $slug)
     {
-        return view('pages.news-single', compact('slug'));
+        $newsItem = News::with('newsCategory')->where('slug', $slug)->first();
+
+        if (! $newsItem && ctype_digit((string) $slug)) {
+            $newsItem = News::with('newsCategory')->find((int) $slug);
+        }
+
+        if (! $newsItem) {
+            abort(404);
+        }
+
+        return view('pages.news-single', compact('newsItem'));
     }
 
     public function contact()

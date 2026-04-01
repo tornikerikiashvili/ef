@@ -34,6 +34,15 @@ class ServiceForm
                     ->statePath('resourceTranslations')
                     ->columnSpan(2),
 
+                Section::make('Options')
+                    ->schema([
+                        TextInput::make('slug')
+                            ->label('URL slug')
+                            ->maxLength(255)
+                            ->helperText('Leave empty to auto-generate from English title. Used in URLs: /services/your-slug'),
+                    ])
+                    ->columnSpan(1),
+
                 Section::make('Media')
                     ->schema([
                         FileUpload::make('cover_photo')

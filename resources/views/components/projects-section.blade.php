@@ -1,6 +1,12 @@
 @props([
     'projects' => collect(),
 ])
+@push('styles')
+<style>
+    .wptb-project.projects-section--olive .grid_lines { background-color: #C0C6AF; }
+    .wptb-project.projects-section--olive .grid_lines .grid_line { mix-blend-mode: normal; }
+</style>
+@endpush
 @php
     $items = $projects->isNotEmpty() ? $projects : null;
     $placeholderItems = [
@@ -9,7 +15,7 @@
         ['8', 'Iceland girl'], ['7', 'Summer sadness'],
     ];
 @endphp
-<section class="wptb-project">
+<section class="wptb-project projects-section--olive">
     <div class="grid_lines">
         @for ($i = 0; $i < 7; $i++) <div class="grid_line"></div> @endfor
     </div>

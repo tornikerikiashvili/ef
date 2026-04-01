@@ -2,6 +2,13 @@
     'projects' => collect(),
     'categories' => collect(),
 ])
+@push('styles')
+<style>
+    .projects-listing--olive { position: relative; }
+    .projects-listing--olive .grid_lines { background-color: #C0C6AF; }
+    .projects-listing--olive .grid_lines .grid_line { background-color: rgba(255, 255, 255, 0.6) !important; mix-blend-mode: normal; }
+</style>
+@endpush
 @php
     $categoryClass = fn ($project) => $project->category
         ? 'category-' . \Illuminate\Support\Str::slug($project->category->slug ?? $project->category->name ?? $project->category->id)
@@ -18,7 +25,10 @@
 </div>
 
 <!-- Our Projects -->
-<section>
+<section class="projects-listing--olive">
+    <div class="grid_lines">
+        @for ($i = 0; $i < 7; $i++) <div class="grid_line"></div> @endfor
+    </div>
     <div class="container">
         <div class="wptb-project--inner">
             <div class="wptb-heading">

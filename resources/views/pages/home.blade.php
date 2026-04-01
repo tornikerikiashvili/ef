@@ -7,9 +7,9 @@
     <x-hero :services="$featuredServices" />
     <x-services-section />
     <x-about-section />
-    <x-partners />
+    <x-partners :partnerLogos="$partnerLogos" />
     <x-projects-section :projects="$featuredProjects" />
-    <x-blog-section />
+    <x-news-section :news="$featuredNews" />
     <x-cta />
     <x-instagram-gallery />
 @endsection
