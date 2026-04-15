@@ -4,43 +4,70 @@
 @php
     use Illuminate\Support\Facades\Storage;
 
-    $logos = $partnerLogos->isNotEmpty() ? $partnerLogos : collect();
+    $logoItems = $partnerLogos
+        ->map(function ($partner) {
+            $logoUrl = $partner->logo_white
+                ? Storage::disk('public')->url($partner->logo_white)
+                : ($partner->logo_colorful ? Storage::disk('public')->url($partner->logo_colorful) : null);
+            if (! $logoUrl) {
+                return null;
+            }
+
+            return [
+                'url' => $logoUrl,
+                'link' => $partner->link ?? '#',
+                'title' => $partner->title ?? 'Partner',
+            ];
+        })
+        ->filter()
+        ->values();
 @endphp
-@if($logos->isNotEmpty())
-<div class="wptb-marquee pd-top-80">
-    <div class="wptb-text-marquee1 wptb-slide-to-left">
-        <div class="wptb-item--container">
-            <div class="wptb-item--inner d-flex align-items-center gap-5" style="gap: 3rem;">
-                @foreach ($logos as $partner)
-                @php
-                    $logoUrl = $partner->logo_white
-                        ? Storage::disk('public')->url($partner->logo_white)
-                        : ($partner->logo_colorful ? Storage::disk('public')->url($partner->logo_colorful) : null);
-                    $link = $partner->link ?? '#';
-                @endphp
-                @if($logoUrl)
-                <a href="{{ $link }}" class="d-block" target="_blank" rel="noopener noreferrer" style="height: 2.5rem; display: flex; align-items: center;">
-                    <img src="{{ $logoUrl }}" alt="{{ $partner->title ?? 'Partner' }}" style="max-height: 2.5rem; width: auto; object-fit: contain;">
-                </a>
-                @endif
-                @endforeach
+@if ($logoItems->isNotEmpty())
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/gh/Wrapp-dev/public-scripts@main/dist/marquee.min.js"></script>
+    @endpush
+    {{-- Mirrors Zoomart about.html: third <section> (Wrapp marquee + class names) --}}
+    <section class="zoomart-partners section_default overflow-hidden">
+        {{-- <div class="container">
+            <div class="wptb-heading">
+                <div class="wptb-item--inner">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <h1 class="wptb-item--title">Partners</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="wptb-item--inner d-flex align-items-center gap-5" style="gap: 3rem;" aria-hidden="true">
-                @foreach ($logos as $partner)
-                @php
-                    $logoUrl = $partner->logo_white
-                        ? Storage::disk('public')->url($partner->logo_white)
-                        : ($partner->logo_colorful ? Storage::disk('public')->url($partner->logo_colorful) : null);
-                    $link = $partner->link ?? '#';
-                @endphp
-                @if($logoUrl)
-                <a href="{{ $link }}" class="d-block" target="_blank" rel="noopener noreferrer" style="height: 2.5rem; display: flex; align-items: center;">
-                    <img src="{{ $logoUrl }}" alt="" style="max-height: 2.5rem; width: auto; object-fit: contain;">
-                </a>
-                @endif
+        </div> --}}
+        <div data-wr-marquee class="partners_wrapper">
+            <div class="partners_list">
+                @foreach ($logoItems as $item)
+                    <a
+                        href="{{ $item['link'] }}"
+                        class="partners_item w-inline-block"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <img
+                            src="{{ $item['url'] }}"
+                            width="218"
+                            height="89"
+                            alt="{{ $item['title'] }}"
+                            class="partners_logo"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </a>
                 @endforeach
             </div>
         </div>
-    </div>
-</div>
+    </section>
 @endif
+
+
+
+
+
+
+
+

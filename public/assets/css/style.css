@@ -514,6 +514,9 @@
     border: 1px solid var(--color-dark-seven);
     overflow: hidden;
     margin-bottom: 30px;
+    background-color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .wptb-project-info1 .wptb-item--title {
@@ -523,6 +526,8 @@
     font-weight: var(--fw-medium);
     padding: 15px 30px;
     text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .wptb-project-info1 .wptb--holder {
@@ -561,7 +566,7 @@
     gap: 15px;
 }
 .wptb-project-info1 .wptb--meta label {
-    color: var(--color-white);
+    color: #3A3B3A;
     font-size: 14px;
     font-weight: var(--fw-semibold);
     line-height: 28px;

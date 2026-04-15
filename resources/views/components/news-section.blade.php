@@ -17,7 +17,6 @@
             <div class="wptb-item--inner">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <h6 class="wptb-item--subtitle"><span>05 //</span> {{ __('messages.nav.news') }}</h6>
                         <h1 class="wptb-item--title mb-0">Our Photography<br><span>Related Blog</span></h1>
                     </div>
                     <div class="col-lg-6">

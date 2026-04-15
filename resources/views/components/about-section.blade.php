@@ -4,8 +4,8 @@
                         <div class="wptb-item--inner">
                             <div class="row align-items-center">
                                 <div class="col-lg-7">
-                                    <h6 class="wptb-item--subtitle"><span>03 //</span> About</h6>
-                                    <h1 class="wptb-item--title">Element FIT-OUT <span>Quality & Vision</span></h1>
+
+                                    <h1 class="wptb-item--title"> <span>Quality & Vision</span></h1>
                                 </div>
                                 <div class="col-lg-5 text-lg-end">
                                     <div class="wptb-item--button">
@@ -45,10 +45,75 @@
                             <div class="wptb-about--text ps-md-5">
                                 <h3>About Element FIT-OUT</h3>
                                 <p class="wptb-about--text-one">Our approach is built on quality, international standards, and vision. We deliver a full-service package from concept to completion: design, interior design, and premium fit-out works.</p>
-                                <p class="mb-2">Element FIT-OUT operates in Georgia and is a subsidiary of ELEMENT HOLDING, which unites more than 10 companies in the construction sector since 2007.</p>
-                                <p class="border-start border-3 border-primary ps-3 py-2 mb-0" style="border-color: var(--color-dark-one) !important;"><strong>Since 2025 — actively operating in Uzbekistan</strong>, marking a significant step in the brand's expansion.</p>
+
+
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+
+       {{--
+            <section class="bg-dark-200 pd-bottom-80">
+                <div class="container">
+                    <div class="wptb-heading">
+                        <div class="wptb-item--inner">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h6 class="wptb-item--subtitle"><span>02 //</span> Our Awards</h6>
+                                    <h1 class="wptb-item--title mb-0">Our Photography<br>
+                                        <span>Awards</span></h1>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <ol class="wptb-award-list">
+                        <li class="wptb-item">
+                            <div class="wptb-item--inner">
+                                <div class="wptb-item--holder">
+                                    <a href="project-details.html">Photography Team of the Year 2023</a>
+                                </div>
+                                <div class="wptb-item--image">
+                                    <img src="../assets/img/more/4.jpg" alt="img">
+                                    <div class="wptb-item--button">
+                                        <a href="project-details.html" class="btn">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="wptb-item active highlight">
+                            <div class="wptb-item--inner">
+                                <div class="wptb-item--holder">
+                                    <a href="project-details.html">Best Wedding Photographer 2022</a>
+                                </div>
+                                <div class="wptb-item--image">
+                                    <img src="../assets/img/more/5.jpg" alt="img">
+                                    <div class="wptb-item--button">
+                                        <a href="project-details.html" class="btn">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="wptb-item">
+                            <div class="wptb-item--inner">
+                                <div class="wptb-item--holder">
+                                    <a href="project-details.html">Photography Team of the Year 2019</a>
+                                </div>
+                                <div class="wptb-item--image">
+                                    <img src="../assets/img/more/6.jpg" alt="img">
+                                    <div class="wptb-item--button">
+                                        <a href="project-details.html" class="btn">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+    --}}

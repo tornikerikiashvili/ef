@@ -1,9 +1,25 @@
 @props([
     'news' => collect(),
+    'pageCover' => null,
 ])
 @php
     use Illuminate\Support\Facades\Storage;
+
+    $coverPath = is_array($pageCover) ? (reset($pageCover) ?: null) : $pageCover;
+    $headerBg = $coverPath
+        ? Storage::disk('public')->url($coverPath)
+        : asset('assets/img/background/page-header-bg-8.jpg');
 @endphp
+<!-- Page Header -->
+<div class="wptb-page-heading">
+    <div class="wptb-item--inner" style="background-image: url('{{ $headerBg }}');">
+        <div class="wptb-item-layer wptb-item-layer-one">
+            <img src="{{ asset('assets/img/more/circle.png') }}" alt="">
+        </div>
+        <h2 class="wptb-item--title">{{ __('messages.nav.news') }}</h2>
+    </div>
+</div>
+
 <section class="wptb-blog-grid-one">
     <div class="container">
 
@@ -36,6 +52,4 @@
         </div>
 
     </div>
-</section>
-
 </section>

@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\PartnerLogo;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\SiteSetting;
 
 class PageController extends Controller
 {
@@ -37,8 +38,9 @@ class PageController extends Controller
     public function services()
     {
         $services = Service::orderBy('created_at', 'desc')->get();
+        $servicesPageCover = SiteSetting::getValue('services_page_cover');
 
-        return view('pages.services', compact('services'));
+        return view('pages.services', compact('services', 'servicesPageCover'));
     }
 
     public function serviceSingle(string $locale, string $slug)
@@ -53,7 +55,15 @@ class PageController extends Controller
             abort(404);
         }
 
-        return view('pages.service-single', compact('service'));
+        $prevService = Service::where('id', '<', $service->id)->orderBy('id', 'desc')->first();
+        $nextService = Service::where('id', '>', $service->id)->orderBy('id')->first();
+
+        $relatedServices = Service::where('id', '!=', $service->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(4)
+            ->get();
+
+        return view('pages.service-single', compact('service', 'prevService', 'nextService', 'relatedServices'));
     }
 
     public function projects()
@@ -81,14 +91,21 @@ class PageController extends Controller
         $prevProject = Project::where('id', '<', $project->id)->orderBy('id', 'desc')->first();
         $nextProject = Project::where('id', '>', $project->id)->orderBy('id')->first();
 
-        return view('pages.project-single', compact('project', 'prevProject', 'nextProject'));
+        $relatedProjects = Project::with('category')
+            ->where('id', '!=', $project->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(4)
+            ->get();
+
+        return view('pages.project-single', compact('project', 'prevProject', 'nextProject', 'relatedProjects'));
     }
 
     public function news()
     {
         $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+        $newsPageCover = SiteSetting::getValue('news_page_cover');
 
-        return view('pages.news', compact('news'));
+        return view('pages.news', compact('news', 'newsPageCover'));
     }
 
     public function newsSingle(string $locale, string $slug)

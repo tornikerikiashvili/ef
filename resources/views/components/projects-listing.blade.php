@@ -15,25 +15,33 @@
         : 'category-uncategorized';
 @endphp
 <!-- Page Header -->
-<div class="wptb-page-heading">
-    <div class="wptb-item--inner" style="background-image: url('{{ asset('assets/img/background/page-header-bg-8.jpg') }}');">
+<div class="wptb-page-heading" style="background-color: #C0C6AF;">
+    @php
+        $coverPath = \App\Models\SiteSetting::getValue('projects_page_cover');
+
+        $headerBg = $coverPath
+            ? $coverPath
+            : asset('assets/img/background/page-header-bg-8.jpg');
+    @endphp
+    <div class="wptb-item--inner" style="background-image: url('/storage/{{ $coverPath }}');">
         <div class="wptb-item-layer wptb-item-layer-one">
-            <img src="{{ asset('assets/img/more/circle.png') }}" alt="">
+            @if(!$coverPath)
+              <img src="{{ asset('assets/img/more/circle.png') }}" alt="">
+            @endif
         </div>
         <h2 class="wptb-item--title">{{ __('messages.nav.projects') }}</h2>
     </div>
 </div>
 
 <!-- Our Projects -->
-<section class="projects-listing--olive">
-    <div class="grid_lines">
+<section class="projects-listing--olive" style="background-color: #C0C6AF;">
+    {{-- <div class="grid_lines">
         @for ($i = 0; $i < 7; $i++) <div class="grid_line"></div> @endfor
-    </div>
+    </div> --}}
     <div class="container">
         <div class="wptb-project--inner">
             <div class="wptb-heading">
                 <div class="wptb-item--inner text-center">
-                    <h6 class="wptb-item--subtitle"><span>01//</span> {{ __('messages.nav.projects') }}</h6>
                     <h1 class="wptb-item--title">Kimono captures <span>All of Your</span> <br>
                         beautiful memories</h1>
                 </div>

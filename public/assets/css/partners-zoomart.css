@@ -1,0 +1,136 @@
+/**
+ * Zoomart "Our partner brands" section (about.html third <section>)
+ * Scoped under .zoomart-partners — same class names as Zoomart where possible.
+ */
+
+.zoomart-partners {
+    --zm-black: #101820;
+    --zm-off-white: #f2f1ef;
+    --zm-grid-col-width: calc((100vw - 42px - 88px) / 12);
+    margin-top: 34px;
+    margin-bottom: 34px;
+    color: var(--zm-black);
+    padding: 0;
+}
+
+.zoomart-partners .padding-global {
+    flex: 1;
+    padding-left: 21px;
+    padding-right: 21px;
+}
+
+.partners_wrapper {
+    margin-bottom: 60px;
+}
+
+.zoomart-partners .section-header {
+    grid-column-gap: 13px;
+    grid-row-gap: 13px;
+    text-align: center;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 21px;
+    display: flex;
+}
+
+.zoomart-partners .section-header.is-left-align {
+    text-align: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.zoomart-partners h2 {
+    font-size: 34px;
+    line-height: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--zm-black);
+}
+
+.zoomart-partners .text-size-l {
+    font-size: 21px;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.zoomart-partners .text-weight-bold {
+    font-weight: 700;
+}
+
+.zoomart-partners .w-inline-block {
+    max-width: 100%;
+    display: inline-block;
+}
+
+.zoomart-partners .partners_list {
+    grid-column-gap: 13px;
+    grid-row-gap: 13px;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+}
+
+.zoomart-partners .partners_item {
+    aspect-ratio: 290 / 190;
+    width: calc(var(--zm-grid-col-width) * 2 + 21px);
+    border-radius: 55px;
+    flex: none;
+    justify-content: center;
+    align-items: center;
+    padding-left: 34px;
+    padding-right: 34px;
+    transition-property: background-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+}
+
+.zoomart-partners .partners_item:hover {
+    background-color: #C0C6AF;
+}
+
+.zoomart-partners .partners_logo {
+    object-fit: contain;
+    max-height: 100%;
+    width: auto;
+}
+
+/* Wrapp marquee injects .marquee-inner (see marquee.min.js) */
+.zoomart-partners [data-wr-marquee] .marquee-inner {
+    align-items: center;
+}
+
+@media screen and (max-width: 991px) {
+    .zoomart-partners .padding-global {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .zoomart-partners .section-header,
+    .zoomart-partners .section-header.is-left-align {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .zoomart-partners .partners_list {
+        grid-column-gap: 21px;
+        grid-row-gap: 21px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .zoomart-partners .partners_item {
+        width: 200px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .zoomart-partners .marquee-inner {
+        animation: none !important;
+    }
+}

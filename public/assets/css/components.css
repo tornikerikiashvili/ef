@@ -2429,14 +2429,14 @@ Ready Components Stylesheet
     height: 56px;
     font-size: 24px;
     color: var(--color-white-fixed);
-    background-color: var(--color-one);
+    background-color: #C0C6AF;
     margin-right: 22px;
-    -webkit-box-shadow: 0 10px 20px 0 rgba(var(--color-one-rgb),.25);
-    -khtml-box-shadow: 0 10px 20px 0 rgba(var(--color-one-rgb),.25);
-    -moz-box-shadow: 0 10px 20px 0 rgba(var(--color-one-rgb),.25);
-    -ms-box-shadow: 0 10px 20px 0 rgba(var(--color-one-rgb),.25);
-    -o-box-shadow: 0 10px 20px 0 rgba(var(--color-one-rgb),.25);
-    box-shadow: 0 10px 20px rgba(var(--color-one-rgb),.25);
+    -webkit-box-shadow: 0 10px 20px 0 rgba(192, 198, 175, 0.25);
+    -khtml-box-shadow: 0 10px 20px 0 rgba(192, 198, 175, 0.25);
+    -moz-box-shadow: 0 10px 20px 0 rgba(192, 198, 175, 0.25);
+    -ms-box-shadow: 0 10px 20px 0 rgba(192, 198, 175, 0.25);
+    -o-box-shadow: 0 10px 20px 0 rgba(192, 198, 175, 0.25);
+    box-shadow: 0 10px 20px rgba(192, 198, 175, 0.25);
     border-radius: 100%;
     transition: var(--transition-base);
 }
@@ -2923,6 +2923,36 @@ Ready Components Stylesheet
 .wptb-icon-box7.active .wptb-item--count,
 .wptb-icon-box7:hover .wptb-item--count {
     -webkit-text-stroke-color: var(--color-one);
+}
+
+.wptb-services .wptb-icon-box7 .wptb-item--count--arrow {
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    -webkit-text-stroke-width: 0;
+    -webkit-text-stroke-color: transparent;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border: 1px solid rgba(var(--color-white-fixed-rgb), 0.35);
+    color: var(--color-white-fixed);
+    background-color: #c0c6af;
+    transition: var(--transition-base);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.wptb-services .wptb-icon-box7.active .wptb-item--count--arrow,
+.wptb-services .wptb-icon-box7:hover .wptb-item--count--arrow,
+.wptb-services .wptb-icon-box7 .wptb-item--count--arrow:hover,
+.wptb-services .wptb-icon-box7 .wptb-item--count--arrow:focus-visible {
+    border-color: rgba(var(--color-one-rgb), 0.55);
+    color: white;
+    background-color: rgb(192 198 175);
 }
 
 .wptb-icon-box7 .wptb-item--icon {
@@ -6184,7 +6214,6 @@ svg.radial-progress {
     animation: wptb_spin 60s linear infinite;
     -webkit-animation: wptb_spin 60s linear infinite;
 }
-
 
 .text-outline {
     font-family: var(--font-family-three);

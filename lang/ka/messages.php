@@ -10,6 +10,8 @@ return [
         'contact' => 'კონტაქტი',
     ],
     'language' => 'ენა',
+    'lang_abbr_georgian' => 'GE',
+    'lang_abbr_english' => 'EN',
     'english' => 'ინგლისური',
     'georgian' => 'ქართული',
     'russian' => 'რუსული',
@@ -24,5 +26,13 @@ return [
         'area' => 'ფართობი',
         'category' => 'კატეგორია',
         'status' => 'სტატუსი',
+    ],
+    'service' => [
+        'details' => 'სერვისის დეტალები',
+        'summary' => 'მოკლე აღწერა',
+    ],
+    'partners' => [
+        'title' => 'ჩვენი პარტნიორი ბრენდები',
+        'description' => 'პრემიუმ პარტნიორები, შერჩეული თქვენი კეთილდღეობისთვის.',
     ],
 ];

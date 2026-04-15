@@ -17,16 +17,25 @@
 .logo {
   position: relative;
   min-width: 110px;
+  /* max-width: 180px; */
   transition: var(--transition-base);
 }
 
 .header .logo a {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
 }
 
 .header .logo a img {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+  object-position: left center;
   transition: var(--transition-base);
 }
 
@@ -318,8 +327,8 @@
   transform: translateY(-50%);
 }
 
-/* .header .mainnav ul.main-menu > li.menu-item-has-children.current > a::after, 
-.header .mainnav ul.main-menu > li.menu-item-has-children.active > a::after, 
+/* .header .mainnav ul.main-menu > li.menu-item-has-children.current > a::after,
+.header .mainnav ul.main-menu > li.menu-item-has-children.active > a::after,
 .header .mainnav ul.main-menu > li.menu-item-has-children:hover > a::after {
   color: var(--color-one);
 } */
@@ -409,6 +418,23 @@
   font-size: 16px;
   font-weight: var(--fw-light);
   font-style: normal;
+  color: var(--color-one);
+}
+
+.header .header_search .lang-switch-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2em;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
+}
+
+.header .header_search .lang-switch-trigger:hover {
   color: var(--color-one);
 }
 
@@ -708,7 +734,7 @@
 
 .mr_menu ul.main-menu li a::before {
   font-family: 'bootstrap-icons';
-  
+
   color: var(--color-one);
 }
 
@@ -751,7 +777,7 @@
   width: 40px;
   line-height: 52px;
   text-align: center;
-  
+
   background: transparent;
   color: var(--color-muted);
   cursor: pointer;
@@ -1096,7 +1122,7 @@ body.overlay_menu_active .wptb-overlay-contact {
 }
 
 .header.sticky .logo {
-  max-width: 220px;
+  max-width: 180px;
 }
 
 .header.sticky .mainnav ul.main-menu > li > a {
@@ -1160,7 +1186,7 @@ body.overlay_menu_active .wptb-overlay-contact {
     position: relative;
     max-width: 180px;
   }
-  
+
   .header .logo a {
     padding: 0;
     box-shadow: none;
@@ -1188,7 +1214,7 @@ body.overlay_menu_active .wptb-overlay-contact {
     left: 0px;
   }
 
-  
+
   .overlay_menu {
     padding: 100px 30px 30px;
     overflow: auto;
@@ -1212,7 +1238,7 @@ body.overlay_menu_active .wptb-overlay-contact {
   .overlay_menu_toggle:hover span:nth-child(3), .mr_menu_toggle:hover span:nth-child(3), .mr_menu_toggle.close span:nth-child(3) {
     width: 30px;
   }
- 
+
 }
 
 @media screen and (max-width: 767.9px) {
@@ -1226,5 +1252,5 @@ body.overlay_menu_active .wptb-overlay-contact {
   .wptb-overlay-contact {
     margin-top: 50px;
   }
-  
+
 }

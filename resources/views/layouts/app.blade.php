@@ -15,13 +15,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     @stack('styles')
 </head>
-<body class="{{ request()->routeIs('home') ? 'theme-style--olive theme-style--light' : 'theme-style--light' }}">
+
+<body class="{{request()->route()->getName()}} {{ request()->routeIs('home') ? 'theme-style--olive theme-style--light' : 'theme-style--light' }}">
 
     <div id="preloader">
         <div class="preloader-inner">
-            <div class="spinner">
-                <img src="{{ asset('assets/img/preloader-logo.svg') }}" alt="">
-                <img src="{{ asset('assets/img/preloader-wheel.svg') }}" alt="" class="wheel">
+            <div class="spinner" >
+                <img style="width: 200px;" src="{{ asset('assets/img/logo_footer.svg') }}" alt="">
+                {{-- <img src="{{ asset('assets/img/preloader-wheel.svg') }}" alt="" class="wheel"> --}}
             </div>
         </div>
     </div>

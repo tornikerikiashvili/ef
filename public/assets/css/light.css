@@ -2,28 +2,28 @@
     --fw-light:           400;
 
     /* Primary Color */
-    --color-one:                        #B90808;
+    --color-one:                        #BE5244;
     --color-one-rgb:                    185, 8, 8;
-    
+
 
     /* Text Color */
     --color-two:                      #585858;
     --color-two-rgb:                   88, 88, 88;
-    
+
     /* Body BG */
-    --color-dark-one:                  #FFFFFF;
+    --color-dark-one:                  #F5F5F5;
     --color-dark-one-rgb:               255, 255, 255;
 
     /* Hero BG */
     --color-dark-two:                  #FAFAFA;
     --color-dark-two-rgb:               250, 250, 250;
-    
-    --color-dark-three:                #F2F2F2; 
+
+    --color-dark-three:                #F2F2F2;
     --color-dark-three-rgb:             242, 242, 242;
-    
+
     --color-dark-four:                 #F5F5F5;
     --color-dark-four-rgb:              245, 245, 245;
-    
+
     --color-dark-five:                 #DDDDDD;
     --color-dark-five-rgb:              221, 221, 221;
 
@@ -54,9 +54,9 @@
     --color-dark-fourteen:                #FAFAFA;
     --color-dark-fourteen-rgb:             250, 250, 250;
 
-    --color-dark-fifteen:                #F5F5F5;
+    --color-dark-fifteen:                #f2f2f2;
     --color-dark-fifteen-rgb:             245, 245, 245;
-    
+
     --color-white:                     #000000;
     --color-white-rgb:                  0, 0, 0;
 
@@ -173,8 +173,8 @@
 .theme-style--light .wptb-contact-form.style2 .form-control {
     background-color: var(--color-black);
 }
-.theme-style--light .wptb-slider.style2 .wptb-swiper-dots.style2::before, 
-.theme-style--light .wptb-slider.style3 .wptb-swiper-dots.style2::before, 
+.theme-style--light .wptb-slider.style2 .wptb-swiper-dots.style2::before,
+.theme-style--light .wptb-slider.style3 .wptb-swiper-dots.style2::before,
 .theme-style--light .wptb-slider.style2 .wptb-swiper-dots.style2::after,
 .theme-style--light .wptb-slider.style3 .wptb-swiper-dots.style2::after {
     background-color: rgba(var(--color-black-rgb), 0.3);
@@ -273,11 +273,11 @@
 
 .theme-style--light .wptb-slider.style2 .wptb-swiper-dots.style2 .swiper-pagination-bullet.swiper-pagination-bullet-active,
 .theme-style--light .wptb-slider.style3 .wptb-swiper-dots.style2 .swiper-pagination-bullet.swiper-pagination-bullet-active,
-.theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative:not(:hover)::after, 
+.theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative:not(:hover)::after,
 .theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative .btn-wrap:not(:hover)::before, .theme-style--light .wptb-slider.style5 .wptb-heading .btn.creative .btn-wrap:not(:hover)::after,
-.theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative:not(:hover)::after, 
+.theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative:not(:hover)::after,
 .theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative .btn-wrap:not(:hover)::before, .theme-style--light .wptb-slider.style6 .wptb-heading .btn.creative .btn-wrap:not(:hover)::after,
-.theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative:not(:hover)::after, 
+.theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative:not(:hover):before, .theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative:not(:hover)::after,
 .theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative .btn-wrap:not(:hover)::before, .theme-style--light .wptb-slider.style14 .wptb-heading .btn.creative .btn-wrap:not(:hover)::after  {
     border-color: var(--color-black);
 }
@@ -299,7 +299,7 @@
     color: var(--color-white-fixed);
 }
 
-.theme-style--light .wptb-slider .btn.creative::before, .theme-style--light .wptb-slider .btn.creative::after, 
+.theme-style--light .wptb-slider .btn.creative::before, .theme-style--light .wptb-slider .btn.creative::after,
 .theme-style--light .wptb-slider .btn.creative .btn-wrap::before, .theme-style--light .wptb-slider .btn.creative .btn-wrap::after {
     border-color: var(--color-black);
 }

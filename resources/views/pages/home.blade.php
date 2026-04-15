@@ -9,6 +9,7 @@
     <x-about-section />
     <x-partners :partnerLogos="$partnerLogos" />
     <x-projects-section :projects="$featuredProjects" />
+    <x-funfacts />
     <x-news-section :news="$featuredNews" />
     <x-cta />
     <x-instagram-gallery />

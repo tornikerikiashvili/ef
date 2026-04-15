@@ -23,7 +23,7 @@
         <div class="wptb-project--inner">
             <div class="wptb-heading">
                 <div class="wptb-item--inner text-center">
-                    <h6 class="wptb-item--subtitle"><span>04//</span> Our Portfolio</h6>
+                    <h6 class="wptb-item--subtitle"> Our Portfolio</h6>
                     <h1 class="wptb-item--title">We capture <span>All of Your</span> <br> beautiful memories</h1>
                 </div>
             </div>

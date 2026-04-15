@@ -10,6 +10,8 @@ return [
         'contact' => 'Contact',
     ],
     'language' => 'Language',
+    'lang_abbr_georgian' => 'GE',
+    'lang_abbr_english' => 'EN',
     'english' => 'English',
     'georgian' => 'Georgian',
     'russian' => 'Russian',
@@ -24,5 +26,13 @@ return [
         'area' => 'Area',
         'category' => 'Category',
         'status' => 'Status',
+    ],
+    'service' => [
+        'details' => 'Service details',
+        'summary' => 'Summary',
+    ],
+    'partners' => [
+        'title' => 'Our partner brands',
+        'description' => 'Premium partners selected for your pet’s well-being.',
     ],
 ];
