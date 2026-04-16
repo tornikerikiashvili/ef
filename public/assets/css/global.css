@@ -305,6 +305,17 @@
     --transition-bezier: all .25s cubic-bezier(.645, .045, .355, 1);
 }
 
+html[lang="ka"] {
+    --font-family-base: "Noto Sans Georgian", "Sora", sans-serif;
+    --font-family-two: "Noto Serif Georgian", "Playfair Display", serif;
+    --font-family-three: "Noto Sans Georgian", "DM Sans", sans-serif;
+}
+
+html[lang="ka"] .wptb-single--image .wptb-team-ci-wrap .team-ci-content .team-ci-title,
+html[lang="ka"] .wptb-single--image .wptb-team-ci-wrap .team-ci-content .team-ci-desc {
+    font-family: var(--font-family-base);
+}
+
 :root .theme-style--orange {
     --color-one:                     #F85623;
     --color-one-rgb:                    248, 86, 35;

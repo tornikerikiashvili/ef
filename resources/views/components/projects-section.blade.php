@@ -5,6 +5,30 @@
 <style>
     .wptb-project.projects-section--olive .grid_lines { background-color: #C0C6AF; }
     .wptb-project.projects-section--olive .grid_lines .grid_line { mix-blend-mode: normal; }
+
+    .projects-section--card-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .projects-section--card-link:hover,
+    .projects-section--card-link:focus {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .projects-section--card-link .wptb-item--image img {
+        transform: scale(1);
+        transform-origin: center;
+        transition: transform 450ms ease;
+        will-change: transform;
+    }
+
+    .projects-section--card-link:hover .wptb-item--image img,
+    .projects-section--card-link:focus-visible .wptb-item--image img {
+        transform: scale(0.97);
+    }
 </style>
 @endpush
 @php
@@ -39,37 +63,41 @@
                             $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
                         @endphp
                         <div class="grid-item">
-                            <div class="wptb-item--inner">
-                                <div class="wptb-item--image">
-                                    <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
-                                </div>
-                                <div class="wptb-item--holder">
-                                    <div class="wptb-item--meta">
-                                        <h4><a href="{{ $projectUrl }}">{{ $project->title }}</a></h4>
-                                        @if($project->client)
-                                            <p>{{ $project->client }}</p>
-                                        @else
-                                            <p>&nbsp;</p>
-                                        @endif
+                            <a class="projects-section--card-link" href="{{ $projectUrl }}">
+                                <div class="wptb-item--inner">
+                                    <div class="wptb-item--image">
+                                        <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
+                                    </div>
+                                    <div class="wptb-item--holder">
+                                        <div class="wptb-item--meta">
+                                            <h4>{{ $project->title }}</h4>
+                                            @if($project->client)
+                                                <p>{{ $project->client }}</p>
+                                            @else
+                                                <p>&nbsp;</p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                         @endforeach
                     @else
                         @foreach ($placeholderItems as $item)
                         <div class="grid-item">
-                            <div class="wptb-item--inner">
-                                <div class="wptb-item--image">
-                                    <img src="{{ asset('assets/img/projects/6/' . $item[0] . '.jpg') }}" alt="">
-                                </div>
-                                <div class="wptb-item--holder">
-                                    <div class="wptb-item--meta">
-                                        <h4><a href="{{ route('projects') }}">{{ $item[1] }}</a></h4>
-                                        <p>By Jonathon Willson</p>
+                            <a class="projects-section--card-link" href="{{ route('projects') }}">
+                                <div class="wptb-item--inner">
+                                    <div class="wptb-item--image">
+                                        <img src="{{ asset('assets/img/projects/6/' . $item[0] . '.jpg') }}" alt="">
+                                    </div>
+                                    <div class="wptb-item--holder">
+                                        <div class="wptb-item--meta">
+                                            <h4>{{ $item[1] }}</h4>
+                                            <p>By Jonathon Willson</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                         @endforeach
                     @endif

@@ -33,7 +33,7 @@
         <script src="https://cdn.jsdelivr.net/gh/Wrapp-dev/public-scripts@main/dist/marquee.min.js"></script>
     @endpush
     {{-- Mirrors Zoomart about.html: third <section> (Wrapp marquee + class names) --}}
-    <section class="zoomart-partners section_default overflow-hidden">
+    <section style="background-color: #3A3B3A;" class="zoomart-partners section_default overflow-hidden">
         {{-- <div class="container">
             <div class="wptb-heading">
                 <div class="wptb-item--inner">
