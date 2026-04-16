@@ -1853,7 +1853,7 @@ Ready Components Stylesheet
     max-width: 310px;
     margin-right: calc(-2.0938rem - 8.67909vw);
     transform-style: preserve-3d;
-    background-color: var(--color-dark-fifteen-fixed);
+    background-color: #3A3B3A;
 }
 
 @media (min-width: 1400px) {

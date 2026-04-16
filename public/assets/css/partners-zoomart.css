@@ -98,6 +98,33 @@
     object-fit: contain;
     max-height: 100%;
     width: auto;
+    opacity: 0.8;
+}
+
+.zoomart-partners .partners_logo-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoomart-partners .partners_logo--default,
+.zoomart-partners .partners_logo--hover {
+    transition: opacity 0.3s ease;
+}
+
+.zoomart-partners .partners_logo--hover {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+}
+
+.zoomart-partners .partners_item:hover .partners_logo--default {
+    opacity: 0;
+}
+
+.zoomart-partners .partners_item:hover .partners_logo--hover {
+    opacity: 1;
 }
 
 /* Wrapp marquee injects .marquee-inner (see marquee.min.js) */

@@ -4,10 +4,9 @@
                         <div class="wptb-item--inner">
                             <div class="row align-items-center">
                                 <div class="col-lg-7">
-
                                     <h1 class="wptb-item--title"> <span>Quality & Vision</span></h1>
                                 </div>
-                                <div class="col-lg-5 text-lg-end">
+                                {{-- <div class="col-lg-5 text-lg-end">
                                     <div class="wptb-item--button">
                                         <a href="{{ route('about') }}" class="btn btn-two creative text-uppercase">
                                             <span class="btn-wrap">
@@ -16,12 +15,12 @@
                                             </span>
                                         </a>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-md-6">
                             <div class="wptb-image-single wow fadeInUp">
                                 <div class="wptb-item--inner">

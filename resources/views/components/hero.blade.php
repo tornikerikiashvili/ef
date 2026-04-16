@@ -75,10 +75,9 @@
     <div class="wptb-right-pane">
         <div class="social-box style-oval">
             <ul>
-                <li><a href="#">FB</a></li>
-                <li><a href="#">IG</a></li>
-                <li><a href="#">TW</a></li>
-                <li><a href="#">YT</a></li>
+                <li><a href="#" class="bi bi-facebook" aria-label="Facebook"></a></li>
+                <li><a href="#" class="bi bi-instagram" aria-label="Instagram"></a></li>
+                <li><a href="#" class="bi bi-twitter-x" aria-label="X"></a></li>
             </ul>
         </div>
     </div>

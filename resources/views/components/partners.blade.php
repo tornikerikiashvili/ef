@@ -6,15 +6,21 @@
 
     $logoItems = $partnerLogos
         ->map(function ($partner) {
-            $logoUrl = $partner->logo_white
+            $defaultLogoUrl = $partner->logo_white
                 ? Storage::disk('public')->url($partner->logo_white)
                 : ($partner->logo_colorful ? Storage::disk('public')->url($partner->logo_colorful) : null);
-            if (! $logoUrl) {
+
+            $hoverLogoUrl = $partner->logo_colorful
+                ? Storage::disk('public')->url($partner->logo_colorful)
+                : $defaultLogoUrl;
+
+            if (! $defaultLogoUrl) {
                 return null;
             }
 
             return [
-                'url' => $logoUrl,
+                'default_logo_url' => $defaultLogoUrl,
+                'hover_logo_url' => $hoverLogoUrl,
                 'link' => $partner->link ?? '#',
                 'title' => $partner->title ?? 'Partner',
             ];
@@ -48,15 +54,26 @@
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img
-                            src="{{ $item['url'] }}"
-                            width="218"
-                            height="89"
-                            alt="{{ $item['title'] }}"
-                            class="partners_logo"
-                            loading="lazy"
-                            decoding="async"
-                        >
+                        <span class="partners_logo-wrap">
+                            <img
+                                src="{{ $item['default_logo_url'] }}"
+                                width="218"
+                                height="89"
+                                alt="{{ $item['title'] }}"
+                                class="partners_logo partners_logo--default"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                            <img
+                                src="{{ $item['hover_logo_url'] }}"
+                                width="218"
+                                height="89"
+                                alt=""
+                                class="partners_logo partners_logo--hover"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </span>
                     </a>
                 @endforeach
             </div>

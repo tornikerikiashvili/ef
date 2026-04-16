@@ -304,7 +304,7 @@
     font-size: 96px;
     font-style: normal;
     font-weight: var(--fw-semibold);
-    line-height: 28px; 
+    line-height: 28px;
 }
 
 .wptb-awards-one--inner .wptb-counter1.style1 .wptb-item--text {
@@ -325,7 +325,7 @@
         font-size: 72px;
         line-height: 1.2em;
     }
-    
+
     .wptb-awards-one--inner .wptb-counter1.style1 .wptb-item--text {
         font-size: 20px;
         line-height: 1.2em;
@@ -339,7 +339,7 @@
     .wptb-awards-one--inner .wptb-counter1.style1 .wptb-item--value .suffix {
         font-size: 60px;
     }
-    
+
     .wptb-awards-one--inner .wptb-counter1.style1 .wptb-item--text {
         font-size: 18px;
     }
@@ -957,7 +957,7 @@
 .wptb-map-item-list .wptb-item--inner .wptb-item--holder .wptb-item--title {
     padding: 0 17px;
     line-height: 1.65;
-    
+
     background-color: var(--color-one);
     border-radius: 8.27px;
     text-align: center;
@@ -1002,7 +1002,7 @@
 @media screen and (max-width: 1400px) {
     .gmapbox {
         padding: 100px 30px 0px 30px;
-    }    
+    }
 }
 
 @media screen and (max-width: 1199px) {
@@ -1557,7 +1557,7 @@ body.theme-style--olive {
 }
 
 .theme-style--olive .wptb-funfacts--area {
-    background-color: var(--color-dark-one-fixed);
+    background-color: #3A3B3A;
     overflow: hidden;
 }
 .theme-style--olive .wptb-counter1 .wptb-item--value,
@@ -1598,7 +1598,7 @@ body.theme-style--olive {
 }
 
 #wptb-triggerslider {
-    height: 100vh; 
+    height: 100vh;
     overflow: hidden;
 }
 
