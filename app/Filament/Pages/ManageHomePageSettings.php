@@ -141,6 +141,7 @@ class ManageHomePageSettings extends FilamentPage
             'news_section',
             'show_contact_form',
             'gallery_id',
+            'gallery_instagram_link',
         ];
 
         foreach (array_keys($defaults) as $locale) {
@@ -225,6 +226,13 @@ class ManageHomePageSettings extends FilamentPage
         $gid = $merged['gallery_id'] ?? null;
         $merged['gallery_id'] = ($gid !== null && $gid !== '' && (int) $gid > 0) ? (int) $gid : null;
 
+        $merged['gallery_instagram_link'] = isset($merged['gallery_instagram_link'])
+            ? (string) $merged['gallery_instagram_link']
+            : '';
+        if (strlen($merged['gallery_instagram_link']) > 2048) {
+            $merged['gallery_instagram_link'] = substr($merged['gallery_instagram_link'], 0, 2048);
+        }
+
         return $merged;
     }
 
@@ -265,7 +273,7 @@ class ManageHomePageSettings extends FilamentPage
                                         ->schema($this->headlineTabFields())
                                     )->all()
                                 )->columns(1)->extraAttributes([
-                                    'style' => 'background-color: #fafafa',
+                                    'style' => 'background-color: #fff7ef',
                                 ]),
                         ])
                         ->columns(1),
@@ -281,7 +289,7 @@ class ManageHomePageSettings extends FilamentPage
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
-                                    'style' => 'background-color: #fafafa',
+                                    'style' => 'background-color: #fff7ef',
                                 ]),
                         ])
                         ->columns(1),
@@ -297,7 +305,7 @@ class ManageHomePageSettings extends FilamentPage
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
-                                    'style' => 'background-color: #fafafa',
+                                    'style' => 'background-color: #fff7ef',
                                 ]),
                             Select::make('project_ids')
                                 ->label('Projects')
@@ -328,7 +336,7 @@ class ManageHomePageSettings extends FilamentPage
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
-                                    'style' => 'background-color: #fafafa',
+                                    'style' => 'background-color: #fff7ef',
                                 ]),
                             Select::make('partner_logo_ids')
                                 ->label('Partner logos')
@@ -359,7 +367,7 @@ class ManageHomePageSettings extends FilamentPage
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
-                                    'style' => 'background-color: #fafafa',
+                                    'style' => 'background-color: #fff7ef',
                                 ]),
                             Select::make('news_ids')
                                 ->label('News posts')
@@ -404,6 +412,11 @@ class ManageHomePageSettings extends FilamentPage
                                     ])
                                     ->all())
                                 ->nullable(),
+                            TextInput::make('gallery_instagram_link')
+                                ->label('Instagram link')
+                                ->maxLength(2048)
+                                ->placeholder('https://www.instagram.com/yourprofile/')
+                                ->helperText('URL for the “Follow on Instagram” button next to the gallery images on the home page.'),
                         ])
                         ->columns(1),
                 ])

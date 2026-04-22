@@ -162,6 +162,8 @@
 .header .mainnav ul.main-menu {
   padding: 0px;
   margin: 0px;
+  font-feature-settings: "case" on;
+  text-transform: uppercase;
 }
 
 .header .mainnav ul.main-menu li {
@@ -177,6 +179,11 @@
 
 .header .mainnav ul.main-menu > li + li {
   margin-left: 70px;
+}
+
+/* Georgian menu labels are wider — reduce spacing in header center nav */
+html[lang="ka"] .header .header_center_part .mainnav ul.main-menu > li + li {
+  margin-left: 40px;
 }
 
 .header .mainnav ul.main-menu li a {

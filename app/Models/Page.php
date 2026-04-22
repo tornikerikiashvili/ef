@@ -12,10 +12,26 @@ class Page extends Model
     /** Single homepage row: featured service ids + localized headline (en/ka). */
     public const KEY_HOME_PAGE = 'home_page';
 
+    /** Single about page row: localized cover + body content. */
+    public const KEY_ABOUT_PAGE = 'about_page';
+
+    /** Services listing page settings. */
+    public const KEY_SERVICES_LISTING_PAGE = 'services_listing_page';
+
+    /** Projects listing page settings. */
+    public const KEY_PROJECTS_LISTING_PAGE = 'projects_listing_page';
+
+    /** News listing page settings. */
+    public const KEY_NEWS_LISTING_PAGE = 'news_listing_page';
+
     /** @var list<string> */
     public const SEED_KEYS = [
         self::KEY_CONTACT_PAGE,
         self::KEY_HOME_PAGE,
+        self::KEY_ABOUT_PAGE,
+        self::KEY_SERVICES_LISTING_PAGE,
+        self::KEY_PROJECTS_LISTING_PAGE,
+        self::KEY_NEWS_LISTING_PAGE,
     ];
 
     protected $fillable = [
@@ -69,6 +85,7 @@ class Page extends Model
             'news_section' => [],
             'show_contact_form' => false,
             'gallery_id' => null,
+            'gallery_instagram_link' => '',
         ];
         foreach ($locales as $locale) {
             $out[$locale] = [
@@ -98,6 +115,175 @@ class Page extends Model
     }
 
     /**
+     * @return array{
+     *   cover: array<string, array{title: string, background_image: string|null}>,
+     *   about_images: array{image_left: string|null, image_right: string|null},
+     *   about: array<string, array{teaser: string, description: string}>,
+     *   funfacts: array<string, array{label_1: string, value_1: int, label_2: string, value_2: int}>,
+     *   president: array{
+     *     years_experience: int,
+     *     image: string|null,
+     *     locales: array<string, array{
+     *       title: string,
+     *       items: list<array{title: string, content: string}>
+     *     }>
+     *   },
+     *   video_background_image: string|null,
+     *   video: array<string, array{url: string}>,
+     *   body: array<string, array{title: string, text: string, image: string|null, video_url: string}>
+     * }
+     */
+    public static function defaultAboutPagePayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        $out = [
+            'cover' => [],
+            'about_images' => [
+                'image_left' => null,
+                'image_right' => null,
+            ],
+            'about' => [],
+            'funfacts' => [],
+            'president' => [
+                'years_experience' => 0,
+                'image' => null,
+                'locales' => [],
+            ],
+            'video_background_image' => null,
+            'video' => [],
+            'body' => [],
+        ];
+
+        foreach ($locales as $locale) {
+            $out['cover'][$locale] = [
+                'title' => '',
+                'background_image' => null,
+            ];
+
+            $out['about'][$locale] = [
+                'teaser' => '',
+                'description' => '',
+            ];
+
+            $out['funfacts'][$locale] = [
+                'label_1' => '',
+                'value_1' => 0,
+                'label_2' => '',
+                'value_2' => 0,
+            ];
+
+            $out['president']['locales'][$locale] = [
+                'title' => '',
+                'items' => [
+                    ['title' => '', 'content' => ''],
+                    ['title' => '', 'content' => ''],
+                    ['title' => '', 'content' => ''],
+                ],
+            ];
+
+            $out['video'][$locale] = [
+                'url' => '',
+            ];
+
+            $out['body'][$locale] = [
+                'title' => '',
+                'text' => '',
+                'image' => null,
+                'video_url' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array{
+     *   cover_image: string|null,
+     *   video_background_image: string|null,
+     *   video_url: string,
+     *   services: list<int>,
+     *   locales: array<string, array{title: string, services_title: string}>
+     * }
+     */
+    public static function defaultServicesListingPagePayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        $out = [
+            'cover_image' => null,
+            'video_background_image' => null,
+            'services' => [],
+            'video' => [],
+            'locales' => [],
+        ];
+
+        foreach ($locales as $locale) {
+            $out['locales'][$locale] = [
+                'title' => '',
+                'services_title' => '',
+            ];
+            $out['video'][$locale] = [
+                'url' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array{
+     *   cover_image: string|null,
+     *   projects: list<int>,
+     *   locales: array<string, array{title: string}>
+     * }
+     */
+    public static function defaultProjectsListingPagePayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        $out = [
+            'cover_image' => null,
+            'projects' => [],
+            'locales' => [],
+        ];
+
+        foreach ($locales as $locale) {
+            $out['locales'][$locale] = [
+                'title' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array{
+     *   cover_image: string|null,
+     *   news: list<int>,
+     *   locales: array<string, array{title: string}>
+     * }
+     */
+    public static function defaultNewsListingPagePayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        $out = [
+            'cover_image' => null,
+            'news' => [],
+            'locales' => [],
+        ];
+
+        foreach ($locales as $locale) {
+            $out['locales'][$locale] = [
+                'title' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public static function defaultPayloadForKey(string $key): array
@@ -105,6 +291,10 @@ class Page extends Model
         return match ($key) {
             self::KEY_CONTACT_PAGE => self::defaultContactPayload(),
             self::KEY_HOME_PAGE => self::defaultHomePagePayload(),
+            self::KEY_ABOUT_PAGE => self::defaultAboutPagePayload(),
+            self::KEY_SERVICES_LISTING_PAGE => self::defaultServicesListingPagePayload(),
+            self::KEY_PROJECTS_LISTING_PAGE => self::defaultProjectsListingPagePayload(),
+            self::KEY_NEWS_LISTING_PAGE => self::defaultNewsListingPagePayload(),
         };
     }
 
@@ -145,6 +335,342 @@ class Page extends Model
             ['key' => self::KEY_HOME_PAGE],
             ['payload' => static::defaultHomePagePayload()]
         );
+    }
+
+    /**
+     * Ensure the `about_page` row exists.
+     */
+    public static function ensureAboutPageBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_ABOUT_PAGE],
+            ['payload' => static::defaultAboutPagePayload()]
+        );
+    }
+
+    /**
+     * Ensure the `services_listing_page` row exists.
+     */
+    public static function ensureServicesListingPageBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_SERVICES_LISTING_PAGE],
+            ['payload' => static::defaultServicesListingPagePayload()]
+        );
+    }
+
+    /**
+     * Ensure the `projects_listing_page` row exists.
+     */
+    public static function ensureProjectsListingPageBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_PROJECTS_LISTING_PAGE],
+            ['payload' => static::defaultProjectsListingPagePayload()]
+        );
+    }
+
+    /**
+     * Ensure the `news_listing_page` row exists.
+     */
+    public static function ensureNewsListingPageBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_NEWS_LISTING_PAGE],
+            ['payload' => static::defaultNewsListingPagePayload()]
+        );
+    }
+
+    /**
+     * News listing page settings for the current request locale (no cross-locale fallback).
+     *
+     * @return array{
+     *   title: string,
+     *   cover_image: string|null,
+     *   news: list<int>
+     * }
+     */
+    public static function newsListingPageContent(): array
+    {
+        static::ensureNewsListingPageBlock();
+
+        $defaults = static::defaultNewsListingPagePayload();
+        $stored = static::query()->where('key', self::KEY_NEWS_LISTING_PAGE)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['locales'] ?? []) ? $locale : 'en';
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
+        $base = $localesDefaults[$baseLocale] ?? ['title' => ''];
+        $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
+        $row = array_merge($base, $localized);
+
+        $cover = $merged['cover_image'] ?? null;
+        if (is_array($cover)) {
+            $cover = $cover[0] ?? null;
+        }
+        $cover = filled($cover) ? (string) $cover : null;
+
+        $news = $merged['news'] ?? [];
+        $newsIds = array_values(array_unique(array_filter(array_map('intval', is_array($news) ? $news : []))));
+
+        return [
+            'title' => (string) ($row['title'] ?? ''),
+            'cover_image' => $cover,
+            'news' => $newsIds,
+        ];
+    }
+
+    /**
+     * Projects listing page settings for the current request locale (no cross-locale fallback).
+     *
+     * @return array{
+     *   title: string,
+     *   cover_image: string|null,
+     *   projects: list<int>
+     * }
+     */
+    public static function projectsListingPageContent(): array
+    {
+        static::ensureProjectsListingPageBlock();
+
+        $defaults = static::defaultProjectsListingPagePayload();
+        $stored = static::query()->where('key', self::KEY_PROJECTS_LISTING_PAGE)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['locales'] ?? []) ? $locale : 'en';
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
+        $base = $localesDefaults[$baseLocale] ?? ['title' => ''];
+        $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
+        $row = array_merge($base, $localized);
+
+        $cover = $merged['cover_image'] ?? null;
+        if (is_array($cover)) {
+            $cover = $cover[0] ?? null;
+        }
+        $cover = filled($cover) ? (string) $cover : null;
+
+        $projects = $merged['projects'] ?? [];
+        $projectIds = array_values(array_unique(array_filter(array_map('intval', is_array($projects) ? $projects : []))));
+
+        return [
+            'title' => (string) ($row['title'] ?? ''),
+            'cover_image' => $cover,
+            'projects' => $projectIds,
+        ];
+    }
+
+    /**
+     * Services listing page settings for the current request locale (no cross-locale fallback).
+     *
+     * @return array{
+     *   title: string,
+     *   services_title: string,
+     *   cover_image: string|null,
+     *   video_background_image: string|null,
+     *   video_url: string,
+     *   services: list<int>
+     * }
+     */
+    public static function servicesListingPageContent(): array
+    {
+        static::ensureServicesListingPageBlock();
+
+        $defaults = static::defaultServicesListingPagePayload();
+        $stored = static::query()->where('key', self::KEY_SERVICES_LISTING_PAGE)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['locales'] ?? []) ? $locale : 'en';
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
+        $base = $localesDefaults[$baseLocale] ?? ['title' => '', 'services_title' => ''];
+        $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
+        $row = array_merge($base, $localized);
+
+        $videoDefaults = is_array($defaults['video'] ?? null) ? $defaults['video'] : [];
+        $videoStored = is_array($merged['video'] ?? null) ? $merged['video'] : [];
+        $videoBase = $videoDefaults[$baseLocale] ?? ['url' => ''];
+        $videoLocalized = is_array($videoStored[$baseLocale] ?? null) ? $videoStored[$baseLocale] : [];
+        $videoRow = array_merge($videoBase, $videoLocalized);
+
+        $cover = $merged['cover_image'] ?? null;
+        if (is_array($cover)) {
+            $cover = $cover[0] ?? null;
+        }
+        $cover = filled($cover) ? (string) $cover : null;
+
+        $videoBg = $merged['video_background_image'] ?? null;
+        if (is_array($videoBg)) {
+            $videoBg = $videoBg[0] ?? null;
+        }
+        $videoBg = filled($videoBg) ? (string) $videoBg : null;
+
+        $services = $merged['services'] ?? [];
+        $serviceIds = array_values(array_unique(array_filter(array_map('intval', is_array($services) ? $services : []))));
+
+        return [
+            'title' => (string) ($row['title'] ?? ''),
+            'services_title' => (string) ($row['services_title'] ?? ''),
+            'cover_image' => $cover,
+            'video_background_image' => $videoBg,
+            'video_url' => (string) ($videoRow['url'] ?? ''),
+            'services' => $serviceIds,
+        ];
+    }
+
+    /**
+     * About page content for the current request locale (no cross-locale fallback).
+     *
+     * @return array{
+     *   cover: array{title: string, background_image: string|null},
+     *   about: array{teaser: string, description: string, image_left: string|null, image_right: string|null},
+     *   funfacts: array{label_1: string, value_1: int, label_2: string, value_2: int},
+     *   president: array{title: string, years_experience: int, image: string|null, items: list<array{title: string, content: string}>},
+     *   video_background_image: string|null,
+     *   video: array{url: string},
+     *   body: array{title: string, text: string, image: string|null, video_url: string}
+     * }
+     */
+    public static function aboutPageContent(): array
+    {
+        static::ensureAboutPageBlock();
+
+        $defaults = static::defaultAboutPagePayload();
+        $stored = static::query()->where('key', self::KEY_ABOUT_PAGE)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['cover'] ?? []) ? $locale : 'en';
+
+        $coverDefaults = is_array($defaults['cover'] ?? null) ? $defaults['cover'] : [];
+        $coverStored = is_array($merged['cover'] ?? null) ? $merged['cover'] : [];
+        $coverBase = $coverDefaults[$baseLocale] ?? ['title' => '', 'background_image' => null];
+        $coverLocalized = is_array($coverStored[$baseLocale] ?? null) ? $coverStored[$baseLocale] : [];
+        $coverRow = array_merge($coverBase, $coverLocalized);
+
+        $aboutDefaults = is_array($defaults['about'] ?? null) ? $defaults['about'] : [];
+        $aboutStored = is_array($merged['about'] ?? null) ? $merged['about'] : [];
+        $aboutBase = $aboutDefaults[$baseLocale] ?? ['teaser' => '', 'description' => ''];
+        $aboutLocalized = is_array($aboutStored[$baseLocale] ?? null) ? $aboutStored[$baseLocale] : [];
+        $aboutRow = array_merge($aboutBase, $aboutLocalized);
+
+        $aboutImagesStored = is_array($merged['about_images'] ?? null) ? $merged['about_images'] : [];
+        $aboutImageLeft = $aboutImagesStored['image_left'] ?? null;
+        if (is_array($aboutImageLeft)) {
+            $aboutImageLeft = $aboutImageLeft[0] ?? null;
+        }
+        $aboutImageLeft = filled($aboutImageLeft) ? (string) $aboutImageLeft : null;
+
+        $aboutImageRight = $aboutImagesStored['image_right'] ?? null;
+        if (is_array($aboutImageRight)) {
+            $aboutImageRight = $aboutImageRight[0] ?? null;
+        }
+        $aboutImageRight = filled($aboutImageRight) ? (string) $aboutImageRight : null;
+
+        $funfactsDefaults = is_array($defaults['funfacts'] ?? null) ? $defaults['funfacts'] : [];
+        $funfactsStored = is_array($merged['funfacts'] ?? null) ? $merged['funfacts'] : [];
+        $funfactsBase = $funfactsDefaults[$baseLocale] ?? ['label_1' => '', 'value_1' => 0, 'label_2' => '', 'value_2' => 0];
+        $funfactsLocalized = is_array($funfactsStored[$baseLocale] ?? null) ? $funfactsStored[$baseLocale] : [];
+        $funfactsRow = array_merge($funfactsBase, $funfactsLocalized);
+
+        $presidentStored = is_array($merged['president'] ?? null) ? $merged['president'] : [];
+        $presYears = (int) ($presidentStored['years_experience'] ?? 0);
+        if ($presYears < 0) {
+            $presYears = 0;
+        }
+        $presImage = $presidentStored['image'] ?? null;
+        if (is_array($presImage)) {
+            $presImage = $presImage[0] ?? null;
+        }
+        $presImage = filled($presImage) ? (string) $presImage : null;
+
+        $presLocalesDefaults = is_array(($defaults['president']['locales'] ?? null)) ? $defaults['president']['locales'] : [];
+        $presLocalesStored = is_array(($presidentStored['locales'] ?? null)) ? $presidentStored['locales'] : [];
+        $presBase = $presLocalesDefaults[$baseLocale] ?? ['title' => '', 'items' => []];
+        $presLocalized = is_array($presLocalesStored[$baseLocale] ?? null) ? $presLocalesStored[$baseLocale] : [];
+        $presRow = array_merge($presBase, $presLocalized);
+
+        $presItemsRaw = is_array($presRow['items'] ?? null) ? $presRow['items'] : [];
+        $presItems = [];
+        foreach ($presItemsRaw as $item) {
+            $item = is_array($item) ? $item : [];
+            $presItems[] = [
+                'title' => isset($item['title']) ? (string) $item['title'] : '',
+                'content' => isset($item['content']) ? (string) $item['content'] : '',
+            ];
+        }
+
+        $videoDefaults = is_array($defaults['video'] ?? null) ? $defaults['video'] : [];
+        $videoStored = is_array($merged['video'] ?? null) ? $merged['video'] : [];
+        $videoBase = $videoDefaults[$baseLocale] ?? ['url' => ''];
+        $videoLocalized = is_array($videoStored[$baseLocale] ?? null) ? $videoStored[$baseLocale] : [];
+        $videoRow = array_merge($videoBase, $videoLocalized);
+
+        $videoBg = $merged['video_background_image'] ?? null;
+        if (is_array($videoBg)) {
+            $videoBg = $videoBg[0] ?? null;
+        }
+        $videoBg = filled($videoBg) ? (string) $videoBg : null;
+
+        $bodyDefaults = is_array($defaults['body'] ?? null) ? $defaults['body'] : [];
+        $bodyStored = is_array($merged['body'] ?? null) ? $merged['body'] : [];
+        $bodyBase = $bodyDefaults[$baseLocale] ?? ['title' => '', 'text' => '', 'image' => null, 'video_url' => ''];
+        $bodyLocalized = is_array($bodyStored[$baseLocale] ?? null) ? $bodyStored[$baseLocale] : [];
+        $bodyRow = array_merge($bodyBase, $bodyLocalized);
+
+        $bg = $coverRow['background_image'] ?? null;
+        if (is_array($bg)) {
+            $bg = $bg[0] ?? null;
+        }
+        $bg = filled($bg) ? (string) $bg : null;
+
+        $img = $bodyRow['image'] ?? null;
+        if (is_array($img)) {
+            $img = $img[0] ?? null;
+        }
+        $img = filled($img) ? (string) $img : null;
+
+        return [
+            'cover' => [
+                'title' => (string) ($coverRow['title'] ?? ''),
+                'background_image' => $bg,
+            ],
+            'about' => [
+                'teaser' => (string) ($aboutRow['teaser'] ?? ''),
+                'description' => (string) ($aboutRow['description'] ?? ''),
+                'image_left' => $aboutImageLeft,
+                'image_right' => $aboutImageRight,
+            ],
+            'funfacts' => [
+                'label_1' => (string) ($funfactsRow['label_1'] ?? ''),
+                'value_1' => (int) ($funfactsRow['value_1'] ?? 0),
+                'label_2' => (string) ($funfactsRow['label_2'] ?? ''),
+                'value_2' => (int) ($funfactsRow['value_2'] ?? 0),
+            ],
+            'president' => [
+                'title' => (string) ($presRow['title'] ?? ''),
+                'years_experience' => $presYears,
+                'image' => $presImage,
+                'items' => $presItems,
+            ],
+            'video' => [
+                'url' => (string) ($videoRow['url'] ?? ''),
+            ],
+            'video_background_image' => $videoBg,
+            'body' => [
+                'title' => (string) ($bodyRow['title'] ?? ''),
+                'text' => (string) ($bodyRow['text'] ?? ''),
+                'image' => $img,
+                'video_url' => (string) ($bodyRow['video_url'] ?? ''),
+            ],
+        ];
     }
 
     /**
@@ -292,6 +818,7 @@ class Page extends Model
             'news_ids' => $newsIds,
             'show_contact_form' => $showContactForm,
             'gallery_id' => $galleryId,
+            'gallery_instagram_link' => (string) ($merged['gallery_instagram_link'] ?? ''),
             'gallery' => $galleryPayload,
         ];
     }

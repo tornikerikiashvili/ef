@@ -6,16 +6,80 @@
 @section('content')
 
     <!-- Page Header -->
+    @php
+        $coverTitle = data_get($aboutPage ?? [], 'cover.title');
+        $coverTitle = filled($coverTitle) ? (string) $coverTitle : 'About Us';
+
+        $coverImage = data_get($aboutPage ?? [], 'cover.background_image');
+        $coverImageUrl = filled($coverImage)
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($coverImage)
+            : asset('assets/img/background/page-header-bg-4.jpg');
+    @endphp
     <div class="wptb-page-heading">
-        <div class="wptb-item--inner" style="background-image: url('../assets/img/background/page-header-bg-4.jpg');">
+        <div class="wptb-item--inner" style="background-image: url('{{ $coverImageUrl }}');">
             <div class="wptb-item-layer wptb-item-layer-one">
                 <img src="../assets/img/more/circle.png" alt="img">
             </div>
-            <h2 class="wptb-item--title">About Us</h2>
+            <h2 class="wptb-item--title">{{ $coverTitle }}</h2>
         </div>
     </div>
 
     <!-- About Kimono -->
+    @php
+        $aboutTeaser = data_get($aboutPage ?? [], 'about.teaser');
+        $aboutTeaser = filled($aboutTeaser)
+            ? (string) $aboutTeaser
+            : 'Kimono photography Agency runs wide and deep. Across many markets, geographies & typologies, our team members';
+
+        $aboutDescription = data_get($aboutPage ?? [], 'about.description');
+        $aboutDescription = filled($aboutDescription)
+            ? (string) $aboutDescription
+            : 'The talent at kimono runs wide range of services. Across many markets, geographies & typologies, our team members are some of the finest people of  photographers in the industry wide and deep. From Across many markets, geographies & boundaries. Hire Kimono in your event.';
+
+        $aboutImageLeft = data_get($aboutPage ?? [], 'about.image_left');
+        $aboutImageLeftUrl = filled($aboutImageLeft)
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutImageLeft)
+            : asset('assets/img/more/1.jpg');
+
+        $aboutImageRight = data_get($aboutPage ?? [], 'about.image_right');
+        $aboutImageRightUrl = filled($aboutImageRight)
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutImageRight)
+            : asset('assets/img/more/2.jpg');
+
+        $funfactLabel1 = data_get($aboutPage ?? [], 'funfacts.label_1');
+        $funfactLabel1 = filled($funfactLabel1) ? (string) $funfactLabel1 : 'Customer Satisfaction';
+
+        $funfactValue1 = data_get($aboutPage ?? [], 'funfacts.value_1');
+        $funfactValue1 = is_numeric($funfactValue1) ? (int) $funfactValue1 : 100;
+
+        $funfactLabel2 = data_get($aboutPage ?? [], 'funfacts.label_2');
+        $funfactLabel2 = filled($funfactLabel2) ? (string) $funfactLabel2 : 'Projects Done';
+
+        $funfactValue2 = data_get($aboutPage ?? [], 'funfacts.value_2');
+        $funfactValue2 = is_numeric($funfactValue2) ? (int) $funfactValue2 : 350;
+
+        $presidentTitle = data_get($aboutPage ?? [], 'president.title');
+        $presidentTitle = filled($presidentTitle) ? (string) $presidentTitle : 'Why Choose Us';
+
+        $presidentYears = data_get($aboutPage ?? [], 'president.years_experience');
+        $presidentYears = is_numeric($presidentYears) ? max(0, (int) $presidentYears) : 15;
+
+        $presidentImage = data_get($aboutPage ?? [], 'president.image');
+        $presidentImageUrl = filled($presidentImage)
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($presidentImage)
+            : asset('assets/img/more/3.png');
+
+        $presidentItems = data_get($aboutPage ?? [], 'president.items', []);
+        $presidentItems = is_array($presidentItems) ? $presidentItems : [];
+
+        $aboutVideoUrl = data_get($aboutPage ?? [], 'video.url');
+        $aboutVideoUrl = filled($aboutVideoUrl) ? (string) $aboutVideoUrl : 'https://www.youtube.com/watch?v=SF4aHwxHtZ0';
+
+        $aboutVideoBg = data_get($aboutPage ?? [], 'video_background_image');
+        $aboutVideoBgUrl = filled($aboutVideoBg)
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutVideoBg)
+            : asset('assets/img/background/bg-7.jpg');
+    @endphp
     <section class="wptb-about-one bg-image-2" style="background-image: url('../assets/img/more/texture.png');">
         <div class="container">
 
@@ -26,7 +90,7 @@
                             <div class="wptb-image-single wow fadeInUp">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--image">
-                                        <img src="../assets/img/more/1.jpg" alt="img">
+                                        <img src="{{ $aboutImageLeftUrl }}" alt="img">
                                     </div>
                                 </div>
                             </div>
@@ -34,8 +98,8 @@
 
                         <div class="col-md-6 ps-md-0 mt-5">
                             <div class="wptb-about--text">
-                                <p class="wptb-about--text-one mb-4">Kimono photography Agency runs wide and deep. Across many markets, geographies & typologies, our team members</p>
-                                <p>The talent at kimono runs wide range of services. Across many markets, geographies & typologies, our team members are some of the finest people of  photographers in the industry wide and deep. From Across many markets, geographies & boundaries. Hire Kimono in your event.</p>
+                                <p class="about_teaser wptb-about--text-one mb-4">{{ $aboutTeaser }}</p>
+                                <div class="about_description">{!! $aboutDescription !!}</div>
                             </div>
                         </div>
                     </div>
@@ -45,8 +109,8 @@
                             <div class="wptb-counter1 style1 pd-right-60 wow skewIn">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--holder d-flex align-items-center">
-                                        <div class="wptb-item--value"><span class="odometer" data-count="100"></span><span class="suffix">%</span></div>
-                                        <div class="wptb-item--text">Customer Satisfaction</div>
+                                        <div class="wptb-item--value"><span class="odometer" data-count="{{ $funfactValue1 }}"></span><span class="suffix">%</span></div>
+                                        <div class="wptb-item--text">{{ $funfactLabel1 }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -56,8 +120,8 @@
                             <div class="wptb-counter1 style1 pd-right-60 wow skewIn">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--holder d-flex align-items-center">
-                                        <div class="wptb-item--value flex-shrink-0"><span class="odometer" data-count="350"></span><span class="suffix">+</span></div>
-                                        <div class="wptb-item--text">Photography Session</div>
+                                        <div class="wptb-item--value flex-shrink-0"><span class="odometer" data-count="{{ $funfactValue2 }}"></span><span class="suffix">+</span></div>
+                                        <div class="wptb-item--text">{{ $funfactLabel2 }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -69,7 +133,7 @@
                     <div class="wptb-image-single wow fadeInUp">
                         <div class="wptb-item--inner">
                             <div class="wptb-item--image">
-                                <img src="../assets/img/more/2.jpg" alt="img">
+                                <img src="{{ $aboutImageRightUrl }}" alt="img">
                             </div>
                         </div>
                     </div>
@@ -90,35 +154,36 @@
                 <div class="col-lg-6">
                     <div class="wptb-heading">
                         <div class="wptb-item--inner">
-                            <h1 class="wptb-item--title mb-lg-0">Why Choose Us</h1>
+                            <h1 class="wptb-item--title mb-lg-0">{{ $presidentTitle }}</h1>
                         </div>
                     </div>
 
                     <div class="wptb-accordion wptb-accordion2 wow fadeInUp">
-                        <div class="wptb--item active">
-                            <h6 class="wptb-item-title"><span>Kimono Missions</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
-                            <div class="wptb-item--content">
-                                Our business consulting programs helps to break the performance of your business down into customers and product groups so you know exactly which customers or product groups are working.
+                        @if (count($presidentItems))
+                            @foreach ($presidentItems as $idx => $item)
+                                @php
+                                    $itemTitle = is_array($item) ? (string) ($item['title'] ?? '') : '';
+                                    $itemContent = is_array($item) ? (string) ($item['content'] ?? '') : '';
+                                @endphp
+                                <div class="wptb--item {{ $idx === 0 ? 'active' : '' }}">
+                                    <h6 class="wptb-item-title"><span>{{ $itemTitle }}</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
+                                    <div class="wptb-item--content">
+                                        {{ $itemContent }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="wptb--item active">
+                                <h6 class="wptb-item-title"><span>Kimono Missions</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
+                                <div class="wptb-item--content">
+                                    Our business consulting programs helps to break the performance of your business down into customers and product groups so you know exactly which customers or product groups are working.
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="wptb--item">
-                            <h6 class="wptb-item-title"><span>Kimono Photography Features</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
-                            <div class="wptb-item--content">
-                                Our business consulting programs helps to break the performance of your business down into customers and product groups so you know exactly which customers or product groups are working.
-                            </div>
-                        </div>
-
-                        <div class="wptb--item">
-                            <h6 class="wptb-item-title"><span>Why We are Best Photographers</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
-                            <div class="wptb-item--content">
-                                Our business consulting programs helps to break the performance of your business down into customers and product groups so you know exactly which customers or product groups are working.
-                            </div>
-                        </div>
+                        @endif
                     </div>
 
                     <div class="wptb-agency-experience--item text-white">
-                        <span>15+</span> Years Experience
+                        <span>{{ $presidentYears }}+</span> {{ __('messages.years_experience') }}
                     </div>
                 </div>
 
@@ -126,7 +191,7 @@
                     <div class="wptb-image-single wow fadeInUp">
                         <div class="wptb-item--inner">
                             <div class="wptb-item--image">
-                                <img src="../assets/img/more/3.png" alt="img">
+                                <img src="{{ $presidentImageUrl }}" alt="img">
                             </div>
                         </div>
                     </div>
@@ -137,12 +202,12 @@
 
 
     <!-- BG Video -->
-    <div class="container">
-        <div class="wptb-video-player1 wow zoomIn" style="background-image: url('../assets/img/background/bg-7.jpg');">
+    <div class="container mr-top-100" >
+        <div class="wptb-video-player1 wow zoomIn" style="background-image: url('{{ $aboutVideoBgUrl }}');">
             <div class="wptb-item--inner">
                 <div class="wptb-item--holder">
                     <div class="wptb-item--video-button">
-                        <a class="btn" data-fancybox href="https://www.youtube.com/watch?v=SF4aHwxHtZ0">
+                        <a class="btn" data-fancybox href="{{ $aboutVideoUrl }}">
                             <span class="text-second"> <i class="bi bi-play-fill"></i> </span>
                             <span class="line-video-animation line-video-1"></span>
                             <span class="line-video-animation line-video-2"></span>
@@ -161,9 +226,8 @@
     <div class="divider-line-hr mr-top-100"></div>
 
 
-
     <!-- Awards -->
-    <section class="bg-dark-200 pd-bottom-80">
+    {{-- <section class="bg-dark-200 pd-bottom-80">
         <div class="container">
             <div class="wptb-heading">
                 <div class="wptb-item--inner">
@@ -226,6 +290,6 @@
                 </li>
             </ol>
         </div>
-    </section>
+    </section> --}}
 
 @endsection

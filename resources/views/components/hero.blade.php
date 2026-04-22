@@ -70,7 +70,7 @@
         </div>
     </div>
     <div class="wptb-left-pane justify-content-center">
-        <div class="logo"><h6>Our Works</h6></div>
+        <div class="logo"><h6>{{ __('messages.nav.services') }}</h6></div>
     </div>
     <div class="wptb-right-pane">
         <div class="social-box style-oval">
@@ -84,10 +84,28 @@
     <div class="wptb-bottom-pane justify-content-center">
         <div class="wptb-swiper-dots style2"><div class="swiper-pagination"></div></div>
         <div class="wptb-swiper-navigation style3">
-            <div class="wptb-swiper-arrow swiper-button-prev"></div>
-            <div class="wptb-swiper-arrow swiper-button-next"></div>
+            <div
+                class="wptb-swiper-arrow swiper-button-prev"
+                aria-label="{{ __('messages.hero.slider_prev') }}"
+            ></div>
+            <div
+                class="wptb-swiper-arrow swiper-button-next"
+                aria-label="{{ __('messages.hero.slider_next') }}"
+            ></div>
         </div>
     </div>
+    @once
+        @push('styles')
+            <style>
+                .wptb-slider.style16 .wptb-swiper-navigation.style3 .swiper-button-prev:after {
+                    content: {!! json_encode(__('messages.hero.slider_prev_short'), JSON_UNESCAPED_UNICODE) !!};
+                }
+                .wptb-slider.style16 .wptb-swiper-navigation.style3 .swiper-button-next:after {
+                    content: {!! json_encode(__('messages.hero.slider_next_short'), JSON_UNESCAPED_UNICODE) !!};
+                }
+            </style>
+        @endpush
+    @endonce
     <div class="grid_lines">
         @for ($i = 0; $i < 7; $i++) <div class="grid_line"></div> @endfor
     </div>

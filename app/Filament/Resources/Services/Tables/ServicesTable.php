@@ -18,13 +18,6 @@ class ServicesTable
             ->columns([
                 TextColumn::make('title')
                     ->searchable(),
-                IconColumn::make('is_featured_in_hero')
-                    ->label('In hero')
-                    ->boolean(),
-                TextColumn::make('hero_order')
-                    ->label('Hero order')
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

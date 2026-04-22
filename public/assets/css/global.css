@@ -4,6 +4,7 @@
     --font-family-base: "Sora", sans-serif;
     --font-family-two: "Playfair Display", serif;
     --font-family-three: "DM Sans", sans-serif;
+    --font-family-firago: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif;
 
     /* Font Weight */
     --fw-lighter:         lighter;
@@ -311,6 +312,16 @@ html[lang="ka"] {
     --font-family-three: "Noto Sans Georgian", "DM Sans", sans-serif;
 }
 
+/*
+  Optional font toggle for quick testing.
+  Add `class="font-firago"` on <html> or <body>.
+*/
+html.font-firago,
+body.font-firago {
+    --font-family-base: var(--font-family-firago);
+    --font-family-three: var(--font-family-firago);
+}
+
 html[lang="ka"] .wptb-single--image .wptb-team-ci-wrap .team-ci-content .team-ci-title,
 html[lang="ka"] .wptb-single--image .wptb-team-ci-wrap .team-ci-content .team-ci-desc {
     font-family: var(--font-family-base);
@@ -346,8 +357,8 @@ html {
     overflow-x: hidden;
 }
 body {
+    font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
     position: relative;
-    font-family: var(--font-family-base);
     font-size: var(--fs-16);
     font-weight: var(--fw-light);
     line-height: var(--fs-28);
@@ -412,7 +423,7 @@ body:has(.sidebar) {
     }
 }
 
-body.about, body.services, body.news {
+body.route-about, body.route-services, body.route-news, body.route-services-show, body.route-projects-show {
     background: #C0C6AF;
 }
 
@@ -785,7 +796,8 @@ input[type="submit"],
     font-size: var(--fs-14);
     font-weight: var(--fw-medium);
     line-height: var(--fs-21);
-    text-transform: capitalize;
+    font-feature-settings: "case" on;
+    text-transform: uppercase;
     color: var(--color-white-fixed);
     background: var(--color-one);
     border-width: 0px;
@@ -800,6 +812,23 @@ input[type="submit"],
     -webkit-transition: var(--transition-base);
     transition: var(--transition-base);
 }
+
+
+body {
+    font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
+}
+
+.service_item_title {
+    font-feature-settings: "case" on;
+    text-transform: uppercase;
+}
+/* Case feature + uppercase on all native buttons (no .btn layout) */
+.btn, .wptb-item--link, .wptb-swiper-navigation.style3 .wptb-swiper-arrow:after {
+    font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
+    font-feature-settings: "case" on;
+    text-transform: uppercase;
+}
+
 .btn > * {
     z-index: 1;
 }
@@ -1092,6 +1121,7 @@ input[type="submit"]:hover {
     font-size: var(--fs-16);
     font-weight: var(--fw-medium);
     line-height: var(--fs-28);
+    font-feature-settings: "case" on;
     text-transform: uppercase;
     color: var(--color-white);
     background: var(--color-one);

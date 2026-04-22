@@ -272,42 +272,42 @@
   .gutter-40 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-45 {
     margin: 0px -30px;
   }
   .gutter-45 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-50 {
     margin: 0px -30px;
   }
   .gutter-50 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-55 {
     margin: 0px -45px;
   }
   .gutter-55 .grid-item {
     padding: 45px;
   }
-  
+
   .gutter-60 {
     margin: 0px -45px;
   }
   .gutter-60 .grid-item {
     padding: 45px;
   }
-  
+
   .gutter-90 {
     margin: 0px -70px;
   }
   .gutter-90 .grid-item {
     padding: 70px;
   }
-  
+
   .gutter-100 {
     margin: 0px -70px;
   }
@@ -323,42 +323,42 @@
   .gutter-40 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-45 {
     margin: 0px -30px;
   }
   .gutter-45 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-50 {
     margin: 0px -30px;
   }
   .gutter-50 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-55 {
     margin: 0px -30px;
   }
   .gutter-55 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-60 {
     margin: 0px -30px;
   }
   .gutter-60 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-90 {
     margin: 0px -50px;
   }
   .gutter-90 .grid-item {
     padding: 50px;
   }
-  
+
   .gutter-100 {
     margin: 0px -50px;
   }
@@ -374,42 +374,42 @@
   .gutter-40 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-45 {
     margin: 0px -30px;
   }
   .gutter-45 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-50 {
     margin: 0px -30px;
   }
   .gutter-50 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-55 {
     margin: 0px -30px;
   }
   .gutter-55 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-60 {
     margin: 0px -30px;
   }
   .gutter-60 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-90 {
     margin: 0px -30px;
   }
   .gutter-90 .grid-item {
     padding: 30px;
   }
-  
+
   .gutter-100 {
     margin: 0px -30px;
   }
@@ -638,7 +638,7 @@
   padding: 40px;
   margin-top: 0px;
   text-align: left;
-  background: var(--gradient-one-180);
+  background: linear-gradient(0deg, rgba(39, 39, 39, 0.72), transparent);
   transition: var(--transition-base);
 }
 .effect-gradient .grid-item:hover .wptb-item--holder {
@@ -688,6 +688,23 @@
 .effect-gradient .grid-item:hover .wptb-item--link {
   transform: translateX(0px);
   opacity: 1;
+}
+
+/* Services listing: keep arrow visible by default */
+.services-listing .effect-gradient .grid-item .wptb-item--link {
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+/* Services listing: on mobile, keep title + gradient visible */
+@media (max-width: 767px) {
+  .services-listing .effect-gradient .grid-item .wptb-item--holder {
+    bottom: 0%;
+  }
+  .services-listing .effect-gradient .grid-item .wptb-item--meta h4 {
+    transform: translateY(0px);
+    opacity: 1;
+  }
 }
 
 

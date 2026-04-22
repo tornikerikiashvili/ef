@@ -1,5 +1,6 @@
 @props([
     'projects' => collect(),
+    'sectionTitle' => '',
 ])
 @push('styles')
 <style>
@@ -47,8 +48,11 @@
         <div class="wptb-project--inner">
             <div class="wptb-heading">
                 <div class="wptb-item--inner text-center">
-                    <h6 class="wptb-item--subtitle"> Our Portfolio</h6>
-                    <h1 class="wptb-item--title">We capture <span>All of Your</span> <br> beautiful memories</h1>
+                    @if (filled($sectionTitle))
+                        <h1 class="wptb-item--title">{{ $sectionTitle }}</h1>
+                    @else
+                        <h1 class="wptb-item--title">We capture <span>All of Your</span> <br> beautiful memories</h1>
+                    @endif
                 </div>
             </div>
             <div class="style-masonry effect-tilt">
@@ -106,8 +110,8 @@
             <div class="wptb-item--button text-center mt-5">
                 <a class="btn btn-three w-100 text-uppercase" href="{{ route('projects') }}">
                     <span class="btn-wrap">
-                        <span class="text-first">Discover All Projects</span>
-                        <span class="text-second">Discover All Projects</span>
+                        <span class="text-first">{{ __('messages.projects.discover_all') }}</span>
+                        <span class="text-second">{{ __('messages.projects.discover_all') }}</span>
                     </span>
                 </a>
             </div>

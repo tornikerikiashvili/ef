@@ -4,43 +4,95 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\News;
+use App\Models\Page;
 use App\Models\PartnerLogo;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
     public function home()
     {
-        $featuredServices = Service::featuredInHero()
-            ->orderBy('hero_order')
-            ->get();
+        $homePage = Page::homePageContent();
 
-        $featuredProjects = Project::featured()
-            ->orderBy('featured_order')
-            ->get();
+        $featuredServices = Page::orderedServices($homePage['ids']);
+        if ($featuredServices->isEmpty()) {
+            $featuredServices = Service::featuredInHero()
+                ->orderBy('hero_order')
+                ->get();
+        }
 
-        $featuredNews = News::featured()
-            ->orderBy('featured_order')
-            ->get();
+        $featuredProjects = Page::orderedProjects($homePage['project_ids']);
+        if ($featuredProjects->isEmpty()) {
+            $featuredProjects = Project::featured()
+                ->orderBy('featured_order')
+                ->get();
+        }
 
-        $partnerLogos = PartnerLogo::orderBy('id')->get();
+        $featuredNews = Page::orderedNews($homePage['news_ids']);
+        if ($featuredNews->isEmpty()) {
+            $featuredNews = News::featured()
+                ->orderBy('featured_order')
+                ->get();
+        }
 
-        return view('pages.home', compact('featuredServices', 'featuredProjects', 'featuredNews', 'partnerLogos'));
+        $partnerLogos = Page::orderedPartnerLogos($homePage['partner_logo_ids']);
+        if ($partnerLogos->isEmpty()) {
+            $partnerLogos = PartnerLogo::orderBy('id')->get();
+        }
+
+        return view('pages.home', compact('featuredServices', 'featuredProjects', 'featuredNews', 'partnerLogos', 'homePage'));
     }
 
     public function about()
     {
-        return view('pages.about');
+        $aboutPage = Page::aboutPageContent();
+
+        return view('pages.about', compact('aboutPage'));
     }
 
     public function services()
     {
-        $services = Service::orderBy('created_at', 'desc')->get();
-        $servicesPageCover = SiteSetting::getValue('services_page_cover');
+        $settings = Page::servicesListingPageContent();
 
-        return view('pages.services', compact('services', 'servicesPageCover'));
+        $services = Page::orderedServices($settings['services']);
+        if ($services->isEmpty()) {
+            $services = Service::orderBy('created_at', 'desc')->get();
+        }
+
+        $fallbackCover = SiteSetting::getValue('services_page_cover');
+        $fallbackCover = is_array($fallbackCover) ? (reset($fallbackCover) ?: null) : $fallbackCover;
+
+        $headerBg = $settings['cover_image']
+            ? Storage::disk('public')->url($settings['cover_image'])
+            : ($fallbackCover ? Storage::disk('public')->url($fallbackCover) : asset('assets/img/background/page-header-bg-8.jpg'));
+
+        $serviceCover = fn (Service $service): string => $service->cover_photo
+            ? Storage::disk('public')->url($service->cover_photo)
+            : asset('assets/img/projects/3/1.jpg');
+
+        $servicesPageTitle = $settings['title'];
+        $servicesListTitle = $settings['services_title'];
+
+        $servicesVideoBg = $settings['video_background_image']
+            ? Storage::disk('public')->url($settings['video_background_image'])
+            : asset('assets/img/background/bg-7.jpg');
+
+        $servicesVideoUrl = filled($settings['video_url'])
+            ? $settings['video_url']
+            : 'https://www.youtube.com/watch?v=SF4aHwxHtZ0';
+
+        return view('pages.services', compact(
+            'services',
+            'headerBg',
+            'serviceCover',
+            'servicesPageTitle',
+            'servicesListTitle',
+            'servicesVideoBg',
+            'servicesVideoUrl',
+        ));
     }
 
     public function serviceSingle(string $locale, string $slug)
@@ -68,10 +120,28 @@ class PageController extends Controller
 
     public function projects()
     {
-        $projects = Project::with('category')->orderBy('created_at', 'desc')->get();
+        $settings = Page::projectsListingPageContent();
+
+        $projects = Page::orderedProjects($settings['projects']);
+        if ($projects->isEmpty()) {
+            $projects = Project::with('category')->orderBy('created_at', 'desc')->get();
+        } else {
+            // Ensure the category relation exists for filters/classes.
+            $projects->load('category');
+        }
+
         $categories = Category::orderBy('name')->get();
 
-        return view('pages.projects', compact('projects', 'categories'));
+        $fallbackCover = SiteSetting::getValue('projects_page_cover');
+        $fallbackCover = is_array($fallbackCover) ? (reset($fallbackCover) ?: null) : $fallbackCover;
+
+        $headerBg = $settings['cover_image']
+            ? Storage::disk('public')->url($settings['cover_image'])
+            : ($fallbackCover ? Storage::disk('public')->url($fallbackCover) : asset('assets/img/background/page-header-bg-8.jpg'));
+
+        $projectsPageTitle = $settings['title'];
+
+        return view('pages.projects', compact('projects', 'categories', 'headerBg', 'projectsPageTitle'));
     }
 
     public function projectSingle(string $locale, string $slug)
@@ -102,10 +172,25 @@ class PageController extends Controller
 
     public function news()
     {
-        $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
-        $newsPageCover = SiteSetting::getValue('news_page_cover');
+        $settings = Page::newsListingPageContent();
 
-        return view('pages.news', compact('news', 'newsPageCover'));
+        $news = Page::orderedNews($settings['news']);
+        if ($news->isEmpty()) {
+            $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+        } else {
+            $news->load('newsCategory');
+        }
+
+        $fallbackCover = SiteSetting::getValue('news_page_cover');
+        $fallbackCover = is_array($fallbackCover) ? (reset($fallbackCover) ?: null) : $fallbackCover;
+
+        $headerBg = $settings['cover_image']
+            ? Storage::disk('public')->url($settings['cover_image'])
+            : ($fallbackCover ? Storage::disk('public')->url($fallbackCover) : asset('assets/img/background/page-header-bg-8.jpg'));
+
+        $newsPageTitle = $settings['title'];
+
+        return view('pages.news', compact('news', 'headerBg', 'newsPageTitle'));
     }
 
     public function newsSingle(string $locale, string $slug)

@@ -21,15 +21,15 @@
                             <div class="logo mr-bottom-55">
                                 <a href="{{ route('home') }}"><img src="{{ asset('assets/img/footerlogo.svg') }}" alt="logo"></a>
                             </div>
-                            <h6 class="widget-title">Sign up for all the latest news and offers</h6>
+                            <h6 class="widget-title">{{ __('messages.footer.newsletter_title') }}</h6>
                             <form class="newsletter-form" method="post" action="#">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                    <input type="email" name="email" class="form-control" placeholder="{{ __('messages.footer.newsletter_email_placeholder') }}" required>
                                 </div>
                                 <button type="submit" class="btn btn-two">
                                     <span class="btn-wrap">
-                                        <span class="text-first">Subscribe</span>
+                                        <span class="text-first">{{ __('messages.footer.newsletter_subscribe') }}</span>
                                         <span class="text-second"><i class="bi bi-arrow-up-right"></i></span>
                                     </span>
                                 </button>
@@ -40,7 +40,7 @@
                         <div class="footer-widget text-md-end">
                             <div class="footer-nav">
                                 <ul>
-                                    <li class="menu-item"><a href="{{ route('news') }}">Recent Posts</a></li>
+                                    <li class="menu-item"><a href="{{ route('news') }}">{{ __('messages.footer.recent_posts') }}</a></li>
                                     <li class="menu-item"><a href="{{ route('contact') }}">{{ __('messages.nav.contact') }}</a></li>
                                 </ul>
                             </div>
@@ -54,7 +54,7 @@
         <div class="container">
             <div class="footer-bottom-inner">
                 <div class="copyright">
-                    <p>Ef photography, All Rights Reserved</p>
+                    <p>{{ __('messages.footer.copyright') }}</p>
                 </div>
                 <div class="social-box style-oval">
                     <ul>

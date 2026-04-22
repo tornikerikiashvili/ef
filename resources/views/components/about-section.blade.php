@@ -1,59 +1,61 @@
+@props([
+    'title' => '',
+    'text' => '',
+    'image' => null,
+    'link' => '',
+])
+@php
+    $aboutTitle = filled($title) ? $title : 'Quality & Vision';
+    $aboutText = filled($text)
+        ? $text
+        : 'Our approach is built on quality, international standards, and vision. We deliver a full-service package from concept to completion: design, interior design, and premium fit-out works.';
+    $imageUrl = filled($image)
+        ? \Illuminate\Support\Facades\Storage::disk('public')->url($image)
+        : asset('assets/img/more/7.png');
+    $buttonHref = filled($link) ? $link : route('about');
+@endphp
 <section class="wptb-about-two">
-                <div class="container">
-                    <div class="wptb-heading">
-                        <div class="wptb-item--inner">
-                            <div class="row align-items-center">
-                                <div class="col-lg-7">
-                                    <h1 class="wptb-item--title"> <span>Quality & Vision</span></h1>
-                                </div>
-                                {{-- <div class="col-lg-5 text-lg-end">
-                                    <div class="wptb-item--button">
-                                        <a href="{{ route('about') }}" class="btn btn-two creative text-uppercase">
-                                            <span class="btn-wrap">
-                                                <span class="text-first">Learn More</span>
-                                                <span class="text-second"><i class="bi bi-arrow-up-right"></i></span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div> --}}
-                            </div>
-                        </div>
+    <div class="container">
+        <div class="wptb-heading">
+            <div class="wptb-item--inner">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <h1 class="wptb-item--title"><span>{{ $aboutTitle }}</span></h1>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="wptb-image-single wow fadeInUp">
-                                <div class="wptb-item--inner">
-                                    <div class="wptb-item--image position-relative">
-                                        <img src="{{ asset('assets/img/more/7.png') }}" alt="">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="wptb-image-single wow fadeInUp">
+                    <div class="wptb-item--inner">
+                        <div class="wptb-item--image position-relative">
+                            <img src="{{ $imageUrl }}" alt="{{ $aboutTitle }}">
 
-                                        <div class="wptb-item--button round-button">
-                                            <a class="btn btn-two" href="{{ route('about') }}">
-                                                <span class="btn-wrap">
-                                                    <span class="text-first">Explore Us</span>
-                                                    <span class="text-second"> <i class="bi bi-arrow-up-right"></i> <i class="bi bi-arrow-up-right"></i> </span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
-                            <div class="wptb-about--text ps-md-5">
-                                <h3>About Element FIT-OUT</h3>
-                                <p class="wptb-about--text-one">Our approach is built on quality, international standards, and vision. We deliver a full-service package from concept to completion: design, interior design, and premium fit-out works.</p>
-
-
+                            <div class="wptb-item--button round-button">
+                                <a class="btn btn-two" href="{{ $buttonHref }}">
+                                    <span class="btn-wrap">
+                                        <span class="text-first">{{__('messages.nav.explore_us')}}</span>
+                                        <span class="text-second"> <i class="bi bi-arrow-up-right"></i> <i class="bi bi-arrow-up-right"></i> </span>
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
+            <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
+                <div class="wptb-about--text ps-md-5">
+                    <p class="wptb-about--text-one">{!! nl2br(e($aboutText)) !!}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-       {{--
+{{--
             <section class="bg-dark-200 pd-bottom-80">
                 <div class="container">
                     <div class="wptb-heading">

@@ -16,7 +16,11 @@
     @stack('styles')
 </head>
 
-<body class="{{request()->route()->getName()}} {{ request()->routeIs('home') ? 'theme-style--olive theme-style--light' : 'theme-style--light' }}">
+@php
+    $routeName = request()->route()?->getName() ?? '';
+    $routeClass = $routeName !== '' ? ('route-'.str_replace(['.', '/'], '-', $routeName)) : '';
+@endphp
+<body class="{{ $routeClass }} {{ request()->routeIs('home') ? 'theme-style--olive theme-style--light' : 'theme-style--light' }}">
 
     <div id="preloader">
         <div class="preloader-inner">

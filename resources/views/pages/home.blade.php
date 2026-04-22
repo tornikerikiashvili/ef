@@ -5,13 +5,34 @@
 
 @section('content')
     <x-hero :services="$featuredServices" />
-    <x-services-section />
-    <x-about-section />
+    <x-services-section
+        :title="$homePage['title']"
+        :teaser="$homePage['teaser']"
+        :highlights="$homePage['highlights']"
+    />
+    <x-about-section
+        :title="$homePage['about']['title']"
+        :text="$homePage['about']['text']"
+        :image="$homePage['about']['image']"
+        :link="$homePage['about']['link']"
+    />
 
-    <x-projects-section :projects="$featuredProjects" />
+    <x-projects-section
+        :projects="$featuredProjects"
+        :section-title="$homePage['projects_section']['title']"
+    />
     <x-partners :partnerLogos="$partnerLogos" />
     {{-- <x-funfacts /> --}}
-    <x-news-section :news="$featuredNews" />
-    <x-cta />
-    <x-instagram-gallery />
+    <x-news-section
+        :news="$featuredNews"
+        :section-title="$homePage['news_section']['title']"
+        :section-teaser="$homePage['news_section']['teaser']"
+    />
+    @if ($homePage['show_contact_form'])
+        <x-cta />
+    @endif
+    <x-instagram-gallery
+        :images="data_get($homePage, 'gallery.images', [])"
+        :instagram-url="$homePage['gallery_instagram_link'] ?? ''"
+    />
 @endsection

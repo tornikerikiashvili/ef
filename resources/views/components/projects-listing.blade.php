@@ -61,8 +61,12 @@
                     <div class="grid-sizer"></div>
                     @foreach ($projects as $project)
                     @php
-                        $coverUrl = $project->cover_photo
-                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($project->cover_photo)
+                        $gallery = is_array($project->gallery ?? null) ? $project->gallery : [];
+                        $firstGalleryImage = $gallery[0] ?? null;
+                        $imagePath = filled($firstGalleryImage) ? $firstGalleryImage : ($project->cover_photo ?: null);
+
+                        $coverUrl = $imagePath
+                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($imagePath)
                             : asset('assets/img/projects/3/1.jpg');
                         $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
                     @endphp

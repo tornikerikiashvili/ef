@@ -26,7 +26,7 @@
 </div>
 
 <!-- Our Services Listing -->
-<section>
+<section class="services-listing">
     <div class="container">
         <div class="wptb-project--inner">
             <div class="wptb-heading">
@@ -52,7 +52,7 @@
 
                             <div class="wptb-item--holder">
                                 <div class="wptb-item--meta">
-                                    <h4><a href="{{ $serviceUrl }}">{{ $service->title }}</a></h4>
+                                    <h4 class="service_item_title"><a href="{{ $serviceUrl }}">{{ $service->title }}</a></h4>
                                     @if($service->short_teaser)
                                         <p>{{ \Illuminate\Support\Str::limit(strip_tags($service->short_teaser), 60) }}</p>
                                     @else

@@ -1,5 +1,7 @@
 @props([
     'news' => collect(),
+    'sectionTitle' => '',
+    'sectionTeaser' => '',
 ])
 @php
     use Illuminate\Support\Facades\Storage;
@@ -17,10 +19,16 @@
             <div class="wptb-item--inner">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
-                        <h1 class="wptb-item--title mb-0">Our Photography<br><span>Related Blog</span></h1>
+                        @if (filled($sectionTitle))
+                            <h1 class="wptb-item--title mb-0">{{ $sectionTitle }}</h1>
+                        @else
+                            <h1 class="wptb-item--title mb-0">Our Photography<br><span>Related Blog</span></h1>
+                        @endif
                     </div>
                     <div class="col-lg-6">
-                        <p class="wptb-item--description">We're deeply passionate catch your lovely memories in cameras and convey your love for every moment of life as a whole.</p>
+                        <p class="wptb-item--description">
+                            {{ filled($sectionTeaser) ? $sectionTeaser : "We're deeply passionate catch your lovely memories in cameras and convey your love for every moment of life as a whole." }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -45,9 +53,6 @@
                                 <div class="wptb-item--holder">
                                     <div class="wptb-item--date">{{ $dateStr }}</div>
                                     <h4 class="wptb-item--title"><a href="{{ $itemUrl }}">{{ $item->title }}</a></h4>
-                                    <div class="wptb-item--meta">
-                                        <div class="wptb-item--author">By <a href="{{ $itemUrl }}">Ef</a></div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
