@@ -10,13 +10,13 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("
-            UPDATE `categories`
+            UPDATE `statuses`
             SET `name` = JSON_OBJECT('en', `name`)
             WHERE `name` IS NOT NULL
               AND JSON_VALID(`name`) = 0
         ");
 
-        Schema::table('categories', function (Blueprint $table) {
+        Schema::table('statuses', function (Blueprint $table) {
             // Spatie Translatable stores translations as JSON in the same column.
             $table->json('name')->change();
         });
@@ -24,7 +24,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
+        Schema::table('statuses', function (Blueprint $table) {
             $table->string('name')->change();
         });
     }

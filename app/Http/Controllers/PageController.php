@@ -9,6 +9,7 @@ use App\Models\PartnerLogo;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\SiteSetting;
+use App\Models\Status;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
@@ -124,13 +125,14 @@ class PageController extends Controller
 
         $projects = Page::orderedProjects($settings['projects']);
         if ($projects->isEmpty()) {
-            $projects = Project::with('category')->orderBy('created_at', 'desc')->get();
+            $projects = Project::with(['category', 'status'])->orderBy('created_at', 'desc')->get();
         } else {
-            // Ensure the category relation exists for filters/classes.
-            $projects->load('category');
+            // Ensure relations exist for filters/classes.
+            $projects->load(['category', 'status']);
         }
 
         $categories = Category::orderBy('name')->get();
+        $statuses = Status::orderBy('name')->get();
 
         $fallbackCover = SiteSetting::getValue('projects_page_cover');
         $fallbackCover = is_array($fallbackCover) ? (reset($fallbackCover) ?: null) : $fallbackCover;
@@ -141,7 +143,7 @@ class PageController extends Controller
 
         $projectsPageTitle = $settings['title'];
 
-        return view('pages.projects', compact('projects', 'categories', 'headerBg', 'projectsPageTitle'));
+        return view('pages.projects', compact('projects', 'categories', 'statuses', 'headerBg', 'projectsPageTitle'));
     }
 
     public function projectSingle(string $locale, string $slug)

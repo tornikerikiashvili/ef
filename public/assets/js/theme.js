@@ -1255,8 +1255,8 @@ Description: Kimono - Photography Agency
             dateFormat: 'h:i K'
 		});
 
-        // Nice Select
-        $('select').niceSelect();
+        // Nice Select (skip selects that opt out)
+        $('select').not('.no-nice-select').niceSelect();
         
 
         // Totop Button

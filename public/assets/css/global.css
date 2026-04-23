@@ -823,7 +823,10 @@ body {
     text-transform: uppercase;
 }
 /* Case feature + uppercase on all native buttons (no .btn layout) */
-.btn, .wptb-item--link, .wptb-swiper-navigation.style3 .wptb-swiper-arrow:after {
+.btn, .wptb-item--link, .wptb-swiper-navigation.style3 .wptb-swiper-arrow:after,
+.projects-status-filter,
+.projects-status-filter select,
+.projects-status-filter option {
     font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
     font-feature-settings: "case" on;
     text-transform: uppercase;
