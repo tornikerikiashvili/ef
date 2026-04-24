@@ -176,11 +176,48 @@ class PageController extends Controller
     {
         $settings = Page::newsListingPageContent();
 
-        $news = Page::orderedNews($settings['news']);
-        if ($news->isEmpty()) {
-            $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+        $q = trim((string) request()->query('q', ''));
+        $range = (string) request()->query('range', '');
+        $range = in_array($range, ['week', 'month', 'year'], true) ? $range : '';
+
+        $hasFilters = filled($q) || filled($range);
+
+        if ($hasFilters) {
+            $newsQuery = News::query()
+                ->with('newsCategory')
+                ->orderByRaw('COALESCE(published_at, created_at) DESC');
+
+            if (filled($range)) {
+                $from = match ($range) {
+                    'week' => now()->subWeek(),
+                    'month' => now()->subMonth(),
+                    'year' => now()->subYear(),
+                    default => null,
+                };
+
+                if ($from) {
+                    $newsQuery->whereRaw('COALESCE(published_at, created_at) >= ?', [$from]);
+                }
+            }
+
+            if (filled($q)) {
+                $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $q) . '%';
+                $newsQuery->where(function ($query) use ($like) {
+                    $query
+                        ->where('title', 'like', $like)
+                        ->orWhere('teaser', 'like', $like)
+                        ->orWhere('text_content', 'like', $like);
+                });
+            }
+
+            $news = $newsQuery->get();
         } else {
-            $news->load('newsCategory');
+            $news = Page::orderedNews($settings['news']);
+            if ($news->isEmpty()) {
+                $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+            } else {
+                $news->load('newsCategory');
+            }
         }
 
         $fallbackCover = SiteSetting::getValue('news_page_cover');
@@ -192,7 +229,7 @@ class PageController extends Controller
 
         $newsPageTitle = $settings['title'];
 
-        return view('pages.news', compact('news', 'headerBg', 'newsPageTitle'));
+        return view('pages.news', compact('news', 'headerBg', 'newsPageTitle', 'q', 'range'));
     }
 
     public function newsSingle(string $locale, string $slug)

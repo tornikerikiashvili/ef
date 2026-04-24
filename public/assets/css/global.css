@@ -847,6 +847,16 @@ body {
     }
 }
 
+.news-filters-actions {
+   height: 57px;
+}
+
+.news-filters-actions .btn {
+    height: 100%; /* matches Bootstrap .form-control */
+    padding: 0.375rem 0.75rem;
+    min-width: auto;
+}
+
 .btn > * {
     z-index: 1;
 }

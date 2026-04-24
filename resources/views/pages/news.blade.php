@@ -23,10 +23,30 @@
 <section class="wptb-blog-grid-one">
     <div class="container">
 
+        <form method="GET" action="{{ route('news', ['locale' => app()->getLocale()]) }}" class="row g-3 align-items-end mb-4">
+            <div class="col-12 col-md-4">
+                <label for="news-range" class="form-label mb-1">Date</label>
+                <select id="news-range" name="range" class="form-select no-nice-select">
+                    <option value="">All time</option>
+                    <option value="week" @selected(($range ?? '') === 'week')>Last week</option>
+                    <option value="month" @selected(($range ?? '') === 'month')>Last month</option>
+                    <option value="year" @selected(($range ?? '') === 'year')>Last year</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="news-q" class="form-label mb-1">Keyword</label>
+                <input id="news-q" type="text" name="q" value="{{ $q ?? '' }}" class="form-control" placeholder="Search…">
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2 news-filters-actions">
+                <button type="submit" class="btn flex-fill" style="min-width: auto;">Filter</button>
+                <a href="{{ route('news', ['locale' => app()->getLocale()]) }}" class="btn gray flex-fill" style="min-width: auto;">Clear</a>
+            </div>
+        </form>
+
         <div class="row">
             @foreach ($news as $item)
             @php
-                $itemUrl = route('news.show', ['slug' => $item->slug ?? $item->id]);
+                $itemUrl = route('news.show', ['locale' => app()->getLocale(), 'slug' => $item->slug ?? $item->id]);
                 $imgUrl = $item->cover_photo
                     ? Storage::disk('public')->url($item->cover_photo)
                     : asset('assets/img/blog/' . (((int) (($loop->iteration - 1) % 9)) + 1) . '.jpg');
@@ -47,6 +67,12 @@
             </div>
             @endforeach
         </div>
+
+        @if(($news ?? collect())->isEmpty())
+            <div class="text-center py-5">
+                <p class="mb-0">No results found.</p>
+            </div>
+        @endif
 
     </div>
 </section>

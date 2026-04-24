@@ -4173,7 +4173,7 @@ Ready Components Stylesheet
     text-transform: uppercase;
     letter-spacing: 0.42px;
     color: var(--color-white-fixed);
-    background-color: var(--color-one);
+    background-color: #BE5244;
     border-radius: 5px;
     padding: 0px 7px;
 }
