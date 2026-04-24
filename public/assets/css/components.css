@@ -291,6 +291,14 @@ Ready Components Stylesheet
     overflow: hidden;
     will-change: background-position;
 }
+
+.wptb-page-heading .wptb-item--inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
 /* .wptb-page-heading .wptb-item--inner::after {
     content: url('../img/more/circle.png');
     position: absolute;
@@ -305,7 +313,7 @@ Ready Components Stylesheet
     transform: translateY(-50%);
     left: 0;
     right: 0;
-    z-index: 0;
+    z-index: 1;
 }
 .wptb-page-heading .wptb-item--title {
     position: relative;
@@ -314,6 +322,7 @@ Ready Components Stylesheet
     font-weight: var(--fw-medium);
     line-height: 60px;
     margin-bottom: 0px;
+    z-index: 1;
 }
 .wptb-page-heading .wptb-item--title::before,
 .wptb-page-heading .wptb-item--title::after {
