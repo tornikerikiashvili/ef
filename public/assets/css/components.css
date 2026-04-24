@@ -4245,8 +4245,18 @@ Ready Components Stylesheet
 
 .wptb-blog-grid1 .wptb-item--inner .wptb-item--title {
 	padding: 20px 0px;
+    line-height: 1.25;
+    /* 2 lines + vertical padding (20px top + 20px bottom) */
+    min-height: calc((2 * 1.25em) + 40px);
 }
 
+.wptb-blog-grid1 .wptb-item--inner .wptb-item--title a {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
 .wptb-blog-grid1 .wptb-item--inner .wptb-item--title a:not(:hover) {
 	color: var(--color-white);
 }

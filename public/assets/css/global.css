@@ -423,7 +423,7 @@ body:has(.sidebar) {
     }
 }
 
-body.route-about, body.route-services, body.route-news, body.route-services-show, body.route-projects-show, body.route-news-show {
+body.route-about, body.route-services, body.route-news, body.route-services-show, body.route-projects-show, body.route-news-show, body.route-contact {
     background: #C0C6AF;
 }
 
