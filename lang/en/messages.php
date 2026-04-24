@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'back' => 'Back',
     'nav' => [
         'home' => 'Home',
         'about' => 'About',

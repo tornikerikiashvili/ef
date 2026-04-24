@@ -41,9 +41,6 @@
                             <div class="wptb-item--date">{{ ($item->published_at ?? $item->created_at)->format('d M Y') }}</div>
                             <h4 class="wptb-item--title"><a href="{{ $itemUrl }}">{{ $item->title }}</a></h4>
 
-                            <div class="wptb-item--meta">
-                                <div class="wptb-item--author">By <a href="{{ $itemUrl }}">Ef</a></div>
-                            </div>
                         </div>
                     </div>
                 </div>
