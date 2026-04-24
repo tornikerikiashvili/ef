@@ -289,6 +289,7 @@ Ready Components Stylesheet
     background-size: cover;
     text-align: center;
     overflow: hidden;
+    will-change: background-position;
 }
 /* .wptb-page-heading .wptb-item--inner::after {
     content: url('../img/more/circle.png');

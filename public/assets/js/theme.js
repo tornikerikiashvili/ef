@@ -1257,6 +1257,49 @@ Description: Kimono - Photography Agency
 
         // Nice Select (skip selects that opt out)
         $('select').not('.no-nice-select').niceSelect();
+
+        // Page heading parallax (background-position based)
+        (function initPageHeadingParallax() {
+            const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+            const isTouchLike =
+                ('ontouchstart' in window) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+
+            if (prefersReducedMotion || isTouchLike) return;
+
+            const els = Array.from(document.querySelectorAll('.wptb-page-heading .wptb-item--inner'));
+            if (!els.length) return;
+
+            let ticking = false;
+
+            const update = () => {
+                ticking = false;
+                const vh = window.innerHeight || 1;
+
+                for (const el of els) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.bottom <= 0 || rect.top >= vh) continue;
+
+                    // progress: 0 when element top at viewport bottom, 1 when bottom at viewport top
+                    const progress = (vh - rect.top) / (vh + rect.height);
+                    const clamped = Math.max(0, Math.min(1, progress));
+
+                    // 0..1 => shift up a bit. Tune 18% if you want more/less motion.
+                    const y = 50 - (clamped - 0.5) * 18;
+                    el.style.backgroundPosition = `center ${y}%`;
+                }
+            };
+
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                window.requestAnimationFrame(update);
+            };
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            update();
+        })();
         
 
         // Totop Button
