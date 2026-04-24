@@ -25,7 +25,7 @@
     <div id="preloader">
         <div class="preloader-inner">
             <div class="spinner" >
-                <img style="width: 200px;" src="{{ asset('assets/img/logo_footer.svg') }}" alt="">
+                <img style="width: 200px;" src="{{ asset(app()->getLocale() === 'ka' ? 'assets/img/logo_footerKa.svg' : 'assets/img/logo_footer.svg') }}" alt="">
                 {{-- <img src="{{ asset('assets/img/preloader-wheel.svg') }}" alt="" class="wheel"> --}}
             </div>
         </div>

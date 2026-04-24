@@ -19,7 +19,7 @@
                     <div class="col-lg-4 col-md-4 mb-5 mb-md-0 order-1 order-md-0">
                         <div class="footer-widget text-center">
                             <div class="logo mr-bottom-55">
-                                <a href="{{ route('home') }}"><img src="{{ asset('assets/img/footerlogo.svg') }}" alt="logo"></a>
+                                <a href="{{ route('home') }}"><img src="{{ asset(app()->getLocale() === 'ka' ? 'assets/img/footerlogoKA.svg' : 'assets/img/footerlogo.svg') }}" alt="logo"></a>
                             </div>
                             <h6 class="widget-title">{{ __('messages.footer.newsletter_title') }}</h6>
                             <form class="newsletter-form" method="post" action="#">

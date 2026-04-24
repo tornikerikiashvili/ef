@@ -15,7 +15,7 @@
                 <div class="header_left_part d-flex align-items-center">
                     <div class="logo">
                         <a href="{{ route('home') }}" class="light_logo"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></a>
-                        <a href="{{ route('home') }}" class="dark_logo"><img src="{{ asset('assets/img/logomain.svg') }}" alt="logo"></a>
+                        <a href="{{ route('home') }}" class="dark_logo"><img src="{{ asset(app()->getLocale() === 'ka' ? 'assets/img/logomainKA.svg' : 'assets/img/logomain.svg') }}" alt="logo"></a>
                     </div>
                 </div>
 
