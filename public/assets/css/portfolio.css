@@ -539,6 +539,11 @@
     line-height: 30px;
     letter-spacing: 0px;
     transition: var(--transition-base);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    min-height: 60px; /* 2 lines * 30px */
 }
 
 .grid-item .wptb-item--meta p {
