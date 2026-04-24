@@ -839,6 +839,15 @@ body {
     white-space: nowrap;
 }
 
+/* Override global uppercase: status filter should be lowercase */
+.projects-status-filter,
+.projects-status-filter__label,
+.projects-status-filter select,
+.projects-status-filter option {
+    text-transform: lowercase !important;
+    font-feature-settings: normal !important;
+}
+
 @media (max-width: 767.9px) {
     .projects-status-filter {
         width: 100%;
@@ -855,6 +864,12 @@ body {
     height: 100%; /* matches Bootstrap .form-control */
     padding: 0.375rem 0.75rem;
     min-width: auto;
+}
+
+/* Projects category filter buttons */
+.filters-button-group .button {
+    text-transform: uppercase;
+    font-feature-settings: "case" on;
 }
 
 .btn > * {
