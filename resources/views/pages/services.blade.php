@@ -61,11 +61,11 @@
 
  <!-- BG Video -->
  <div class="container mr-top-100">
-    <div class="wptb-video-player1 wow zoomIn" style="background-image: url('{{ asset('assets/img/background/bg-7.jpg') }}');">
+    <div class="wptb-video-player1 wow zoomIn" style="background-image: url('{{ $servicesVideoBg }}');">
         <div class="wptb-item--inner">
             <div class="wptb-item--holder">
                 <div class="wptb-item--video-button">
-                    <a class="btn" data-fancybox href="https://www.youtube.com/watch?v=SF4aHwxHtZ0">
+                    <a class="btn" data-fancybox href="{{ $servicesVideoUrl }}">
                         <span class="text-second"> <i class="bi bi-play-fill"></i> </span>
                         <span class="line-video-animation line-video-1"></span>
                         <span class="line-video-animation line-video-2"></span>
