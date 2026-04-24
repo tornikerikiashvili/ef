@@ -65,8 +65,9 @@
                                 ? \Illuminate\Support\Facades\Storage::disk('public')->url($project->cover_photo)
                                 : asset('assets/img/projects/6/1.jpg');
                             $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
+                            $dir = ($loop->index % 2 === 0) ? -1 : 1;
                         @endphp
-                        <div class="grid-item">
+                        <div class="grid-item projects-parallax-item" data-parallax-dir="{{ $dir }}">
                             <a class="projects-section--card-link" href="{{ $projectUrl }}">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--image">
@@ -88,7 +89,8 @@
                         @endforeach
                     @else
                         @foreach ($placeholderItems as $item)
-                        <div class="grid-item">
+                        @php $dir = ($loop->index % 2 === 0) ? -1 : 1; @endphp
+                        <div class="grid-item projects-parallax-item" data-parallax-dir="{{ $dir }}">
                             <a class="projects-section--card-link" href="{{ route('projects') }}">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--image">
@@ -118,3 +120,70 @@
         </div>
     </div>
 </section>
+
+@push('styles')
+<style>
+    .projects-section--olive .projects-parallax-item {
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+        transition: transform 120ms linear;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+  (function () {
+    const root = document.querySelector('.wptb-project.projects-section--olive');
+    if (!root) return;
+
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    const isTouchLike = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+    if (prefersReducedMotion || isTouchLike) return;
+
+    const items = Array.from(root.querySelectorAll('.projects-parallax-item'));
+    if (!items.length) return;
+
+    let ticking = false;
+    const amplitudePx = 48; // amount each column drifts
+    const rotateDeg = 1.15; // subtle rotation
+    const scaleAmt = 0.015; // subtle scale
+
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight || 1;
+      const sectionRect = root.getBoundingClientRect();
+
+      // progress 0..1 through the section
+      const sectionProgress = (vh - sectionRect.top) / (vh + sectionRect.height);
+      const p = Math.max(0, Math.min(1, sectionProgress));
+
+      // -0.5..0.5
+      const centered = p - 0.5;
+
+      for (let i = 0; i < items.length; i++) {
+        const el = items[i];
+        const dir = parseFloat(el.dataset.parallaxDir || '0') || 0;
+        const phase = (i % 6) * 0.08; // small per-item variance
+        const wobble = Math.sin((p + phase) * Math.PI * 2) * 6; // +/- 6px
+
+        const y = (centered * amplitudePx * dir * 2) + (wobble * dir);
+        const r = centered * rotateDeg * dir;
+        const s = 1 + (Math.abs(centered) * scaleAmt);
+
+        el.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(3)})`;
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+</script>
+@endpush
