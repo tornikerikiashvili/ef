@@ -37,6 +37,7 @@ return [
     ],
     'filters' => [
         'all' => 'All',
+        'status' => 'Status',
     ],
     'categories' => [
         // Add per-category translations keyed by category slug, e.g.:

@@ -832,6 +832,21 @@ body {
     text-transform: uppercase;
 }
 
+.projects-status-filter__label {
+    color: inherit;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+@media (max-width: 767.9px) {
+    .projects-status-filter {
+        width: 100%;
+        margin-left: 0 !important; /* overrides Bootstrap ms-auto */
+        justify-content: center;
+    }
+}
+
 .btn > * {
     z-index: 1;
 }

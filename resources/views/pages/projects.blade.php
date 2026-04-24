@@ -71,7 +71,10 @@
                             @endforeach
                         </div>
 
-                        <div class="projects-status-filter ms-auto">
+                        <div class="projects-status-filter ms-auto d-inline-flex align-items-center gap-2">
+                            <label for="projects-status-filter" class="projects-status-filter__label mb-0">
+                                {{ __('messages.filters.status') }}:
+                            </label>
                             <select id="projects-status-filter" class="no-nice-select" style="width: auto;">
                                 <option value="*">{{ __('messages.filters.all') }}</option>
                                 @foreach ($statuses as $status)
