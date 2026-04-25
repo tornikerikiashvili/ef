@@ -126,9 +126,21 @@
                         <div class="grid-sizer"></div>
                         @foreach ($relatedProjects as $related)
                             @php
-                                $coverUrl = $related->cover_photo
-                                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($related->cover_photo)
-                                    : asset('assets/img/projects/3/1.jpg');
+                                $firstGallery = null;
+                                if (is_array($related->gallery ?? null)) {
+                                    foreach ($related->gallery as $path) {
+                                        if (is_string($path) && $path !== '') {
+                                            $firstGallery = $path;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $coverUrl = $firstGallery
+                                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($firstGallery)
+                                    : ($related->cover_photo
+                                        ? \Illuminate\Support\Facades\Storage::disk('public')->url($related->cover_photo)
+                                        : asset('assets/img/projects/3/1.jpg'));
                                 $relatedUrl = route('projects.show', ['slug' => $related->slug ?? $related->id]);
                             @endphp
                             <div class="grid-item">
