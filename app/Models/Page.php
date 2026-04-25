@@ -47,7 +47,7 @@ class Page extends Model
     }
 
     /**
-     * @return array<string, array{intro: string, email: string, phone: string, address: string}>
+     * @return array<string, mixed>
      */
     public static function defaultContactPayload(): array
     {
@@ -61,6 +61,17 @@ class Page extends Model
                 'address' => '',
             ];
         }
+
+        $out['gallery_id'] = null;
+        $out['social'] = [
+            'instagram' => [
+                'url' => '',
+                'name' => '',
+            ],
+            'facebook_url' => '',
+            'linkedin_url' => '',
+        ];
+        $out['google_map_embed'] = '';
 
         return $out;
     }
@@ -934,7 +945,24 @@ class Page extends Model
                 }
             }
 
-            return $result;
+            $social = is_array($merged['social'] ?? null) ? $merged['social'] : [];
+            $instagram = is_array($social['instagram'] ?? null) ? $social['instagram'] : [];
+
+            $galleryId = $merged['gallery_id'] ?? null;
+            $galleryId = ($galleryId !== null && $galleryId !== '' && (int) $galleryId > 0) ? (int) $galleryId : null;
+
+            return array_merge($result, [
+                'gallery_id' => $galleryId,
+                'social' => [
+                    'instagram' => [
+                        'url' => isset($instagram['url']) ? (string) $instagram['url'] : '',
+                        'name' => isset($instagram['name']) ? (string) $instagram['name'] : '',
+                    ],
+                    'facebook_url' => isset($social['facebook_url']) ? (string) $social['facebook_url'] : '',
+                    'linkedin_url' => isset($social['linkedin_url']) ? (string) $social['linkedin_url'] : '',
+                ],
+                'google_map_embed' => isset($merged['google_map_embed']) ? (string) $merged['google_map_embed'] : '',
+            ]);
         }
 
         return $result;

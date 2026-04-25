@@ -3,9 +3,11 @@
 namespace App\Filament\Pages;
 
 use App\Models\Page;
+use App\Models\Gallery;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -84,7 +86,9 @@ class ManageContactPageSettings extends FilamentPage
         $defaults = Page::defaultContactPayload();
         $merged = array_replace_recursive($defaults, $payload);
 
-        foreach (array_keys($defaults) as $locale) {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        foreach ($locales as $locale) {
             $row = is_array($merged[$locale] ?? null) ? $merged[$locale] : [];
             $merged[$locale] = [
                 'intro' => isset($row['intro']) ? (string) $row['intro'] : '',
@@ -93,6 +97,22 @@ class ManageContactPageSettings extends FilamentPage
                 'address' => isset($row['address']) ? (string) $row['address'] : '',
             ];
         }
+
+        $galleryId = $merged['gallery_id'] ?? null;
+        $merged['gallery_id'] = ($galleryId !== null && $galleryId !== '' && (int) $galleryId > 0) ? (int) $galleryId : null;
+
+        $social = is_array($merged['social'] ?? null) ? $merged['social'] : [];
+        $instagram = is_array($social['instagram'] ?? null) ? $social['instagram'] : [];
+        $merged['social'] = [
+            'instagram' => [
+                'url' => isset($instagram['url']) ? (string) $instagram['url'] : '',
+                'name' => isset($instagram['name']) ? (string) $instagram['name'] : '',
+            ],
+            'facebook_url' => isset($social['facebook_url']) ? (string) $social['facebook_url'] : '',
+            'linkedin_url' => isset($social['linkedin_url']) ? (string) $social['linkedin_url'] : '',
+        ];
+
+        $merged['google_map_embed'] = isset($merged['google_map_embed']) ? (string) $merged['google_map_embed'] : '';
 
         return $merged;
     }
@@ -105,6 +125,10 @@ class ManageContactPageSettings extends FilamentPage
                     ->description('Intro and contact details (per language). Shown on the public contact page.')
                     ->schema($this->localeTabsForContactBlock())
                     ->columns(1),
+                Section::make('Media & social links')
+                    ->description('Used on the public contact page.')
+                    ->schema($this->contactMediaAndSocialFields())
+                    ->columns(2),
             ]);
     }
 
@@ -156,6 +180,50 @@ class ManageContactPageSettings extends FilamentPage
             TextInput::make('address')
                 ->label('Address')
                 ->maxLength(65535),
+        ];
+    }
+
+    /**
+     * @return list<Component>
+     */
+    protected function contactMediaAndSocialFields(): array
+    {
+        $key = Page::KEY_CONTACT_PAGE;
+
+        return [
+            Group::make([
+                Select::make('gallery_id')
+                    ->label('Gallery')
+                    ->options(fn (): array => Gallery::query()->orderBy('name')->pluck('name', 'id')->all())
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('None')
+                    ->native(false)
+                    ->columnSpanFull(),
+
+                TextInput::make('social.instagram.name')
+                    ->label('Instagram name')
+                    ->maxLength(255),
+                TextInput::make('social.instagram.url')
+                    ->label('Instagram link')
+                    ->url()
+                    ->maxLength(2048),
+
+                TextInput::make('social.facebook_url')
+                    ->label('Facebook link')
+                    ->url()
+                    ->maxLength(2048),
+                TextInput::make('social.linkedin_url')
+                    ->label('LinkedIn link')
+                    ->url()
+                    ->maxLength(2048),
+
+                Textarea::make('google_map_embed')
+                    ->label('Google Map embed code')
+                    ->helperText('Paste the iframe embed code from Google Maps.')
+                    ->rows(5)
+                    ->columnSpanFull(),
+            ])->statePath($key),
         ];
     }
 
