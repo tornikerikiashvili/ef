@@ -4,7 +4,7 @@
         <img src="{{ asset('assets/img/more/texture-2-light.png') }}" alt="">
     </div>
     <div class="container">
-        <div class="wptb-form--wrapper">
+        {{-- <div class="wptb-form--wrapper">
             <div class="wptb-heading">
                 <div class="wptb-item--inner text-center">
                     <h1 class="wptb-item--title">{{ __('messages.cta.title') }}</h1>
@@ -49,7 +49,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="wptb-office-address mr-top-100">
             <div class="row">
                 <div class="col-lg-4 col-md-6">

@@ -136,7 +136,7 @@ class Page extends Model
      *     image: string|null,
      *     locales: array<string, array{
      *       title: string,
-     *       items: list<array{title: string, content: string}>
+     *       content: string
      *     }>
      *   },
      *   video_background_image: string|null,
@@ -186,11 +186,7 @@ class Page extends Model
 
             $out['president']['locales'][$locale] = [
                 'title' => '',
-                'items' => [
-                    ['title' => '', 'content' => ''],
-                    ['title' => '', 'content' => ''],
-                    ['title' => '', 'content' => ''],
-                ],
+                'content' => '',
             ];
 
             $out['video'][$locale] = [
@@ -214,7 +210,7 @@ class Page extends Model
      *   video_background_image: string|null,
      *   video_url: string,
      *   services: list<int>,
-     *   locales: array<string, array{title: string, services_title: string}>
+     *   locales: array<string, array{title: string, services_title: string, typewrite_text: string}>
      * }
      */
     public static function defaultServicesListingPagePayload(): array
@@ -233,6 +229,7 @@ class Page extends Model
             $out['locales'][$locale] = [
                 'title' => '',
                 'services_title' => '',
+                'typewrite_text' => '',
             ];
             $out['video'][$locale] = [
                 'url' => '',
@@ -482,6 +479,7 @@ class Page extends Model
      * @return array{
      *   title: string,
      *   services_title: string,
+     *   typewrite_text: string,
      *   cover_image: string|null,
      *   video_background_image: string|null,
      *   video_url: string,
@@ -501,7 +499,7 @@ class Page extends Model
 
         $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
         $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
-        $base = $localesDefaults[$baseLocale] ?? ['title' => '', 'services_title' => ''];
+        $base = $localesDefaults[$baseLocale] ?? ['title' => '', 'services_title' => '', 'typewrite_text' => ''];
         $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
         $row = array_merge($base, $localized);
 
@@ -529,11 +527,41 @@ class Page extends Model
         return [
             'title' => (string) ($row['title'] ?? ''),
             'services_title' => (string) ($row['services_title'] ?? ''),
+            'typewrite_text' => (string) ($row['typewrite_text'] ?? ''),
             'cover_image' => $cover,
             'video_background_image' => $videoBg,
             'video_url' => (string) ($videoRow['url'] ?? ''),
             'services' => $serviceIds,
         ];
+    }
+
+    /**
+     * President section body: saved RichEditor HTML, or legacy repeater rows converted to HTML.
+     *
+     * @param  array<string, mixed>  $presLocale
+     */
+    public static function presidentLocaleBodyHtml(array $presLocale): string
+    {
+        $raw = isset($presLocale['content']) ? trim((string) $presLocale['content']) : '';
+        if ($raw !== '') {
+            return (string) ($presLocale['content'] ?? '');
+        }
+
+        $items = is_array($presLocale['items'] ?? null) ? $presLocale['items'] : [];
+        $chunks = [];
+        foreach ($items as $item) {
+            $item = is_array($item) ? $item : [];
+            $title = isset($item['title']) ? trim((string) $item['title']) : '';
+            $body = isset($item['content']) ? trim((string) $item['content']) : '';
+            if ($title !== '') {
+                $chunks[] = '<h6>'.e($title).'</h6>';
+            }
+            if ($body !== '') {
+                $chunks[] = '<p>'.nl2br(e($body)).'</p>';
+            }
+        }
+
+        return implode('', $chunks);
     }
 
     /**
@@ -543,7 +571,7 @@ class Page extends Model
      *   cover: array{title: string, background_image: string|null},
      *   about: array{teaser: string, description: string, image_left: string|null, image_right: string|null},
      *   funfacts: array{label_1: string, value_1: int, label_2: string, value_2: int},
-     *   president: array{title: string, years_experience: int, image: string|null, items: list<array{title: string, content: string}>},
+     *   president: array{title: string, years_experience: int, image: string|null, content: string},
      *   video_background_image: string|null,
      *   video: array{url: string},
      *   body: array{title: string, text: string, image: string|null, video_url: string}
@@ -604,19 +632,11 @@ class Page extends Model
 
         $presLocalesDefaults = is_array(($defaults['president']['locales'] ?? null)) ? $defaults['president']['locales'] : [];
         $presLocalesStored = is_array(($presidentStored['locales'] ?? null)) ? $presidentStored['locales'] : [];
-        $presBase = $presLocalesDefaults[$baseLocale] ?? ['title' => '', 'items' => []];
+        $presBase = $presLocalesDefaults[$baseLocale] ?? ['title' => '', 'content' => ''];
         $presLocalized = is_array($presLocalesStored[$baseLocale] ?? null) ? $presLocalesStored[$baseLocale] : [];
         $presRow = array_merge($presBase, $presLocalized);
 
-        $presItemsRaw = is_array($presRow['items'] ?? null) ? $presRow['items'] : [];
-        $presItems = [];
-        foreach ($presItemsRaw as $item) {
-            $item = is_array($item) ? $item : [];
-            $presItems[] = [
-                'title' => isset($item['title']) ? (string) $item['title'] : '',
-                'content' => isset($item['content']) ? (string) $item['content'] : '',
-            ];
-        }
+        $presidentContentHtml = static::presidentLocaleBodyHtml($presRow);
 
         $videoDefaults = is_array($defaults['video'] ?? null) ? $defaults['video'] : [];
         $videoStored = is_array($merged['video'] ?? null) ? $merged['video'] : [];
@@ -669,7 +689,7 @@ class Page extends Model
                 'title' => (string) ($presRow['title'] ?? ''),
                 'years_experience' => $presYears,
                 'image' => $presImage,
-                'items' => $presItems,
+                'content' => $presidentContentHtml,
             ],
             'video' => [
                 'url' => (string) ($videoRow['url'] ?? ''),

@@ -76,6 +76,7 @@ class PageController extends Controller
 
         $servicesPageTitle = $settings['title'];
         $servicesListTitle = $settings['services_title'];
+        $servicesTypewriteText = $settings['typewrite_text'] ?? '';
 
         $servicesVideoBg = $settings['video_background_image']
             ? Storage::disk('public')->url($settings['video_background_image'])
@@ -91,6 +92,7 @@ class PageController extends Controller
             'serviceCover',
             'servicesPageTitle',
             'servicesListTitle',
+            'servicesTypewriteText',
             'servicesVideoBg',
             'servicesVideoUrl',
         ));
@@ -201,7 +203,7 @@ class PageController extends Controller
             }
 
             if (filled($q)) {
-                $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $q) . '%';
+                $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], $q).'%';
                 $newsQuery->where(function ($query) use ($like) {
                     $query
                         ->where('title', 'like', $like)

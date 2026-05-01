@@ -69,8 +69,8 @@
             ? \Illuminate\Support\Facades\Storage::disk('public')->url($presidentImage)
             : asset('assets/img/more/3.png');
 
-        $presidentItems = data_get($aboutPage ?? [], 'president.items', []);
-        $presidentItems = is_array($presidentItems) ? $presidentItems : [];
+        $presidentContent = data_get($aboutPage ?? [], 'president.content', '');
+        $presidentContent = is_string($presidentContent) ? $presidentContent : '';
 
         $aboutVideoUrl = data_get($aboutPage ?? [], 'video.url');
         $aboutVideoUrl = filled($aboutVideoUrl) ? (string) $aboutVideoUrl : 'https://www.youtube.com/watch?v=SF4aHwxHtZ0';
@@ -158,29 +158,11 @@
                         </div>
                     </div>
 
-                    <div class="wptb-accordion wptb-accordion2 wow fadeInUp">
-                        @if (count($presidentItems))
-                            @foreach ($presidentItems as $idx => $item)
-                                @php
-                                    $itemTitle = is_array($item) ? (string) ($item['title'] ?? '') : '';
-                                    $itemContent = is_array($item) ? (string) ($item['content'] ?? '') : '';
-                                @endphp
-                                <div class="wptb--item {{ $idx === 0 ? 'active' : '' }}">
-                                    <h6 class="wptb-item-title"><span>{{ $itemTitle }}</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
-                                    <div class="wptb-item--content">
-                                        {{ $itemContent }}
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="wptb--item active">
-                                <h6 class="wptb-item-title"><span>Kimono Missions</span> <i class="plus bi bi-plus"></i> <i class="minus bi bi-dash"></i></h6>
-                                <div class="wptb-item--content">
-                                    Our business consulting programs helps to break the performance of your business down into customers and product groups so you know exactly which customers or product groups are working.
-                                </div>
-                            </div>
-                        @endif
-                    </div>
+                    @if (filled(trim(strip_tags($presidentContent))))
+                        <div class="wptb-president-copy wow fadeInUp text-white president-rich-text">
+                            {!! $presidentContent !!}
+                        </div>
+                    @endif
 
                     <div class="wptb-agency-experience--item text-white">
                         <span>{{ $presidentYears }}+</span> {{ __('messages.years_experience') }}

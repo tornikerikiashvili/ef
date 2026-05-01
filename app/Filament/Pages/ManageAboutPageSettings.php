@@ -7,7 +7,6 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -51,11 +50,21 @@ class ManageAboutPageSettings extends FilamentPage
 
         $row = Page::query()->where('key', $key)->first();
 
+        $payload = array_replace_recursive(
+            Page::defaultAboutPagePayload(),
+            is_array($row?->payload) ? $row->payload : []
+        );
+
+        foreach (config('cms.supported_locales', ['en', 'ka']) as $locale) {
+            $pres = data_get($payload, 'president.locales.'.$locale);
+            if (! is_array($pres)) {
+                continue;
+            }
+            data_set($payload, 'president.locales.'.$locale.'.content', Page::presidentLocaleBodyHtml($pres));
+        }
+
         $this->form->fill([
-            $key => array_replace_recursive(
-                Page::defaultAboutPagePayload(),
-                is_array($row?->payload) ? $row->payload : []
-            ),
+            $key => $payload,
         ]);
     }
 
@@ -162,18 +171,9 @@ class ManageAboutPageSettings extends FilamentPage
 
             $presLocales = is_array($merged['president']['locales'] ?? null) ? $merged['president']['locales'] : [];
             $presLocale = is_array($presLocales[$locale] ?? null) ? $presLocales[$locale] : [];
-            $presItems = is_array($presLocale['items'] ?? null) ? $presLocale['items'] : [];
-            $outItems = [];
-            foreach ($presItems as $item) {
-                $item = is_array($item) ? $item : [];
-                $outItems[] = [
-                    'title' => isset($item['title']) ? (string) $item['title'] : '',
-                    'content' => isset($item['content']) ? (string) $item['content'] : '',
-                ];
-            }
             $merged['president']['locales'][$locale] = [
                 'title' => isset($presLocale['title']) ? (string) $presLocale['title'] : '',
-                'items' => $outItems,
+                'content' => Page::presidentLocaleBodyHtml($presLocale),
             ];
 
             $video = is_array($merged['video'][$locale] ?? null) ? $merged['video'][$locale] : [];
@@ -279,7 +279,7 @@ class ManageAboutPageSettings extends FilamentPage
                         ])
                         ->columns(1),
                     Section::make('President section')
-                        ->description('Title and accordion content (per language), plus shared experience years and image.')
+                        ->description('Title and rich text (per language), plus shared experience years and image.')
                         ->schema([
                             Group::make([
                                 TextInput::make('president.years_experience')
@@ -460,19 +460,8 @@ class ManageAboutPageSettings extends FilamentPage
             TextInput::make('title')
                 ->label('Title')
                 ->maxLength(65535),
-            Repeater::make('items')
-                ->label('Accordion items')
-                ->minItems(1)
-                ->defaultItems(3)
-                ->schema([
-                    TextInput::make('title')
-                        ->label('Item title')
-                        ->maxLength(65535),
-                    Textarea::make('content')
-                        ->label('Item content')
-                        ->rows(5)
-                        ->columnSpanFull(),
-                ])
+            RichEditor::make('content')
+                ->label('Content')
                 ->columnSpanFull(),
         ];
     }
@@ -512,4 +501,3 @@ class ManageAboutPageSettings extends FilamentPage
             ]);
     }
 }
-

@@ -191,7 +191,7 @@ html[lang="ka"] .header .header_center_part .mainnav ul.main-menu > li + li {
   list-style: none;
   display: inline-block;
   position: relative;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: var(--fw-medium);
   line-height: 24px;
   text-decoration: none;

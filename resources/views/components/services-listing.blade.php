@@ -1,9 +1,29 @@
 @props([
     'services' => collect(),
     'pageCover' => null,
+    'typewriteLines' => null,
+    'typewritePeriod' => 2000,
 ])
 @php
     use Illuminate\Support\Facades\Storage;
+
+    $lines = $typewriteLines;
+    if (! is_array($lines) || count($lines) === 0) {
+        $lines = array_values(array_unique(array_filter([
+            __('messages.nav.services'),
+            'Our Services',
+        ])));
+        foreach ($services->take(6) as $svc) {
+            $t = trim(strip_tags((string) $svc->title));
+            if ($t !== '') {
+                $lines[] = $t;
+            }
+        }
+        $lines = array_values(array_unique($lines));
+    }
+    if (count($lines) === 0) {
+        $lines = [__('messages.nav.services')];
+    }
 
     $coverPath = is_array($pageCover) ? (reset($pageCover) ?: null) : $pageCover;
     $headerBg = $coverPath
@@ -30,8 +50,14 @@
     <div class="container">
         <div class="wptb-project--inner">
             <div class="wptb-heading">
-                <div class="wptb-item--inner text-center">
-                    <h1 class="wptb-item--title">Our <span>Services</span></h1>
+                <div class="wptb-item--inner text-start" style="text-align: left;">
+                    <h1
+                        class="wptb-item--title typewrite d-block"
+                        role="text"
+                        aria-live="polite"
+                        data-period="{{ (int) $typewritePeriod }}"
+                        data-type='@json($lines)'
+                    ></h1>
                 </div>
             </div>
 
@@ -111,3 +137,9 @@
         </div>
     </div>
 </div> --}}
+
+@once
+    @push('scripts')
+        <script src="{{ asset('assets/js/typewrite.js') }}" defer></script>
+    @endpush
+@endonce

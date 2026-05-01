@@ -72,7 +72,7 @@
     position: relative;
     background-color: var(--color-dark-three);
     overflow: hidden;
-    padding-bottom: 185px;
+    padding-bottom: 100px;
 }
 .wptb-about-two .container {
     position: relative;
@@ -1553,7 +1553,8 @@ body.theme-style--olive {
     background-color: var(--color-dark-fifteen);;
 }
 .theme-style--olive .wptb-about-two {
-    background: linear-gradient(180deg, var(--color-dark-one) 0%, var(--color-dark-thirteen) 100%);
+    /* background: linear-gradient(180deg, var(--color-dark-one) 0%, var(--color-dark-thirteen) 100%); */
+    background-color: transparent;
 }
 
 .theme-style--olive .wptb-funfacts--area {

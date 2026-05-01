@@ -3,6 +3,34 @@
 @section('title', __('messages.nav.services') . ' - Ef')
 @section('meta_description', 'Our services - Ef Photography Agency')
 
+@section('content')
+@php
+    $linesRaw = is_string($servicesTypewriteText ?? null) ? (string) $servicesTypewriteText : '';
+    $typewriteLines = collect(preg_split('/\r\n|\r|\n/', $linesRaw))
+        ->map(fn ($l) => trim((string) $l))
+        ->filter(fn ($l) => $l !== '')
+        ->values()
+        ->all();
+
+    if (count($typewriteLines) === 0) {
+        $typewriteLines = array_values(array_unique(array_filter([
+            $servicesListTitle ?? '',
+            __('messages.nav.services'),
+            'Our Services',
+        ])));
+        foreach ($services->take(6) as $svc) {
+            $t = trim(strip_tags((string) $svc->title));
+            if ($t !== '') {
+                $typewriteLines[] = $t;
+            }
+        }
+        $typewriteLines = array_values(array_unique($typewriteLines));
+    }
+
+    if (count($typewriteLines) === 0) {
+        $typewriteLines = [__('messages.nav.services')];
+    }
+@endphp
 
 <!-- Page Header -->
 <div class="wptb-page-heading">
@@ -19,8 +47,14 @@
     <div class="container">
         <div class="wptb-project--inner">
             <div class="wptb-heading">
-                <div class="wptb-item--inner text-center">
-                    <h1 class="wptb-item--title">Our <span>Services</span></h1>
+                <div class="wptb-item--inner text-start" style="text-align: left;">
+                    <h1
+                        class="wptb-item--title typewrite d-block"
+                        role="text"
+                        aria-live="polite"
+                        data-period="2000"
+                        data-type='@json($typewriteLines)'
+                    ></h1>
                 </div>
             </div>
 
@@ -82,7 +116,10 @@
 </div>
 <div class="divider-line-hr mr-top-100"></div>
 
-
-
-
+@once
+    @push('scripts')
+        <script src="{{ asset('assets/js/typewrite.js') }}" defer></script>
+    @endpush
+@endonce
+@endsection
 

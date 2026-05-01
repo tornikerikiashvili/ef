@@ -22,18 +22,7 @@
                                 <a href="{{ route('home') }}"><img src="{{ asset(app()->getLocale() === 'ka' ? 'assets/img/footerlogoKA.svg' : 'assets/img/footerlogo.svg') }}" alt="logo"></a>
                             </div>
                             <h6 class="widget-title">{{ __('messages.footer.newsletter_title') }}</h6>
-                            <form class="newsletter-form" method="post" action="#">
-                                @csrf
-                                <div class="form-group">
-                                    <input type="email" name="email" class="form-control" placeholder="{{ __('messages.footer.newsletter_email_placeholder') }}" required>
-                                </div>
-                                <button type="submit" class="btn btn-two">
-                                    <span class="btn-wrap">
-                                        <span class="text-first">{{ __('messages.footer.newsletter_subscribe') }}</span>
-                                        <span class="text-second"><i class="bi bi-arrow-up-right"></i></span>
-                                    </span>
-                                </button>
-                            </form>
+
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-6 mb-5 mb-md-0">

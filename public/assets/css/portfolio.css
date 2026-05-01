@@ -701,6 +701,32 @@
   opacity: 1;
 }
 
+/* Services listing: keep cards in "hover" state by default */
+.services-listing .effect-gradient .grid-item .wptb-item--holder {
+  bottom: 0%;
+}
+.services-listing .effect-gradient .grid-item .wptb-item--meta h4 {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.services-listing .effect-gradient .grid-item .wptb-item--meta p {
+  transform: translateY(0px);
+  opacity: 1;
+}
+
+/* Services listing: on actual hover, hide overlay and scale arrow */
+.services-listing .effect-gradient .grid-item:hover .wptb-item--holder {
+  bottom: -100%;
+}
+.services-listing .effect-gradient .grid-item:hover .wptb-item--meta h4,
+.services-listing .effect-gradient .grid-item:hover .wptb-item--meta p {
+  transform: translateY(10px);
+  opacity: 0;
+}
+.services-listing .effect-gradient .grid-item:hover .wptb-item--link {
+  transform: translateX(0px) scale(1.2);
+}
+
 /* Services listing: on mobile, keep title + gradient visible */
 @media (max-width: 767px) {
   .services-listing .effect-gradient .grid-item .wptb-item--holder {

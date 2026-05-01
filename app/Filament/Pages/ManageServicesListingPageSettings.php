@@ -6,9 +6,9 @@ use App\Models\Page;
 use App\Models\Service;
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page as FilamentPage;
@@ -116,6 +116,7 @@ class ManageServicesListingPageSettings extends FilamentPage
             $merged['locales'][$locale] = [
                 'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'services_title' => isset($row['services_title']) ? (string) $row['services_title'] : '',
+                'typewrite_text' => isset($row['typewrite_text']) ? (string) $row['typewrite_text'] : '',
             ];
 
             $videoRow = is_array($merged['video'][$locale] ?? null) ? $merged['video'][$locale] : [];
@@ -175,6 +176,11 @@ class ManageServicesListingPageSettings extends FilamentPage
                                             TextInput::make('services_title')
                                                 ->label('Services list title')
                                                 ->maxLength(65535),
+                                            Textarea::make('typewrite_text')
+                                                ->label('Animated title text (one line per phrase)')
+                                                ->rows(4)
+                                                ->helperText('Each line becomes a phrase in the typing animation. Leave empty to auto-generate from service titles.')
+                                                ->columnSpanFull(),
                                         ])
                                     )->all()
                                 )
@@ -255,4 +261,3 @@ class ManageServicesListingPageSettings extends FilamentPage
             ]);
     }
 }
-
