@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Page;
 use App\Models\Gallery;
+use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
@@ -27,7 +27,7 @@ use UnitEnum;
 
 class ManageContactPageSettings extends FilamentPage
 {
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Contact page';
 

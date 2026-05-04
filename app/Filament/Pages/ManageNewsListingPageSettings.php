@@ -6,7 +6,6 @@ use App\Models\News;
 use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -27,7 +26,7 @@ use UnitEnum;
 
 class ManageNewsListingPageSettings extends FilamentPage
 {
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'News page';
 
@@ -199,4 +198,3 @@ class ManageNewsListingPageSettings extends FilamentPage
             ]);
     }
 }
-

@@ -27,7 +27,7 @@ use UnitEnum;
 
 class ManageAboutPageSettings extends FilamentPage
 {
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'About page';
 

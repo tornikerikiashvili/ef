@@ -34,7 +34,7 @@ use UnitEnum;
 
 class ManageHomePageSettings extends FilamentPage
 {
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Home page';
 
