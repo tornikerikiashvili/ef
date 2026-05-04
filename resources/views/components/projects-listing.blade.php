@@ -59,6 +59,7 @@
 
                 <div class="grid grid-3 gutter-30 clearfix">
                     <div class="grid-sizer"></div>
+
                     @foreach ($projects as $project)
                     @php
                         $gallery = is_array($project->gallery ?? null) ? $project->gallery : [];

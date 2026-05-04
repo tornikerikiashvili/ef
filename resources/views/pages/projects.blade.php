@@ -5,10 +5,6 @@
 
 @push('styles')
 <style>
-    .projects-listing--olive { position: relative; }
-    .projects-listing--olive .grid_lines { background-color: #C0C6AF; }
-    .projects-listing--olive .grid_lines .grid_line { background-color: rgba(255, 255, 255, 0.6) !important; mix-blend-mode: normal; }
-
     .projects-listing--olive .projects-status-filter select.no-nice-select {
         height: 38px;
         padding: 6px 10px;
@@ -18,8 +14,20 @@
         color: #111;
         outline: none;
     }
+
+    /* Hoverdir "fly" effect needs an initial off-canvas position. */
+    .projects-listing--olive .effect-fly .grid-item .wptb-item--holder {
+        top: -100%;
+        left: 0;
+    }
+
+    /* Match classic filterable layout (no rounding on this page). */
+    .projects-listing--olive .grid-item .wptb-item--image {
+        border-radius: 0 !important;
+    }
 </style>
 @endpush
+
 @php
     $pageTitle = filled($projectsPageTitle ?? null) ? (string) $projectsPageTitle : __('messages.nav.projects');
 
@@ -30,32 +38,22 @@
         ? 'status-' . ((int) $project->status_id)
         : 'status-unknown';
 @endphp
-<!-- Page Header -->
+
 <div class="wptb-page-heading" style="background-color: #C0C6AF;">
     <div class="wptb-item--inner" style="background-image: url('{{ $headerBg }}');">
         <div class="wptb-item-layer wptb-item-layer-one">
             @if(!filled($headerBg) || str_contains($headerBg, 'page-header-bg-8.jpg'))
-              <img src="{{ asset('assets/img/more/circle.png') }}" alt="">
+                <img src="{{ asset('assets/img/more/circle.png') }}" alt="">
             @endif
         </div>
         <h2 class="wptb-item--title">{{ $pageTitle }}</h2>
     </div>
 </div>
 
-<!-- Our Projects -->
 <section class="projects-listing--olive" style="background-color: #C0C6AF;">
-    {{-- <div class="grid_lines">
-        @for ($i = 0; $i < 7; $i++) <div class="grid_line"></div> @endfor
-    </div> --}}
     <div class="container">
         <div class="wptb-project--inner">
-            {{-- <div class="wptb-heading">
-                <div class="wptb-item--inner text-center">
-                    <h1 class="wptb-item--title">{{ $pageTitle }}</h1>
-                </div>
-            </div> --}}
-
-            <div class="has-radius effect-tilt">
+            <div class="effect-fly">
                 <div class="portfolio-filters-content">
                     <div class="projects-filters d-flex flex-wrap align-items-center justify-content-between gap-3">
                         <div class="filters-button-group">
@@ -93,34 +91,36 @@
 
                 <div class="grid grid-3 gutter-30 clearfix">
                     <div class="grid-sizer"></div>
-                    @foreach ($projects as $project)
-                    @php
-                        $gallery = is_array($project->gallery ?? null) ? $project->gallery : [];
-                        $firstGalleryImage = $gallery[0] ?? null;
-                        $imagePath = filled($firstGalleryImage) ? $firstGalleryImage : ($project->cover_photo ?: null);
 
-                        $coverUrl = $imagePath
-                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($imagePath)
-                            : asset('assets/img/projects/3/1.jpg');
-                        $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
-                    @endphp
-                    <div class="grid-item {{ $categoryClass($project) }} {{ $statusClass($project) }}">
-                        <div class="wptb-item--inner">
-                            <div class="wptb-item--image">
-                                <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
-                            </div>
-                            <div class="wptb-item--holder">
-                                <div class="wptb-item--meta">
-                                    <h4><a href="{{ $projectUrl }}">{{ $project->title }}</a></h4>
-                                    @if($project->client)
-                                        <p>By {{ $project->client }}</p>
-                                    @else
-                                        <p>&nbsp;</p>
-                                    @endif
+                    @foreach ($projects as $project)
+                        @php
+                            $gallery = is_array($project->gallery ?? null) ? $project->gallery : [];
+                            $firstGalleryImage = $gallery[0] ?? null;
+                            $imagePath = filled($firstGalleryImage) ? $firstGalleryImage : ($project->cover_photo ?: null);
+
+                            $coverUrl = $imagePath
+                                ? \Illuminate\Support\Facades\Storage::disk('public')->url($imagePath)
+                                : asset('assets/img/projects/3/1.jpg');
+                            $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
+                        @endphp
+
+                        <div class="grid-item {{ $categoryClass($project) }} {{ $statusClass($project) }}">
+                            <div class="wptb-item--inner">
+                                <div class="wptb-item--image">
+                                    <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
+                                </div>
+                                <div class="wptb-item--holder">
+                                    <div class="wptb-item--meta">
+                                        <h4><a href="{{ $projectUrl }}">{{ $project->title }}</a></h4>
+                                        @if($project->client)
+                                            <p>By {{ $project->client }}</p>
+                                        @else
+                                            <p>&nbsp;</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
@@ -141,17 +141,19 @@
       return categoryFilter + statusFilter;
     }
 
-    // Override theme's default filter handler to allow combining.
-    jQuery(document).on('click', '.projects-listing--olive .filters-button-group .button', function (e) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      categoryFilter = jQuery(this).attr('data-filter') || '*';
-      window.$grid && window.$grid.isotope({ filter: combinedFilter() });
-    });
+    jQuery(function () {
+      // Keep the theme's "is-checked" behavior, but replace its filtering
+      // so we can combine category + status.
+      jQuery('.projects-listing--olive .filters-button-group .button').off('click').on('click', function (e) {
+        e.preventDefault();
+        categoryFilter = jQuery(this).attr('data-filter') || '*';
+        window.$grid && window.$grid.isotope({ filter: combinedFilter() });
+      });
 
-    jQuery(document).on('change', '#projects-status-filter', function () {
-      statusFilter = jQuery(this).val() || '*';
-      window.$grid && window.$grid.isotope({ filter: combinedFilter() });
+      jQuery(document).on('change', '#projects-status-filter', function () {
+        statusFilter = jQuery(this).val() || '*';
+        window.$grid && window.$grid.isotope({ filter: combinedFilter() });
+      });
     });
   })();
 </script>

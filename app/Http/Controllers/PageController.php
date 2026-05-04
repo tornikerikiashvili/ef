@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\SiteSetting;
 use App\Models\Status;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
@@ -183,6 +185,7 @@ class PageController extends Controller
         $range = in_array($range, ['week', 'month', 'year'], true) ? $range : '';
 
         $hasFilters = filled($q) || filled($range);
+        $perPage = 12;
 
         if ($hasFilters) {
             $newsQuery = News::query()
@@ -212,14 +215,32 @@ class PageController extends Controller
                 });
             }
 
-            $news = $newsQuery->get();
+            $news = $newsQuery->paginate($perPage)->withQueryString();
         } else {
-            $news = Page::orderedNews($settings['news']);
-            if ($news->isEmpty()) {
-                $news = News::with('newsCategory')->orderBy('published_at', 'desc')->get();
+            $collection = Page::orderedNews($settings['news']);
+            if ($collection->isEmpty()) {
+                $collection = News::with('newsCategory')
+                    ->orderByRaw('COALESCE(published_at, created_at) DESC')
+                    ->get();
             } else {
-                $news->load('newsCategory');
+                $collection->load('newsCategory');
             }
+
+            $page = max(1, (int) request()->query('page', 1));
+            $total = $collection->count();
+            $items = $collection->forPage($page, $perPage)->values();
+
+            $news = new LengthAwarePaginator(
+                $items,
+                $total,
+                $perPage,
+                $page,
+                [
+                    'path' => request()->url(),
+                    'pageName' => 'page',
+                ]
+            );
+            $news->withQueryString();
         }
 
         $fallbackCover = SiteSetting::getValue('news_page_cover');
@@ -231,7 +252,80 @@ class PageController extends Controller
 
         $newsPageTitle = $settings['title'];
 
-        return view('pages.news', compact('news', 'headerBg', 'newsPageTitle', 'q', 'range'));
+        $newsSlots = $this->newsListingCardSlots(collect($news->items()));
+
+        return view('pages.news', compact('news', 'newsSlots', 'headerBg', 'newsPageTitle', 'q', 'range'));
+    }
+
+    /**
+     * Wide cards (width-100) only use {@see News::$is_featured}. If the current page has no featured
+     * posts, every card is width-50 — no empty wide slots, no promoting normal posts to full width.
+     *
+     * @param  Collection<int, News>  $pageItems
+     * @return list<array{span: string, news: News}>
+     */
+    private function newsListingCardSlots(Collection $pageItems): array
+    {
+        if ($pageItems->isEmpty()) {
+            return [];
+        }
+
+        $hasFeaturedOnPage = $pageItems->contains(fn (News $n) => $n->is_featured);
+
+        if (! $hasFeaturedOnPage) {
+            return $pageItems->values()
+                ->map(fn (News $n) => ['span' => 'width-50', 'news' => $n])
+                ->all();
+        }
+
+        $standard = $pageItems
+            ->filter(fn (News $n) => ! $n->is_featured)
+            ->sortByDesc(fn (News $n) => ($n->published_at ?? $n->created_at)?->timestamp ?? 0)
+            ->values();
+
+        $featured = $pageItems
+            ->filter(fn (News $n) => $n->is_featured)
+            ->sort(function (News $a, News $b): int {
+                $oa = (int) ($a->featured_order ?? 99999);
+                $ob = (int) ($b->featured_order ?? 99999);
+                if ($oa !== $ob) {
+                    return $oa <=> $ob;
+                }
+
+                return ($b->published_at ?? $b->created_at) <=> ($a->published_at ?? $a->created_at);
+            })
+            ->values();
+
+        $standardList = $standard->all();
+        $featuredList = $featured->all();
+        $sq = 0;
+        $fq = 0;
+        $pattern = ['width-50', 'width-50', 'width-100', 'width-50', 'width-50', 'width-100'];
+        $slots = [];
+        $pi = 0;
+
+        while ($sq < count($standardList) || $fq < count($featuredList)) {
+            $slotType = $pattern[$pi % count($pattern)];
+            $pi++;
+
+            if ($slotType === 'width-100') {
+                if ($fq >= count($featuredList)) {
+                    continue;
+                }
+                $slots[] = ['span' => 'width-100', 'news' => $featuredList[$fq++]];
+                continue;
+            }
+
+            if ($sq < count($standardList)) {
+                $slots[] = ['span' => 'width-50', 'news' => $standardList[$sq++]];
+            } elseif ($fq < count($featuredList)) {
+                $slots[] = ['span' => 'width-50', 'news' => $featuredList[$fq++]];
+            } else {
+                break;
+            }
+        }
+
+        return $slots;
     }
 
     public function newsSingle(string $locale, string $slug)

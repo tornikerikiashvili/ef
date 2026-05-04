@@ -3,6 +3,48 @@
 @section('title', __('messages.nav.news') . ' - Ef')
 @section('meta_description', 'News and blog - Ef Photography Agency')
 
+@push('styles')
+<style>
+    /* Small cards: design target 612×366 (ratio preserved; scales down in narrow columns) */
+    .news-listing-mosaic .grid-item.width-50 .wptb-item--image {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 612px;
+        margin-left: auto;
+        margin-right: auto;
+        aspect-ratio: 612 / 366;
+        height: auto;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .news-listing-mosaic .grid-item.width-100 .wptb-item--image {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    @media screen and (max-width: 500px) {
+        .news-listing-mosaic .grid-item.width-50 {
+            width: 50% !important;
+        }
+        .news-listing-mosaic .grid-item.width-100 {
+            width: 100% !important;
+        }
+        .news-listing-mosaic.gutter-30 {
+            margin-left: -8px;
+            margin-right: -8px;
+        }
+        .news-listing-mosaic.gutter-30 .grid-item {
+            padding: 8px;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 
 @php
@@ -20,7 +62,7 @@
     </div>
 </div>
 
-<section class="wptb-blog-grid-one">
+<section>
     <div class="container">
 
         <form method="GET" action="{{ route('news', ['locale' => app()->getLocale()]) }}" class="row g-3 align-items-end mb-4">
@@ -43,39 +85,53 @@
             </div>
         </form>
 
-        <div class="row">
-            @foreach ($news as $item)
-            @php
-                $itemUrl = route('news.show', ['locale' => app()->getLocale(), 'slug' => $item->slug ?? $item->id]);
-                $imgUrl = $item->cover_photo
-                    ? Storage::disk('public')->url($item->cover_photo)
-                    : asset('assets/img/blog/' . (((int) (($loop->iteration - 1) % 9)) + 1) . '.jpg');
-            @endphp
-            <div class="col-lg-4 col-sm-6">
-                <div class="wptb-blog-grid1 {{ $loop->iteration % 3 === 1 ? 'active highlight' : '' }} wow fadeInLeft">
-                    <div class="wptb-item--inner">
-                        <div class="wptb-item--image">
-                            <a href="{{ $itemUrl }}" class="wptb-item-link"><img src="{{ $imgUrl }}" alt="{{ $item->title }}"></a>
-                        </div>
-                        <div class="wptb-item--holder">
-                            <div class="wptb-item--date">{{ ($item->published_at ?? $item->created_at)->format('d M Y') }}</div>
-                            <h4 class="wptb-item--title"><a href="{{ $itemUrl }}">{{ $item->title }}</a></h4>
+        <div class="wptb-project--inner">
 
+
+            <div class="has-radius effect-tilt">
+                <div class="grid gutter-30 clearfix news-listing-mosaic">
+                    <div class="grid-sizer"></div>
+                    @foreach ($newsSlots ?? [] as $slot)
+                        @php
+                            $item = $slot['news'];
+                            $span = $slot['span'];
+                            $itemUrl = route('news.show', ['locale' => app()->getLocale(), 'slug' => $item->slug ?? $item->id]);
+                            $imgUrl = $item->cover_photo
+                                ? Storage::disk('public')->url($item->cover_photo)
+                                : asset('assets/img/blog/' . (((int) (($loop->iteration - 1) % 9)) + 1) . '.jpg');
+                            $metaLine = ($item->published_at ?? $item->created_at)->format('d M Y');
+                            $coverStyle = 'background-image: url('.json_encode($imgUrl).');';
+                        @endphp
+                        <div class="grid-item {{ $span }}">
+                            <div class="wptb-item--inner">
+                                <div class="wptb-item--image" style="{{ $coverStyle }}" role="img" aria-label="{{ $item->title }}"></div>
+
+                                <div class="wptb-item--holder">
+                                    <div class="wptb-item--meta">
+                                        <h4><a href="{{ $itemUrl }}">{{ $item->title }}</a></h4>
+                                        <p>{{ $metaLine }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-            @endforeach
         </div>
 
-        @if(($news ?? collect())->isEmpty())
+        @if($news->isEmpty())
             <div class="text-center py-5">
                 <p class="mb-0">No results found.</p>
             </div>
         @endif
 
+        {{-- @if($news->hasPages())
+            <div class="wptb-pagination-wrap text-center">
+                {{ $news->onEachSide(1)->links() }}
+            </div>
+        @endif --}}
+
     </div>
 </section>
 
 @endsection
-

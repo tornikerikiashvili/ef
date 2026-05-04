@@ -107,6 +107,8 @@
     <script src="{{ asset('plugins/odometer/odometer.js') }}"></script>
     <script src="{{ asset('plugins/isotope/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('plugins/isotope/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ asset('plugins/isotope/modernizr-custom.js') }}"></script>
+    <script src="{{ asset('plugins/isotope/jquery.hoverdir.js') }}"></script>
     <script src="{{ asset('plugins/isotope/tilt.jquery.js') }}"></script>
     <script src="{{ asset('plugins/isotope/isotope-init.js') }}"></script>
     <script src="{{ asset('plugins/fancybox/jquery.fancybox.min.js') }}"></script>
