@@ -61,7 +61,8 @@
                 <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
                     <div class="wptb-about--text ps-md-5">
                         @if (filled($text))
-                            <p class="wptb-about--text-one">{!! nl2br(e($text)) !!}</p>
+                            {{-- Same HTML as Home about / Filament RichEditor; do not use e() here or tags show as text --}}
+                            <div class="wptb-about--text-one">{!! $text !!}</div>
                         @endif
                     </div>
                 </div>

@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -64,11 +65,43 @@ class ManageHomePageSettings extends FilamentPage
         ]);
     }
 
+    /**
+     * When “Headline & highlights” is hidden in the form, Filament may omit locale keys from state.
+     * Merge stored headline blocks so saving other sections does not wipe title/teaser/highlights.
+     *
+     * @param  array<string, mixed>  $incoming
+     * @return array<string, mixed>
+     */
+    protected function mergePreservedHomeHeadlineLocalesFromDatabase(array $incoming): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+        $existing = Page::query()->where('key', Page::KEY_HOME_PAGE)->value('payload');
+        if (! is_array($existing)) {
+            return $incoming;
+        }
+
+        foreach ($locales as $locale) {
+            if (! is_string($locale)) {
+                continue;
+            }
+            if (isset($incoming[$locale])) {
+                continue;
+            }
+            if (isset($existing[$locale]) && is_array($existing[$locale])) {
+                $incoming[$locale] = $existing[$locale];
+            }
+        }
+
+        return $incoming;
+    }
+
     public function save(): void
     {
         $state = $this->form->getState();
         $key = Page::KEY_HOME_PAGE;
-        $payload = $this->normalizeHomePagePayload(is_array($state[$key] ?? null) ? $state[$key] : []);
+        $incoming = is_array($state[$key] ?? null) ? $state[$key] : [];
+        $incoming = $this->mergePreservedHomeHeadlineLocalesFromDatabase($incoming);
+        $payload = $this->normalizeHomePagePayload($incoming);
 
         Page::query()->updateOrCreate(
             ['key' => $key],
@@ -276,7 +309,9 @@ class ManageHomePageSettings extends FilamentPage
                                     'style' => 'background-color: #fff7ef',
                                 ]),
                         ])
-                        ->columns(1),
+                        ->columns(1)
+                        // Hidden from editors per client request; data remains in DB and on save (see mergePreservedHomeHeadlineLocalesFromDatabase).
+                        ->hidden(),
                     Section::make('About')
                         ->description('Optional home about band: title, body, image, and link (per language).')
                         ->schema([
@@ -475,9 +510,8 @@ class ManageHomePageSettings extends FilamentPage
             TextInput::make('title')
                 ->label('Title')
                 ->maxLength(65535),
-            Textarea::make('text')
+            RichEditor::make('text')
                 ->label('Text')
-                ->rows(6)
                 ->columnSpanFull(),
             FileUpload::make('image')
                 ->label('Image')

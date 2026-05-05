@@ -48,7 +48,8 @@
 
             <div class="col-md-6 ps-md-5 mt-4 mt-md-0">
                 <div class="wptb-about--text ps-md-5">
-                    <p class="wptb-about--text-one">{!! nl2br(e($aboutText)) !!}</p>
+                    {{-- Rich text from Filament RichEditor (trusted CMS HTML); legacy plain text still renders --}}
+                    <div class="wptb-about--text-one">{!! $aboutText !!}</div>
                 </div>
             </div>
         </div>

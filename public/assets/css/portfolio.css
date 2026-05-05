@@ -695,6 +695,23 @@
   opacity: 1;
 }
 
+/* Services listing: whole card is one link */
+.services-listing .effect-gradient .grid-item > .wptb-item--inner.services-listing__card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.services-listing .effect-gradient .grid-item > .wptb-item--inner.services-listing__card:focus-visible {
+  outline: 2px solid var(--color-one);
+  outline-offset: 4px;
+}
+
+.services-listing .effect-gradient .grid-item > .wptb-item--inner.services-listing__card .wptb-item--meta h4 {
+  color: var(--color-white-fixed);
+}
+
 /* Services listing: keep arrow visible by default */
 .services-listing .effect-gradient .grid-item .wptb-item--link {
   transform: translateX(0px);

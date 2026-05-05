@@ -125,6 +125,30 @@
     font-size: 22px;
     line-height: 34px;
 }
+/* Inline links inside home about rich text (RichEditor) */
+.wptb-about-two .wptb-about--text .wptb-about--text-one a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #c0c6af;
+    border-radius: 5px;
+    padding: 3px 4px 3px 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+}
+.wptb-about-two .wptb-about--text .wptb-about--text-one a::after {
+    content: '';
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.45);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%231a1a1a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 11px 11px;
+}
 .wptb-about-two .wptb-item--button.round-button {
     position: absolute;
     bottom: -50px;
@@ -1619,5 +1643,33 @@ body.theme-style--olive {
 .project-distortion {
     width: 100%;
     height: 400px;
+}
+
+/*
+ * Inner pages use theme-style--light only (home adds theme-style--olive).
+ * Keep olive accent for custom cursor dot, scrollbar, and text selection.
+ */
+body.theme-style--light:not(.theme-style--olive) ::-moz-selection {
+    background: #A6A182;
+}
+body.theme-style--light:not(.theme-style--olive) ::selection {
+    background: #A6A182;
+}
+
+body.theme-style--light:not(.theme-style--olive) {
+    scrollbar-color: rgba(166, 161, 130, 1) transparent;
+}
+
+body.theme-style--light:not(.theme-style--olive)::-webkit-scrollbar-thumb {
+    background-color: rgba(166, 161, 130, 1);
+}
+
+body.theme-style--light:not(.theme-style--olive) .pointer {
+    background: #A6A182;
+}
+
+body.theme-style--light:not(.theme-style--olive) .bnz-pointer.bnz-drag:before,
+body.theme-style--light:not(.theme-style--olive) .bnz-pointer.bnz-drag:after {
+    color: #A6A182;
 }
 

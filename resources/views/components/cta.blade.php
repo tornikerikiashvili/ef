@@ -1,8 +1,12 @@
+@php
+    $ctaTextureUrl = asset('assets/img/more/texture-2.svg');
+@endphp
 <section class="wptb-contact-form style1">
-    <div class="wptb-item-layer both-version">
-        <img src="{{ asset('assets/img/more/texture-2.png') }}" alt="">
-        <img src="{{ asset('assets/img/more/texture-2-light.png') }}" alt="">
-    </div>
+    <div
+        class="wptb-item-layer both-version"
+        style="background-image: url({{ json_encode($ctaTextureUrl) }}); background-repeat: repeat; background-position: center;"
+        aria-hidden="true"
+    ></div>
     <div class="container">
         {{-- <div class="wptb-form--wrapper">
             <div class="wptb-heading">

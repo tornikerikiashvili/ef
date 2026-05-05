@@ -67,15 +67,15 @@
                         $serviceUrl = route('services.show', ['slug' => $service->slug ?? $service->id]);
                     @endphp
                     <div class="grid-item">
-                        <div class="wptb-item--inner">
+                        <a class="wptb-item--inner services-listing__card" href="{{ $serviceUrl }}">
                             <div class="wptb-item--image">
-                                <img src="{{ $coverUrl }}" alt="{{ $service->title }}">
-                                <a class="wptb-item--link" href="{{ $serviceUrl }}"><i class="bi bi-chevron-right"></i></a>
+                                <img src="{{ $coverUrl }}" alt="">
+                                <span class="wptb-item--link" aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
                             </div>
 
                             <div class="wptb-item--holder">
                                 <div class="wptb-item--meta">
-                                    <h4 class="service_item_title"><a href="{{ $serviceUrl }}">{{ $service->title }}</a></h4>
+                                    <h4 class="service_item_title">{{ $service->title }}</h4>
                                     @if($service->short_teaser)
                                         <p>{{ \Illuminate\Support\Str::limit(strip_tags($service->short_teaser), 60) }}</p>
                                     @else
@@ -83,7 +83,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     @endforeach
                 </div>
