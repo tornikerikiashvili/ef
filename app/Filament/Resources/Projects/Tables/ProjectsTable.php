@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
+use App\Models\Project;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -24,10 +25,13 @@ class ProjectsTable
                     ->label('Order')
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('category.name')
-                    ->label('Category')
-                    ->sortable()
-                    ->toggleable(),
+                TextColumn::make('categories_summary')
+                    ->label('Categories')
+                    ->toggleable()
+                    ->sortable(query: function ($query, string $direction): void {
+                        $query->withCount('categories')->orderBy('categories_count', $direction);
+                    })
+                    ->getStateUsing(fn (Project $record): string => $record->categories->pluck('name')->unique()->filter()->implode(', ') ?: '—'),
                 TextColumn::make('status.name')
                     ->label('Status')
                     ->sortable()

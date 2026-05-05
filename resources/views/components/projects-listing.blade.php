@@ -10,9 +10,15 @@
 </style>
 @endpush
 @php
-    $categoryClass = fn ($project) => $project->category
-        ? 'category-' . \Illuminate\Support\Str::slug($project->category->slug ?? $project->category->name ?? $project->category->id)
-        : 'category-uncategorized';
+    $categoryClass = function ($project) {
+        if ($project->categories->isEmpty()) {
+            return 'category-uncategorized';
+        }
+
+        return $project->categories
+            ->map(fn ($category) => 'category-'.\Illuminate\Support\Str::slug($category->slug ?? $category->name ?? $category->id))
+            ->implode(' ');
+    };
 @endphp
 <!-- Page Header -->
 <div class="wptb-page-heading" style="background-color: #C0C6AF;">

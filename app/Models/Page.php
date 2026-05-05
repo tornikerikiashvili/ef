@@ -889,6 +889,7 @@ class Page extends Model
 
         return Project::query()
             ->whereIn('id', $ids)
+            ->with(['categories', 'status'])
             ->get()
             ->sortBy(fn (Project $p): int => $order[$p->id] ?? 999)
             ->values();

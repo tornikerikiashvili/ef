@@ -184,26 +184,7 @@
 
 
     <!-- BG Video -->
-    <div class="container mr-top-100" >
-        <div class="wptb-video-player1 wow zoomIn" style="background-image: url('{{ $aboutVideoBgUrl }}');">
-            <div class="wptb-item--inner">
-                <div class="wptb-item--holder">
-                    <div class="wptb-item--video-button">
-                        <a class="btn" data-fancybox href="{{ $aboutVideoUrl }}">
-                            <span class="text-second"> <i class="bi bi-play-fill"></i> </span>
-                            <span class="line-video-animation line-video-1"></span>
-                            <span class="line-video-animation line-video-2"></span>
-                            <span class="line-video-animation line-video-3"></span>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-            <div class="wptb-item-layer wptb-item-layer-one">
-                <img src="../assets/img/more/light-3.png" alt="img">
-            </div>
-        </div>
-    </div>
+    <x-wptb-video-section :url="$aboutVideoUrl" :background-image="$aboutVideoBgUrl" />
 
     <div class="divider-line-hr mr-top-100"></div>
 

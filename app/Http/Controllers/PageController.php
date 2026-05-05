@@ -129,10 +129,10 @@ class PageController extends Controller
 
         $projects = Page::orderedProjects($settings['projects']);
         if ($projects->isEmpty()) {
-            $projects = Project::with(['category', 'status'])->orderBy('created_at', 'desc')->get();
+            $projects = Project::with(['categories', 'status'])->orderBy('created_at', 'desc')->get();
         } else {
             // Ensure relations exist for filters/classes.
-            $projects->load(['category', 'status']);
+            $projects->load(['categories', 'status']);
         }
 
         $categories = Category::orderBy('name')->get();
@@ -152,12 +152,12 @@ class PageController extends Controller
 
     public function projectSingle(string $locale, string $slug)
     {
-        $project = Project::with(['category', 'status'])
+        $project = Project::with(['categories', 'status'])
             ->where('slug', $slug)
             ->first();
 
         if (! $project && ctype_digit((string) $slug)) {
-            $project = Project::with(['category', 'status'])->find((int) $slug);
+            $project = Project::with(['categories', 'status'])->find((int) $slug);
         }
 
         if (! $project) {
@@ -167,7 +167,7 @@ class PageController extends Controller
         $prevProject = Project::where('id', '<', $project->id)->orderBy('id', 'desc')->first();
         $nextProject = Project::where('id', '>', $project->id)->orderBy('id')->first();
 
-        $relatedProjects = Project::with('category')
+        $relatedProjects = Project::with('categories')
             ->where('id', '!=', $project->id)
             ->orderBy('created_at', 'desc')
             ->limit(4)
@@ -313,6 +313,7 @@ class PageController extends Controller
                     continue;
                 }
                 $slots[] = ['span' => 'width-100', 'news' => $featuredList[$fq++]];
+
                 continue;
             }
 

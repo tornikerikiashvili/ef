@@ -15,10 +15,16 @@
         outline: none;
     }
 
-    /* Hoverdir "fly" effect needs an initial off-canvas position. */
-    .projects-listing--olive .effect-fly .grid-item .wptb-item--holder {
+    /* Hoverdir "fly" effect: holder starts off-canvas until hover (unless trial hover below). */
+    .projects-listing--olive:not(.projects-listing--trial-hover) .effect-fly .grid-item .wptb-item--holder {
         top: -100%;
         left: 0;
+    }
+
+    /* Temporary trial: keep overlay visible like hovered state (remove class when reverting). */
+    .projects-listing--olive.projects-listing--trial-hover .effect-fly .grid-item .wptb-item--holder {
+        top: 0 !important;
+        left: 0 !important;
     }
 
     /* Match classic filterable layout (no rounding on this page). */
@@ -31,9 +37,15 @@
 @php
     $pageTitle = filled($projectsPageTitle ?? null) ? (string) $projectsPageTitle : __('messages.nav.projects');
 
-    $categoryClass = fn ($project) => $project->category
-        ? 'category-' . \Illuminate\Support\Str::slug($project->category->slug ?? $project->category->name ?? $project->category->id)
-        : 'category-uncategorized';
+    $categoryClass = function ($project) {
+        if ($project->categories->isEmpty()) {
+            return 'category-uncategorized';
+        }
+
+        return $project->categories
+            ->map(fn ($category) => 'category-'.\Illuminate\Support\Str::slug($category->slug ?? $category->name ?? $category->id))
+            ->implode(' ');
+    };
     $statusClass = fn ($project) => filled($project->status_id ?? null)
         ? 'status-' . ((int) $project->status_id)
         : 'status-unknown';
@@ -50,7 +62,7 @@
     </div>
 </div>
 
-<section class="projects-listing--olive" style="background-color: #C0C6AF;">
+<section class="projects-listing--olive projects-listing--trial-hover" style="background-color: #C0C6AF;">
     <div class="container">
         <div class="wptb-project--inner">
             <div class="effect-fly">
@@ -104,7 +116,7 @@
                             $projectUrl = route('projects.show', ['slug' => $project->slug ?? $project->id]);
                         @endphp
 
-                        <div class="grid-item {{ $categoryClass($project) }} {{ $statusClass($project) }}">
+                        <div class="project_grid_item grid-item {{ $categoryClass($project) }} {{ $statusClass($project) }}">
                             <div class="wptb-item--inner">
                                 <div class="wptb-item--image">
                                     <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
@@ -113,7 +125,7 @@
                                     <div class="wptb-item--meta">
                                         <h4><a href="{{ $projectUrl }}">{{ $project->title }}</a></h4>
                                         @if($project->client)
-                                            <p>By {{ $project->client }}</p>
+                                            <p>{{ $project->client }}</p>
                                         @else
                                             <p>&nbsp;</p>
                                         @endif

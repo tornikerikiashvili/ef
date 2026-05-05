@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Concerns\HasResourceTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -18,10 +20,11 @@ class Project extends Model
         'location',
         'status_text',
         'text_content',
-        'category_id',
         'status_id',
         'cover_photo',
         'gallery',
+        'video_poster',
+        'video_url',
         'is_featured',
         'featured_order',
         'resourceTranslations',
@@ -41,9 +44,9 @@ class Project extends Model
         'text_content',
     ];
 
-    public function category(): BelongsTo
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
 
     public function status(): BelongsTo
@@ -57,10 +60,10 @@ class Project extends Model
             unset($model->attributes['resourceTranslations']);
             if (empty($model->slug) && $model->title) {
                 $title = is_string($model->title) ? $model->title : ($model->getTranslation('title', 'en') ?: $model->getTranslation('title', 'ka') ?: 'project');
-                $model->slug = \Illuminate\Support\Str::slug($title);
+                $model->slug = Str::slug($title);
                 $i = 1;
                 while (static::where('slug', $model->slug)->where('id', '!=', $model->id)->exists()) {
-                    $model->slug = \Illuminate\Support\Str::slug($title) . '-' . $i++;
+                    $model->slug = Str::slug($title).'-'.$i++;
                 }
             }
         });
@@ -69,5 +72,42 @@ class Project extends Model
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    public static function youtubeWatchUrl(?string $videoUrl): ?string
+    {
+        if ($videoUrl === null || trim($videoUrl) === '') {
+            return null;
+        }
+
+        $videoUrl = trim($videoUrl);
+
+        if (preg_match('/youtu\.be\/([a-zA-Z0-9_-]{11})/', $videoUrl, $m)) {
+            return 'https://www.youtube.com/watch?v='.$m[1];
+        }
+
+        if (preg_match('/[?&]v=([a-zA-Z0-9_-]{11})/', $videoUrl, $m)) {
+            return 'https://www.youtube.com/watch?v='.$m[1];
+        }
+
+        if (preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/', $videoUrl, $m)) {
+            return 'https://www.youtube.com/watch?v='.$m[1];
+        }
+
+        if (preg_match('/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/', $videoUrl, $m)) {
+            return 'https://www.youtube.com/watch?v='.$m[1];
+        }
+
+        return null;
+    }
+
+    public static function youtubeVideoId(?string $videoUrl): ?string
+    {
+        $watch = self::youtubeWatchUrl($videoUrl);
+        if ($watch === null) {
+            return null;
+        }
+
+        return preg_match('/v=([a-zA-Z0-9_-]{11})/', $watch, $m) ? $m[1] : null;
     }
 }

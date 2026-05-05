@@ -1233,6 +1233,7 @@
     width: auto;
     height: auto;
     font-size: 13px;
+    font-feature-settings: "case" on;
     text-transform: uppercase;
     letter-spacing: 0px;
     padding: 15px 22px;
@@ -1657,11 +1658,15 @@ body.theme-style--light:not(.theme-style--olive) ::selection {
 }
 
 body.theme-style--light:not(.theme-style--olive) {
-    scrollbar-color: rgba(166, 161, 130, 1) transparent;
+    scrollbar-color: #a6a182;
 }
 
 body.theme-style--light:not(.theme-style--olive)::-webkit-scrollbar-thumb {
-    background-color: rgba(166, 161, 130, 1);
+    background-color: #a6a182;
+}
+
+body.theme-style--light:not(.theme-style--olive)::-webkit-scrollbar-track {
+    background-color: #ffffff;
 }
 
 body.theme-style--light:not(.theme-style--olive) .pointer {
@@ -1671,5 +1676,10 @@ body.theme-style--light:not(.theme-style--olive) .pointer {
 body.theme-style--light:not(.theme-style--olive) .bnz-pointer.bnz-drag:before,
 body.theme-style--light:not(.theme-style--olive) .bnz-pointer.bnz-drag:after {
     color: #A6A182;
+}
+
+body.theme-style--light:not(.theme-style--olive) .totop a {
+    background: #a6a182;
+    box-shadow: 0px 0px 3px #a6a182;
 }
 

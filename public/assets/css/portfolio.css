@@ -612,6 +612,10 @@
   filter: brightness(.4) contrast(1.1) saturate(1.2) blur(3px);
 }
 
+.project_grid_item .wptb-item--meta  a, .project_grid_item .wptb-item--meta p{
+   color: white;
+}
+
 /* Effect Fly */
 .effect-fly .grid-item .wptb-item--holder {
   position: absolute;
@@ -623,7 +627,7 @@
   padding: 50px;
   margin-top: 0px;
   text-align: center;
-  background: rgba(var(--color-black-rgb), 0.5);
+  background: rgba(98,98,98, 0.5);
 }
 
 /* Effect Gradient */

@@ -6592,6 +6592,7 @@ svg.radial-progress {
     font-style: normal;
     font-weight: var(--fw-normal);
     line-height: 15px; /* 125% */
+    font-feature-settings: "case" on;
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: var(--transition-base);

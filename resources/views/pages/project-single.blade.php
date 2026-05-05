@@ -6,6 +6,23 @@
 @section('content')
 @push('styles')
 <style>
+    .blog-details .effect-tilt .grid-item > .wptb-item--inner.project-related__card {
+        display: block;
+        text-decoration: none;
+        color: var(--color-two);
+        cursor: pointer;
+    }
+
+    .blog-details .effect-tilt .grid-item > .wptb-item--inner.project-related__card:focus-visible {
+        outline: 2px solid var(--color-one);
+        outline-offset: 4px;
+    }
+
+    .blog-details .effect-tilt .grid-item > .wptb-item--inner.project-related__card .wptb-item--meta h4,
+    .blog-details .effect-tilt .grid-item > .wptb-item--inner.project-related__card .wptb-item--meta p {
+        color: inherit;
+    }
+
     @media (min-width: 768px) {
         .project-single__row {
             flex-wrap: nowrap;
@@ -29,6 +46,13 @@
     $galleryImages = is_array($project->gallery) && count($project->gallery) > 0
         ? collect($project->gallery)
         : collect([null]);
+    $youtubeWatch = \App\Models\Project::youtubeWatchUrl($project->video_url);
+    $youtubePosterId = \App\Models\Project::youtubeVideoId($project->video_url);
+    $projectVideoBgUrl = filled($project->video_poster)
+        ? \Illuminate\Support\Facades\Storage::disk('public')->url($project->video_poster)
+        : ($youtubePosterId
+            ? 'https://i.ytimg.com/vi/'.$youtubePosterId.'/hqdefault.jpg'
+            : asset('assets/img/background/bg-7.jpg'));
 @endphp
 <section class="blog-details">
     <div class="container">
@@ -62,19 +86,23 @@
                                 <p>{{ __('messages.project.client') }}: {{ $project->client }}</p>
                             @endif
 
+                            @if ($youtubeWatch)
+                                <x-wptb-video-section class="mb-4 mt-4" :url="$youtubeWatch" :background-image="$projectVideoBgUrl" />
+                            @endif
+
                             <div class="wptb-page-links">
                                 <div class="wptb-pge-link--item previous">
                                     @if ($prevProject)
-                                        <a href="{{ route('projects.show', ['slug' => $prevProject->slug ?? $prevProject->id]) }}"><i class="bi bi-arrow-left"></i> <span>Previous</span></a>
+                                        <a href="{{ route('projects.show', ['slug' => $prevProject->slug ?? $prevProject->id]) }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.previous') }}</span></a>
                                     @else
-                                        <a href="{{ route('projects') }}"><i class="bi bi-arrow-left"></i> <span>Back to Projects</span></a>
+                                        <a href="{{ route('projects') }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.back_to_projects') }}</span></a>
                                     @endif
                                 </div>
                                 <div class="wptb-pge-link--item next">
                                     @if ($nextProject)
-                                        <a href="{{ route('projects.show', ['slug' => $nextProject->slug ?? $nextProject->id]) }}"><span>Next</span> <i class="bi bi-arrow-right"></i></a>
+                                        <a href="{{ route('projects.show', ['slug' => $nextProject->slug ?? $nextProject->id]) }}"><span>{{ __('messages.project.next') }}</span> <i class="bi bi-arrow-right"></i></a>
                                     @else
-                                        <a href="{{ route('projects') }}"><span>Back to Projects</span> <i class="bi bi-arrow-right"></i></a>
+                                        <a href="{{ route('projects') }}"><span>{{ __('messages.project.back_to_projects') }}</span> <i class="bi bi-arrow-right"></i></a>
                                     @endif
                                 </div>
                             </div>
@@ -101,9 +129,9 @@
                                             <div class="wptb--meta"><label>{{ __('messages.project.area') }}:</label> <span>{{ $project->area }}</span></div>
                                         </div>
                                     @endif
-                                    @if ($project->category)
+                                    @if ($project->categories->isNotEmpty())
                                         <div class="wptb--item">
-                                            <div class="wptb--meta"><label>{{ __('messages.project.category') }}:</label> <span>{{ $project->category->name }}</span></div>
+                                            <div class="wptb--meta"><label>{{ __('messages.project.category') }}:</label> <span>{{ $project->categories->pluck('name')->unique()->join(', ') }}</span></div>
                                         </div>
                                     @endif
                                     @if ($project->status_text || $project->status)
@@ -144,13 +172,13 @@
                                 $relatedUrl = route('projects.show', ['slug' => $related->slug ?? $related->id]);
                             @endphp
                             <div class="grid-item">
-                                <div class="wptb-item--inner">
+                                <a class="wptb-item--inner project-related__card" href="{{ $relatedUrl }}">
                                     <div class="wptb-item--image">
-                                        <img src="{{ $coverUrl }}" alt="{{ $related->title }}">
+                                        <img src="{{ $coverUrl }}" alt="">
                                     </div>
                                     <div class="wptb-item--holder">
                                         <div class="wptb-item--meta">
-                                            <h4><a href="{{ $relatedUrl }}">{{ $related->title }}</a></h4>
+                                            <h4>{{ $related->title }}</h4>
                                             @if ($related->client)
                                                 <p>{{ $related->client }}</p>
                                             @else
@@ -158,7 +186,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>

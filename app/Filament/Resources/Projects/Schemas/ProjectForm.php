@@ -41,12 +41,12 @@ class ProjectForm
                             ->label('URL slug')
                             ->maxLength(255)
                             ->helperText('Leave empty to auto-generate from title. Used in URLs: /projects/your-slug'),
-                        Select::make('category_id')
-                            ->label('Category')
-                            ->relationship('category', 'name')
+                        Select::make('categories')
+                            ->label('Categories')
+                            ->relationship('categories', 'name')
+                            ->multiple()
                             ->searchable()
-                            ->preload()
-                            ->nullable(),
+                            ->preload(),
                         Select::make('status_id')
                             ->label('Status')
                             ->relationship('status', 'name')
@@ -74,6 +74,21 @@ class ProjectForm
                             ->multiple()
                             ->reorderable()
                             ->columnSpanFull(),
+                        TextInput::make('video_url')
+                            ->label('YouTube video URL')
+                            ->maxLength(2048)
+                            ->nullable()
+                            ->columnSpanFull()
+                            ->helperText('Paste a full URL (watch, embed, shorts, or youtu.be).'),
+                        FileUpload::make('video_poster')
+                            ->label('Video poster image')
+                            ->disk('public')
+                            ->directory('projects')
+                            ->visibility('public')
+                            ->image()
+                            ->nullable()
+                            ->columnSpanFull()
+                            ->helperText('Optional thumbnail before play. If empty, the YouTube default thumbnail is used.'),
                     ])
                     ->columnSpanFull(),
 
@@ -95,7 +110,7 @@ class ProjectForm
     }
 
     /**
-     * @return array<int, \Filament\Forms\Components\TextInput|\Filament\Forms\Components\RichEditor>
+     * @return array<int, TextInput|RichEditor>
      */
     protected static function translatableFields(): array
     {

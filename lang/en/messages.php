@@ -32,6 +32,10 @@ return [
         'area' => 'Area',
         'category' => 'Category',
         'status' => 'Status',
+        'previous' => 'Previous',
+        'next' => 'Next',
+        'back_to_projects' => 'Back to Projects',
+        'watch_video' => 'Watch video',
     ],
     'projects' => [
         'discover_all' => 'Discover All Projects',

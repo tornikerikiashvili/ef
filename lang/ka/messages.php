@@ -32,6 +32,10 @@ return [
         'area' => 'ფართობი',
         'category' => 'კატეგორია',
         'status' => 'სტატუსი',
+        'previous' => 'წინა',
+        'next' => 'შემდეგი',
+        'back_to_projects' => 'უკან პროექტებში',
+        'watch_video' => 'ვიდეოს ნახვა',
     ],
     'projects' => [
         'discover_all' => 'ყველა პროექტის გაცნობა',

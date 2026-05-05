@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasResourceTranslations;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model
 {
@@ -20,8 +20,8 @@ class Category extends Model
         'name',
     ];
 
-    public function projects(): HasMany
+    public function projects(): BelongsToMany
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsToMany(Project::class)->withTimestamps();
     }
 }
