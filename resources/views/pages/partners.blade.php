@@ -5,6 +5,12 @@
 
 @push('styles')
 <style>
+
+body.route-partners .partners-grid-page .grid-item .wptb-item--image{
+    background: rgba(242, 242, 242,0.9);
+}
+
+
     .partners-grid-page .grid-item .wptb-item--image {
         display: flex;
         align-items: center;
