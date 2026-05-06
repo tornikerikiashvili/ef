@@ -8,7 +8,7 @@
         <div class="wptb-item--inner">
             <div class="wptb-item--holder">
                 <div class="wptb-item--video-button">
-                    <a class="btn" data-fancybox href="{{ $url }}">
+                    <a class="btn cursor-no-grow" data-fancybox href="{{ $url }}">
                         <span class="text-second"> <i class="bi bi-play-fill"></i> </span>
                         <span class="line-video-animation line-video-1"></span>
                         <span class="line-video-animation line-video-2"></span>

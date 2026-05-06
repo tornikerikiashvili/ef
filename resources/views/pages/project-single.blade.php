@@ -40,6 +40,19 @@
             max-width: 40%;
         }
     }
+
+    /* Sidebar video: keep uploaded poster proportions (no crop). */
+    .project-single__sidebar .wptb-video-player1 {
+        min-height: unset;
+        aspect-ratio: 16 / 9;
+        background-size: contain;
+        background-color: #000;
+    }
+    .project-single__sidebar .wptb-item--video-button .btn {
+        width: 96px;
+        min-width: 96px;
+        height: 96px;
+    }
 </style>
 @endpush
 @php
@@ -63,9 +76,17 @@
                         <div class="swiper-container swiper-gallery mb-4">
                             <div class="swiper-wrapper">
                                 @foreach ($galleryImages as $image)
+                                    @php
+                                        $src = $image
+                                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($image)
+                                            : asset('assets/img/projects/gallery/3.jpg');
+                                    @endphp
                                     <div class="swiper-slide">
                                         <figure class="block-gallery">
-                                            <img src="{{ $image ? \Illuminate\Support\Facades\Storage::disk('public')->url($image) : asset('assets/img/projects/gallery/3.jpg') }}" alt="{{ $project->title }}">
+                                            <img src="{{ $src }}" alt="{{ $project->title }}">
+                                            <a class="wptb-image-popup" href="{{ $src }}" data-fancybox="project-gallery">
+                                                <i class="bi bi-arrows-fullscreen"></i>
+                                            </a>
                                         </figure>
                                     </div>
                                 @endforeach
@@ -84,10 +105,6 @@
                                 {!! $project->text_content !!}
                             @elseif ($project->client)
                                 <p>{{ __('messages.project.client') }}: {{ $project->client }}</p>
-                            @endif
-
-                            @if ($youtubeWatch)
-                                <x-wptb-video-section class="mb-4 mt-4" :url="$youtubeWatch" :background-image="$projectVideoBgUrl" />
                             @endif
 
                             <div class="wptb-page-links">
@@ -141,6 +158,10 @@
                                     @endif
                                 </div>
                             </div>
+
+                            @if ($youtubeWatch)
+                                <x-wptb-video-section class="mt-4" :url="$youtubeWatch" :background-image="$projectVideoBgUrl" />
+                            @endif
                         </div>
                     </div>
                 </div>
