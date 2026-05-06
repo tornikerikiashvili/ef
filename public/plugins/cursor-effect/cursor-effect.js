@@ -7,7 +7,7 @@
 
 	$(document).mousemove(function(e) {
 
-		$(".swiper-button-prev, .swiper-button-next, input.button, a, .btn, button, #mode_switcher")
+		$(".swiper-button-prev, .swiper-button-next, input.button, a:not(.cursor-no-grow), .btn:not(.cursor-no-grow), button:not(.cursor-no-grow), #mode_switcher")
 		.on("mouseenter", function() {
 			$('.bnz-pointer').addClass("bnz-large")
 		})

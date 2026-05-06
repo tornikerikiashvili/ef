@@ -6,7 +6,7 @@
     padding: 150px 100px 100px;
 }
 .blog-details.blog-details-box .sidebar {
-    top: 300px;
+    top: 200px;
 }
 .blog-details .post-header {
     margin-top: 0px;
@@ -77,7 +77,7 @@
 .blog-details ul.point-order li {
     position: relative;
     line-height: 36px;
-    
+
 }
 .blog-details ul.point-order li span {
     color: var(--color-white);
@@ -112,7 +112,7 @@
     background: var(--color-white);
 	color: var(--color-one);
     border-radius: 100%;
-	
+
 	font-size: 22px;
     line-height: 40px;
     text-align: center;
@@ -237,7 +237,7 @@
     width: auto;
     display: inline-block;
     background-color: var(--color-dark-seven);
-    
+
     -webkit-border-radius: 3px;
     border-radius: 3px;
     padding: 6px 13px;
@@ -247,7 +247,7 @@
 .blog-details .post-share ul.share-list li a:hover {
     background-color: var(--color-one);
     border-color: var(--color-one);
-    
+
 }
 
 .blog-details .post-share ul.share-list li:first-child {
@@ -295,7 +295,7 @@
     padding: 30px 0px;
     margin: 0px 0px 40px 0px;
   }
-  
+
   .blog-details .author-div .author {
     max-width: 125px;
     min-width: 125px;
@@ -304,46 +304,46 @@
     border-radius: 100%;
     overflow: hidden;
   }
-  
+
   .blog-details .author-div .author-name {
     font-size: 24px;
     margin-bottom: 6px;
   }
-  
+
   .blog-details .author-div .author-intro {
     margin-bottom: 15px;
     font-size: 17px;
     font-weight: var(--fw-light);
     line-height: 27px;
   }
-  
+
   .blog-details .author-div .social-media {
     display: flex;
     align-items: center;
   }
-  
+
   .blog-details .author-div .social-media ul.social-list {
     display: flex;
     align-items: center;
     margin-bottom: 0px;
     padding-left: 0;
   }
-  
+
   .blog-details .author-div .social-media ul.social-list li {
     list-style-type: none;
     display: inline-block;
   }
-  
+
   .blog-details .author-div .social-media ul.social-list li a {
     font-size: 15px;
     padding: 0px 14px;
-    
+
   }
-  
+
   .blog-details .author-div .social-media ul.social-list li:first-child a {
     padding-left: 0px;
   }
-  
+
   .blog-details .author-div .social-media ul.social-list li:last-child a {
     padding-right: 0px;
   }
@@ -379,7 +379,7 @@
     background: var(--color-one);
     text-align: center;
     font-size: 30px;
-    
+
     border-radius: 100%;
     cursor: pointer;
     transition: all 0.5s ease;
@@ -436,11 +436,11 @@
 
 .blog-details .video-post .ytube-video .post_header .post_title {
     margin: 0px 0px;
-    
+
 }
 
 .blog-details .video-post .ytube-video .post_header .post_title a {
-    
+
 }
 
 .blog-details .video-post .local_video {
@@ -467,7 +467,7 @@
     background: var(--second-color);
     text-align: center;
     font-size: 30px;
-    
+
     border-radius: 100%;
     cursor: pointer;
     transition: all 0.5s ease;
@@ -494,7 +494,7 @@
     font-size: 24px;
     background: var(--second-color);
     text-align: center;
-    
+
     border-radius: 3px;
     cursor: pointer;
 }
@@ -512,11 +512,11 @@
 
 .blog-details .video-post .local_video .post_header .post_title {
     margin: 0px 0px;
-    
+
 }
 
 .blog-details .video-post .local_video .post_header .post_title a {
-    
+
 }
 
 iframe, object, embed, iframe, object, iframe, video {
@@ -527,7 +527,7 @@ iframe, object, embed, iframe, object, iframe, video {
 /*-------- Comments ------------*/
 .comments-area .comments-title {
     position: relative;
-    
+
     font-size: 32px;
     font-style: normal;
     font-weight: var(--fw-medium);
@@ -576,7 +576,7 @@ iframe, object, embed, iframe, object, iframe, video {
     display: flex;
     align-items: center;
     color: var(--color-white);
-    
+
     font-size: 18px;
     font-style: normal;
     font-weight: var(--fw-medium);
@@ -633,13 +633,13 @@ iframe, object, embed, iframe, object, iframe, video {
     width: 40px;
     height: 40px;
     line-height: 40px;
-    
+
     display: block;
 }
 
 .comments-area .comments-pagination a:hover, .comments-area .comments-pagination a.current, .comments-area .comments-pagination span:hover, .comments-area .comments-pagination span.current {
     background: var(--color-one);
-    
+
 }
 
 .comment-respond {
@@ -647,8 +647,8 @@ iframe, object, embed, iframe, object, iframe, video {
 }
 
 .comment-respond .comment-reply-title {
-    position: relative;    
-    
+    position: relative;
+
     font-size: 32px;
     font-style: normal;
     font-weight: var(--fw-medium);
@@ -677,7 +677,7 @@ iframe, object, embed, iframe, object, iframe, video {
     height: 58px;
     font-size: 16px;
     background: var(--color-five);
-    
+
     border: 1px solid var(--color-five);
     padding: 15px 25px;
 }
@@ -686,7 +686,7 @@ iframe, object, embed, iframe, object, iframe, video {
     height: 140px;
     font-size: 16px;
     background: var(--color-five);
-    
+
     border: 1px solid var(--color-five);
     padding: 15px 25px;
 } */

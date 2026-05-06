@@ -15,22 +15,17 @@
         outline: none;
     }
 
-    /* Hoverdir "fly" effect: holder starts off-canvas until hover (unless trial hover below). */
-    .projects-listing--olive:not(.projects-listing--trial-hover) .effect-fly .grid-item .wptb-item--holder {
-        top: -100%;
-        left: 0;
-    }
-
-    /* Temporary trial: keep overlay visible like hovered state (remove class when reverting). */
-    .projects-listing--olive.projects-listing--trial-hover .effect-fly .grid-item .wptb-item--holder {
-        top: 0 !important;
-        left: 0 !important;
-    }
-
     /* Match classic filterable layout (no rounding on this page). */
     .projects-listing--olive .grid-item .wptb-item--image {
         border-radius: 0 !important;
     }
+
+    /* Whole-card link: keep typography consistent (white title). */
+    .projects-listing--olive .project_grid_item .wptb-item--meta h4,
+    .projects-listing--olive .project_grid_item .wptb-item--meta h4 * {
+        color: #fff;
+    }
+
 </style>
 @endpush
 
@@ -62,7 +57,7 @@
     </div>
 </div>
 
-<section class="projects-listing--olive projects-listing--trial-hover" style="background-color: #C0C6AF;">
+<section class="projects-listing--olive" style="background-color: #C0C6AF;">
     <div class="container">
         <div class="wptb-project--inner">
             <div class="effect-fly">
@@ -117,13 +112,13 @@
                         @endphp
 
                         <div class="project_grid_item grid-item {{ $categoryClass($project) }} {{ $statusClass($project) }}">
-                            <div class="wptb-item--inner">
+                            <a href="{{ $projectUrl }}" class="wptb-item--inner cursor-no-grow" aria-label="{{ $project->title }}">
                                 <div class="wptb-item--image">
                                     <img src="{{ $coverUrl }}" alt="{{ $project->title }}">
                                 </div>
                                 <div class="wptb-item--holder">
                                     <div class="wptb-item--meta">
-                                        <h4><a href="{{ $projectUrl }}">{{ $project->title }}</a></h4>
+                                        <h4>{{ $project->title }}</h4>
                                         @if($project->client)
                                             <p>{{ $project->client }}</p>
                                         @else
@@ -131,7 +126,7 @@
                                         @endif
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>
