@@ -27,6 +27,7 @@ class Project extends Model
         'video_url',
         'is_featured',
         'featured_order',
+        'sort_order',
         'resourceTranslations',
     ];
 

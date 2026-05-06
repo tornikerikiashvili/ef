@@ -129,7 +129,10 @@ class PageController extends Controller
 
         $projects = Page::orderedProjects($settings['projects']);
         if ($projects->isEmpty()) {
-            $projects = Project::with(['categories', 'status'])->orderBy('created_at', 'desc')->get();
+            $projects = Project::with(['categories', 'status'])
+                ->orderByRaw('COALESCE(sort_order, 2147483647) ASC')
+                ->orderByDesc('created_at')
+                ->get();
         } else {
             // Ensure relations exist for filters/classes.
             $projects->load(['categories', 'status']);
@@ -164,12 +167,21 @@ class PageController extends Controller
             abort(404);
         }
 
-        $prevProject = Project::where('id', '<', $project->id)->orderBy('id', 'desc')->first();
-        $nextProject = Project::where('id', '>', $project->id)->orderBy('id')->first();
+        $prevProject = Project::query()
+            ->whereRaw('COALESCE(sort_order, 2147483647) < COALESCE(?, 2147483647)', [$project->sort_order])
+            ->orderByRaw('COALESCE(sort_order, 2147483647) DESC')
+            ->orderByDesc('id')
+            ->first();
+        $nextProject = Project::query()
+            ->whereRaw('COALESCE(sort_order, 2147483647) > COALESCE(?, 2147483647)', [$project->sort_order])
+            ->orderByRaw('COALESCE(sort_order, 2147483647) ASC')
+            ->orderBy('id')
+            ->first();
 
         $relatedProjects = Project::with('categories')
             ->where('id', '!=', $project->id)
-            ->orderBy('created_at', 'desc')
+            ->orderByRaw('COALESCE(sort_order, 2147483647) ASC')
+            ->orderByDesc('created_at')
             ->limit(4)
             ->get();
 
