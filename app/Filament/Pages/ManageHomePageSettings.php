@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use App\Models\Gallery;
-use App\Models\News;
 use App\Models\Page;
 use App\Models\PartnerLogo;
 use App\Models\Project;
@@ -37,9 +36,9 @@ class ManageHomePageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'Home page';
+    protected static ?string $title = 'Home';
 
-    protected static ?string $navigationLabel = 'Home page';
+    protected static ?string $navigationLabel = 'Home';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
@@ -95,12 +94,35 @@ class ManageHomePageSettings extends FilamentPage
         return $incoming;
     }
 
+    /**
+     * Home form no longer includes News fields; keep stored `news_ids` / `news_section` on save.
+     *
+     * @param  array<string, mixed>  $incoming
+     * @return array<string, mixed>
+     */
+    protected function mergePreservedHomeNewsFromDatabase(array $incoming): array
+    {
+        $existing = Page::query()->where('key', Page::KEY_HOME_PAGE)->value('payload');
+        if (! is_array($existing)) {
+            return $incoming;
+        }
+
+        foreach (['news_ids', 'news_section'] as $field) {
+            if (! array_key_exists($field, $incoming) && array_key_exists($field, $existing)) {
+                $incoming[$field] = $existing[$field];
+            }
+        }
+
+        return $incoming;
+    }
+
     public function save(): void
     {
         $state = $this->form->getState();
         $key = Page::KEY_HOME_PAGE;
         $incoming = is_array($state[$key] ?? null) ? $state[$key] : [];
         $incoming = $this->mergePreservedHomeHeadlineLocalesFromDatabase($incoming);
+        $incoming = $this->mergePreservedHomeNewsFromDatabase($incoming);
         $payload = $this->normalizeHomePagePayload($incoming);
 
         Page::query()->updateOrCreate(
@@ -390,37 +412,6 @@ class ManageHomePageSettings extends FilamentPage
                                     ->all()),
                         ])
                         ->columns(1),
-                    Section::make('News')
-                        ->description('Section title and teaser per language; the same news posts are shown for every language.')
-                        ->schema([
-                            Tabs::make($key.'_news_section_locales')
-                                ->tabs(
-                                    collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
-                                        ->statePath('news_section.'.$locale)
-                                        ->schema($this->newsSectionTabFields())
-                                    )->all()
-                                )
-                                ->columns(1)
-                                ->extraAttributes([
-                                    'style' => 'background-color: #fff7ef',
-                                ]),
-                            Select::make('news_ids')
-                                ->label('News posts')
-                                ->multiple()
-                                ->searchable()
-                                ->preload()
-                                ->native(false)
-                                ->options(fn (): array => News::query()
-                                    ->orderByDesc('id')
-                                    ->get()
-                                    ->mapWithKeys(fn (News $news): array => [
-                                        $news->id => $news->getTranslation('title', 'en')
-                                            ?: $news->getTranslation('title', 'ka')
-                                            ?: ('News #'.$news->id),
-                                    ])
-                                    ->all()),
-                        ])
-                        ->columns(1),
                     Section::make('Contact form')
                         ->description('Whether to show the contact form on the public home page.')
                         ->schema([
@@ -547,22 +538,6 @@ class ManageHomePageSettings extends FilamentPage
             TextInput::make('title')
                 ->label('Section title')
                 ->maxLength(65535),
-        ];
-    }
-
-    /**
-     * @return list<Component>
-     */
-    protected function newsSectionTabFields(): array
-    {
-        return [
-            TextInput::make('title')
-                ->label('Section title')
-                ->maxLength(65535),
-            Textarea::make('teaser')
-                ->label('Teaser')
-                ->rows(4)
-                ->columnSpanFull(),
         ];
     }
 

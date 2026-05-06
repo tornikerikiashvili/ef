@@ -29,13 +29,13 @@ class ManageContactPageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'Contact page';
+    protected static ?string $title = 'Contact';
 
-    protected static ?string $navigationLabel = 'Contact page';
+    protected static ?string $navigationLabel = 'Contact';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 60;
 
     /**
      * @var array<string, mixed>|null

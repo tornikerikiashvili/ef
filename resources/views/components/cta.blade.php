@@ -4,7 +4,7 @@
 <section class="wptb-contact-form style1">
     <div
         class="wptb-item-layer both-version"
-        style="background-image: url({{ json_encode($ctaTextureUrl) }}); background-repeat: repeat; background-position: center;"
+        style="background-image: url({{ json_encode($ctaTextureUrl) }}); background-repeat: no-repeat; background-position: center; width: 100%; height: 100%;"
         aria-hidden="true"
     ></div>
     <div class="container">

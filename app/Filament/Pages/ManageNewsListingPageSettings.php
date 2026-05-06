@@ -28,13 +28,13 @@ class ManageNewsListingPageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'News page';
+    protected static ?string $title = 'News';
 
-    protected static ?string $navigationLabel = 'News page';
+    protected static ?string $navigationLabel = 'News';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
-    protected static ?int $navigationSort = 15;
+    protected static ?int $navigationSort = 50;
 
     /**
      * @var array<string, mixed>|null

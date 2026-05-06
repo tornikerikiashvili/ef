@@ -3,20 +3,12 @@
 namespace App\Filament\Resources\News\Pages;
 
 use App\Filament\Resources\News\NewsResource;
-use App\Filament\Resources\News\Widgets\NewsPageCoverWidget;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListNews extends ListRecords
 {
     protected static string $resource = NewsResource::class;
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            NewsPageCoverWidget::class,
-        ];
-    }
 
     protected function getHeaderActions(): array
     {

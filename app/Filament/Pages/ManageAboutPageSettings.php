@@ -29,13 +29,13 @@ class ManageAboutPageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'About page';
+    protected static ?string $title = 'About';
 
-    protected static ?string $navigationLabel = 'About page';
+    protected static ?string $navigationLabel = 'About';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInformationCircle;
 
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 20;
 
     /**
      * @var array<string, mixed>|null

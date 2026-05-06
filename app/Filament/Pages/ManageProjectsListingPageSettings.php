@@ -28,13 +28,13 @@ class ManageProjectsListingPageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'Projects page';
+    protected static ?string $title = 'Projects';
 
-    protected static ?string $navigationLabel = 'Projects page';
+    protected static ?string $navigationLabel = 'Projects';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
-    protected static ?int $navigationSort = 14;
+    protected static ?int $navigationSort = 40;
 
     /**
      * @var array<string, mixed>|null

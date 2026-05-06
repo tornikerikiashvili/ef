@@ -29,13 +29,13 @@ class ManageServicesListingPageSettings extends FilamentPage
 {
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
-    protected static ?string $title = 'Services listing';
+    protected static ?string $title = 'Services';
 
-    protected static ?string $navigationLabel = 'Services listing';
+    protected static ?string $navigationLabel = 'Services';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 30;
 
     /**
      * @var array<string, mixed>|null

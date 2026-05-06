@@ -478,6 +478,15 @@
     z-index: 0;
 }
 
+.route-home .wptb-contact-form .wptb-item-layer {
+    bottom: 0%;
+    z-index: 0;
+}
+
+.route-home .wptb-contact-form {
+    padding: 40px 0px;
+}
+
 /* Index-1, Contact-1 */
 .wptb-contact-form.style1 .form-control {
     background: transparent;
