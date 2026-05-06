@@ -95,6 +95,8 @@ class ManageAboutPageSettings extends FilamentPage
         $merged = array_replace_recursive($defaults, $payload);
 
         $merged['cover'] = is_array($merged['cover'] ?? null) ? $merged['cover'] : [];
+        $merged['menu'] = is_array($merged['menu'] ?? null) ? $merged['menu'] : [];
+        $merged['cover_image'] = $merged['cover_image'] ?? null;
         $merged['about_images'] = is_array($merged['about_images'] ?? null) ? $merged['about_images'] : [];
         $merged['about'] = is_array($merged['about'] ?? null) ? $merged['about'] : [];
         $merged['funfacts'] = is_array($merged['funfacts'] ?? null) ? $merged['funfacts'] : [];
@@ -144,15 +146,14 @@ class ManageAboutPageSettings extends FilamentPage
                 continue;
             }
 
-            $cover = is_array($merged['cover'][$locale] ?? null) ? $merged['cover'][$locale] : [];
-            $bg = $cover['background_image'] ?? null;
-            if (is_array($bg)) {
-                $bg = $bg[0] ?? null;
-            }
+            $menu = is_array($merged['menu'][$locale] ?? null) ? $merged['menu'][$locale] : [];
+            $merged['menu'][$locale] = [
+                'title' => isset($menu['title']) ? (string) $menu['title'] : '',
+            ];
 
+            $cover = is_array($merged['cover'][$locale] ?? null) ? $merged['cover'][$locale] : [];
             $merged['cover'][$locale] = [
                 'title' => isset($cover['title']) ? (string) $cover['title'] : '',
-                'background_image' => filled($bg) ? (string) $bg : null,
             ];
 
             $about = is_array($merged['about'][$locale] ?? null) ? $merged['about'][$locale] : [];
@@ -222,6 +223,29 @@ class ManageAboutPageSettings extends FilamentPage
         }
         $merged['video_background_image'] = filled($videoBg) ? (string) $videoBg : null;
 
+        // Shared cover image (new shape). Backward-compat: if older per-locale cover background exists, use the first found.
+        $coverImage = $merged['cover_image'] ?? null;
+        if (is_array($coverImage)) {
+            $coverImage = $coverImage[0] ?? null;
+        }
+        if (! filled($coverImage)) {
+            foreach (array_keys($defaults['cover'] ?? []) as $locale) {
+                if (! is_string($locale)) {
+                    continue;
+                }
+                $legacyCover = is_array($payload['cover'][$locale] ?? null) ? $payload['cover'][$locale] : [];
+                $legacyBg = $legacyCover['background_image'] ?? null;
+                if (is_array($legacyBg)) {
+                    $legacyBg = $legacyBg[0] ?? null;
+                }
+                if (filled($legacyBg)) {
+                    $coverImage = (string) $legacyBg;
+                    break;
+                }
+            }
+        }
+        $merged['cover_image'] = filled($coverImage) ? (string) $coverImage : null;
+
         return $merged;
     }
 
@@ -233,20 +257,37 @@ class ManageAboutPageSettings extends FilamentPage
         return $this->defaultForm($schema)
             ->components([
                 Group::make([
-                    Section::make('Cover')
-                        ->description('Page title and optional background image (per language).')
+                    Section::make('Header')
+                        ->description('Menu title + page title (per language) and shared cover image.')
                         ->schema([
-                            Tabs::make($key.'_cover_locales')
+                            Tabs::make($key.'_header_locales')
                                 ->tabs(
                                     collect($locales)->map(fn (string $locale) => Tab::make(Str::upper($locale))
-                                        ->statePath('cover.'.$locale)
-                                        ->schema($this->coverFields())
+                                        ->schema([
+                                            Group::make([
+                                                TextInput::make('title')
+                                                    ->label('Menu title')
+                                                    ->maxLength(255),
+                                            ])->statePath('menu.'.$locale),
+                                            Group::make([
+                                                TextInput::make('title')
+                                                    ->label('Page title')
+                                                    ->maxLength(65535),
+                                            ])->statePath('cover.'.$locale),
+                                        ])
                                     )->all()
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
                                     'style' => 'background-color: #fff7ef',
                                 ]),
+                            FileUpload::make('cover_image')
+                                ->label('Cover image (shared)')
+                                ->disk('public')
+                                ->directory('about/cover')
+                                ->visibility('public')
+                                ->image()
+                                ->columnSpanFull(),
                         ])
                         ->columns(1),
                     Section::make('About section')
@@ -346,18 +387,7 @@ class ManageAboutPageSettings extends FilamentPage
      */
     protected function coverFields(): array
     {
-        return [
-            TextInput::make('title')
-                ->label('Title')
-                ->maxLength(65535),
-            FileUpload::make('background_image')
-                ->label('Background image')
-                ->disk('public')
-                ->directory('about/cover')
-                ->visibility('public')
-                ->image()
-                ->columnSpanFull(),
-        ];
+        return [];
     }
 
     /**

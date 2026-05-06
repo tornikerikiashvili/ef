@@ -218,6 +218,7 @@ class ManageHomePageSettings extends FilamentPage
                 ];
             }
             $merged[$locale] = [
+                'menu_title' => isset($row['menu_title']) ? (string) $row['menu_title'] : '',
                 'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'teaser' => isset($row['teaser']) ? (string) $row['teaser'] : '',
                 'highlights' => $highlights,
@@ -298,6 +299,26 @@ class ManageHomePageSettings extends FilamentPage
         return $this->defaultForm($schema)
             ->components([
                 Group::make([
+                    Section::make('Menu')
+                    ->description('Menu label (per language). Used in header/footer navigation.')
+                    ->schema([
+                        Tabs::make($key.'_menu_locales')
+                            ->tabs(
+                                collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
+                                    ->statePath($locale)
+                                    ->schema([
+                                        TextInput::make('menu_title')
+                                            ->label('Menu title')
+                                            ->maxLength(255),
+                                    ])
+                                )->all()
+                            )
+                            ->columns(1)
+                            ->extraAttributes([
+                                'style' => 'background-color: #fff7ef',
+                            ]),
+                    ])
+                    ->columns(1),
                     Section::make('Featured services')
                         ->description('Choose which services appear in the home hero.')
                         ->schema([
@@ -318,6 +339,7 @@ class ManageHomePageSettings extends FilamentPage
                                     ->all()),
                         ])
                         ->columns(1),
+
                     Section::make('Headline & highlights')
                         ->description('Title, teaser, and three highlight cards per language (EN / KA).')
                         ->schema([

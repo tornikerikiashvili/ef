@@ -55,6 +55,8 @@ class Page extends Model
         $out = [];
         foreach ($locales as $locale) {
             $out[$locale] = [
+                'menu_title' => '',
+                'title' => '',
                 'intro' => '',
                 'email' => '',
                 'phone' => '',
@@ -100,6 +102,7 @@ class Page extends Model
         ];
         foreach ($locales as $locale) {
             $out[$locale] = [
+                'menu_title' => '',
                 'title' => '',
                 'teaser' => '',
                 'highlights' => [$highlight(), $highlight(), $highlight()],
@@ -149,6 +152,8 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'menu' => [],
+            'cover_image' => null,
             'cover' => [],
             'about_images' => [
                 'image_left' => null,
@@ -167,6 +172,9 @@ class Page extends Model
         ];
 
         foreach ($locales as $locale) {
+            $out['menu'][$locale] = [
+                'title' => '',
+            ];
             $out['cover'][$locale] = [
                 'title' => '',
                 'background_image' => null,
@@ -227,6 +235,7 @@ class Page extends Model
 
         foreach ($locales as $locale) {
             $out['locales'][$locale] = [
+                'menu_title' => '',
                 'title' => '',
                 'services_title' => '',
                 'typewrite_text' => '',
@@ -258,6 +267,7 @@ class Page extends Model
 
         foreach ($locales as $locale) {
             $out['locales'][$locale] = [
+                'menu_title' => '',
                 'title' => '',
             ];
         }
@@ -284,6 +294,7 @@ class Page extends Model
 
         foreach ($locales as $locale) {
             $out['locales'][$locale] = [
+                'menu_title' => '',
                 'title' => '',
             ];
         }
@@ -411,7 +422,7 @@ class Page extends Model
 
         $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
         $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
-        $base = $localesDefaults[$baseLocale] ?? ['title' => ''];
+        $base = $localesDefaults[$baseLocale] ?? ['menu_title' => '', 'title' => ''];
         $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
         $row = array_merge($base, $localized);
 
@@ -425,6 +436,7 @@ class Page extends Model
         $newsIds = array_values(array_unique(array_filter(array_map('intval', is_array($news) ? $news : []))));
 
         return [
+            'menu_title' => (string) ($row['menu_title'] ?? ''),
             'title' => (string) ($row['title'] ?? ''),
             'cover_image' => $cover,
             'news' => $newsIds,
@@ -453,7 +465,7 @@ class Page extends Model
 
         $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
         $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
-        $base = $localesDefaults[$baseLocale] ?? ['title' => ''];
+        $base = $localesDefaults[$baseLocale] ?? ['menu_title' => '', 'title' => ''];
         $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
         $row = array_merge($base, $localized);
 
@@ -467,6 +479,7 @@ class Page extends Model
         $projectIds = array_values(array_unique(array_filter(array_map('intval', is_array($projects) ? $projects : []))));
 
         return [
+            'menu_title' => (string) ($row['menu_title'] ?? ''),
             'title' => (string) ($row['title'] ?? ''),
             'cover_image' => $cover,
             'projects' => $projectIds,
@@ -499,7 +512,7 @@ class Page extends Model
 
         $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
         $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
-        $base = $localesDefaults[$baseLocale] ?? ['title' => '', 'services_title' => '', 'typewrite_text' => ''];
+        $base = $localesDefaults[$baseLocale] ?? ['menu_title' => '', 'title' => '', 'services_title' => '', 'typewrite_text' => ''];
         $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
         $row = array_merge($base, $localized);
 
@@ -525,6 +538,7 @@ class Page extends Model
         $serviceIds = array_values(array_unique(array_filter(array_map('intval', is_array($services) ? $services : []))));
 
         return [
+            'menu_title' => (string) ($row['menu_title'] ?? ''),
             'title' => (string) ($row['title'] ?? ''),
             'services_title' => (string) ($row['services_title'] ?? ''),
             'typewrite_text' => (string) ($row['typewrite_text'] ?? ''),
@@ -587,6 +601,12 @@ class Page extends Model
 
         $locale = app()->getLocale();
         $baseLocale = array_key_exists($locale, $defaults['cover'] ?? []) ? $locale : 'en';
+
+        $menuDefaults = is_array($defaults['menu'] ?? null) ? $defaults['menu'] : [];
+        $menuStored = is_array($merged['menu'] ?? null) ? $merged['menu'] : [];
+        $menuBase = $menuDefaults[$baseLocale] ?? ['title' => ''];
+        $menuLocalized = is_array($menuStored[$baseLocale] ?? null) ? $menuStored[$baseLocale] : [];
+        $menuRow = array_merge($menuBase, $menuLocalized);
 
         $coverDefaults = is_array($defaults['cover'] ?? null) ? $defaults['cover'] : [];
         $coverStored = is_array($merged['cover'] ?? null) ? $merged['cover'] : [];
@@ -662,6 +682,13 @@ class Page extends Model
         }
         $bg = filled($bg) ? (string) $bg : null;
 
+        $coverImage = $merged['cover_image'] ?? null;
+        if (is_array($coverImage)) {
+            $coverImage = $coverImage[0] ?? null;
+        }
+        $coverImage = filled($coverImage) ? (string) $coverImage : null;
+        $bg = $coverImage ?? $bg;
+
         $img = $bodyRow['image'] ?? null;
         if (is_array($img)) {
             $img = $img[0] ?? null;
@@ -669,6 +696,9 @@ class Page extends Model
         $img = filled($img) ? (string) $img : null;
 
         return [
+            'menu' => [
+                'title' => (string) ($menuRow['title'] ?? ''),
+            ],
             'cover' => [
                 'title' => (string) ($coverRow['title'] ?? ''),
                 'background_image' => $bg,
@@ -707,7 +737,7 @@ class Page extends Model
     /**
      * Homepage data for the current request locale: service ids, headline, and about block (with EN fallback for non-EN locales).
      *
-     * @return array{ids: list<int>, title: string, teaser: string, highlights: list<array{title: string, teaser: string, link: string}>, about: array{title: string, text: string, image: string|null, link: string}, projects_section: array{title: string}, project_ids: list<int>}
+     * @return array{ids: list<int>, menu_title: string, title: string, teaser: string, highlights: list<array{title: string, teaser: string, link: string}>, about: array{title: string, text: string, image: string|null, link: string}, projects_section: array{title: string}, project_ids: list<int>}
      */
     public static function homePageContent(): array
     {
@@ -729,7 +759,7 @@ class Page extends Model
         $result['highlights'] = static::normalizeHomeHeadlineHighlights($result['highlights'] ?? []);
 
         if ($locale !== 'en') {
-            foreach (['title', 'teaser'] as $field) {
+            foreach (['menu_title', 'title', 'teaser'] as $field) {
                 if (($result[$field] ?? '') === '' && ($en[$field] ?? '') !== '') {
                     $result[$field] = $en[$field];
                 }
@@ -825,6 +855,7 @@ class Page extends Model
 
         return [
             'ids' => $ids,
+            'menu_title' => (string) ($result['menu_title'] ?? ''),
             'title' => (string) ($result['title'] ?? ''),
             'teaser' => (string) ($result['teaser'] ?? ''),
             'highlights' => $result['highlights'],
@@ -955,7 +986,7 @@ class Page extends Model
 
         if ($key === self::KEY_CONTACT_PAGE) {
             if ($locale !== 'en') {
-                foreach (['intro', 'email', 'phone', 'address'] as $field) {
+                foreach (['menu_title', 'title', 'intro', 'email', 'phone', 'address'] as $field) {
                     $current = $result[$field] ?? null;
                     if (($current === null || $current === '') && array_key_exists($field, $en)) {
                         $fromEn = $en[$field];

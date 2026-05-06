@@ -91,6 +91,8 @@ class ManageContactPageSettings extends FilamentPage
         foreach ($locales as $locale) {
             $row = is_array($merged[$locale] ?? null) ? $merged[$locale] : [];
             $merged[$locale] = [
+                'menu_title' => isset($row['menu_title']) ? (string) $row['menu_title'] : '',
+                'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'intro' => isset($row['intro']) ? (string) $row['intro'] : '',
                 'email' => isset($row['email']) ? (string) $row['email'] : '',
                 'phone' => isset($row['phone']) ? (string) $row['phone'] : '',
@@ -166,6 +168,14 @@ class ManageContactPageSettings extends FilamentPage
     protected function contactFields(): array
     {
         return [
+            TextInput::make('menu_title')
+                ->label('Menu title')
+                ->maxLength(255)
+                ->columnSpanFull(),
+            TextInput::make('title')
+                ->label('Page title')
+                ->maxLength(255)
+                ->columnSpanFull(),
             Textarea::make('intro')
                 ->label('Intro')
                 ->rows(5)

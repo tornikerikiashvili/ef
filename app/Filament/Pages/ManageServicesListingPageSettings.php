@@ -114,6 +114,7 @@ class ManageServicesListingPageSettings extends FilamentPage
             }
             $row = is_array($merged['locales'][$locale] ?? null) ? $merged['locales'][$locale] : [];
             $merged['locales'][$locale] = [
+                'menu_title' => isset($row['menu_title']) ? (string) $row['menu_title'] : '',
                 'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'services_title' => isset($row['services_title']) ? (string) $row['services_title'] : '',
                 'typewrite_text' => isset($row['typewrite_text']) ? (string) $row['typewrite_text'] : '',
@@ -143,6 +144,22 @@ class ManageServicesListingPageSettings extends FilamentPage
                     Section::make('Header')
                         ->description('Page title (per language) and shared cover image.')
                         ->schema([
+                            Tabs::make($key.'_header_locales')
+                                ->tabs(
+                                    collect($locales)->map(fn (string $locale) => Tab::make(Str::upper($locale))
+                                        ->statePath('locales.'.$locale)
+                                        ->schema([
+                                            TextInput::make('menu_title')
+                                                ->label('Menu title')
+                                                ->maxLength(255),
+                                            TextInput::make('title')
+                                                ->label('Page title')
+                                                ->maxLength(65535),
+                                        ])
+                                    )->all()
+                                )
+                                ->columns(1)
+                                ->extraAttributes(['style' => 'background-color: #fff7ef']),
                             FileUpload::make('cover_image')
                                 ->label('Cover image (shared)')
                                 ->disk('public')
@@ -150,19 +167,6 @@ class ManageServicesListingPageSettings extends FilamentPage
                                 ->visibility('public')
                                 ->image()
                                 ->columnSpanFull(),
-                            Tabs::make($key.'_header_locales')
-                                ->tabs(
-                                    collect($locales)->map(fn (string $locale) => Tab::make(Str::upper($locale))
-                                        ->statePath('locales.'.$locale)
-                                        ->schema([
-                                            TextInput::make('title')
-                                                ->label('Title')
-                                                ->maxLength(65535),
-                                        ])
-                                    )->all()
-                                )
-                                ->columns(1)
-                                ->extraAttributes(['style' => 'background-color: #fff7ef']),
                         ])
                         ->columns(1),
                     Section::make('Services list')
