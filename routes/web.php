@@ -18,6 +18,7 @@ Route::prefix('{locale}')
         Route::get('/services/{slug}', [PageController::class, 'serviceSingle'])->name('services.show');
         Route::get('/projects', [PageController::class, 'projects'])->name('projects');
         Route::get('/projects/{slug}', [PageController::class, 'projectSingle'])->name('projects.show');
+        Route::get('/partners', [PageController::class, 'partners'])->name('partners');
         Route::get('/news', [PageController::class, 'news'])->name('news');
         Route::get('/news/{slug}', [PageController::class, 'newsSingle'])->name('news.show');
         Route::get('/contact', [PageController::class, 'contact'])->name('contact');

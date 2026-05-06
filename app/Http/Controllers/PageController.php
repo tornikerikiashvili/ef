@@ -188,6 +188,20 @@ class PageController extends Controller
         return view('pages.project-single', compact('project', 'prevProject', 'nextProject', 'relatedProjects'));
     }
 
+    public function partners()
+    {
+        $settings = Page::partnersPageContent();
+
+        $partnerLogos = PartnerLogo::orderBy('id')->get();
+
+        $headerBg = $settings['cover_image']
+            ? Storage::disk('public')->url($settings['cover_image'])
+            : asset('assets/img/background/page-header-bg-8.jpg');
+        $pageTitle = filled($settings['title'] ?? null) ? (string) $settings['title'] : 'Partners';
+
+        return view('pages.partners', compact('partnerLogos', 'headerBg', 'pageTitle'));
+    }
+
     public function news()
     {
         $settings = Page::newsListingPageContent();

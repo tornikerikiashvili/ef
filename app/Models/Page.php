@@ -24,6 +24,9 @@ class Page extends Model
     /** News listing page settings. */
     public const KEY_NEWS_LISTING_PAGE = 'news_listing_page';
 
+    /** Partners listing page settings. */
+    public const KEY_PARTNERS_PAGE = 'partners_page';
+
     /** @var list<string> */
     public const SEED_KEYS = [
         self::KEY_CONTACT_PAGE,
@@ -32,6 +35,7 @@ class Page extends Model
         self::KEY_SERVICES_LISTING_PAGE,
         self::KEY_PROJECTS_LISTING_PAGE,
         self::KEY_NEWS_LISTING_PAGE,
+        self::KEY_PARTNERS_PAGE,
     ];
 
     protected $fillable = [
@@ -303,6 +307,31 @@ class Page extends Model
     }
 
     /**
+     * @return array{
+     *   cover_image: string|null,
+     *   locales: array<string, array{menu_title: string, title: string}>
+     * }
+     */
+    public static function defaultPartnersPagePayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+
+        $out = [
+            'cover_image' => null,
+            'locales' => [],
+        ];
+
+        foreach ($locales as $locale) {
+            $out['locales'][$locale] = [
+                'menu_title' => '',
+                'title' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public static function defaultPayloadForKey(string $key): array
@@ -314,6 +343,7 @@ class Page extends Model
             self::KEY_SERVICES_LISTING_PAGE => self::defaultServicesListingPagePayload(),
             self::KEY_PROJECTS_LISTING_PAGE => self::defaultProjectsListingPagePayload(),
             self::KEY_NEWS_LISTING_PAGE => self::defaultNewsListingPagePayload(),
+            self::KEY_PARTNERS_PAGE => self::defaultPartnersPagePayload(),
         };
     }
 
@@ -398,6 +428,56 @@ class Page extends Model
             ['key' => self::KEY_NEWS_LISTING_PAGE],
             ['payload' => static::defaultNewsListingPagePayload()]
         );
+    }
+
+    /**
+     * Ensure the `partners_page` row exists.
+     */
+    public static function ensurePartnersPageBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_PARTNERS_PAGE],
+            ['payload' => static::defaultPartnersPagePayload()]
+        );
+    }
+
+    /**
+     * Partners page settings for the current request locale (no cross-locale fallback).
+     *
+     * @return array{
+     *   menu_title: string,
+     *   title: string,
+     *   cover_image: string|null
+     * }
+     */
+    public static function partnersPageContent(): array
+    {
+        static::ensurePartnersPageBlock();
+
+        $defaults = static::defaultPartnersPagePayload();
+        $stored = static::query()->where('key', self::KEY_PARTNERS_PAGE)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['locales'] ?? []) ? $locale : 'en';
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
+        $base = $localesDefaults[$baseLocale] ?? ['menu_title' => '', 'title' => ''];
+        $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
+        $row = array_merge($base, $localized);
+
+        $cover = $merged['cover_image'] ?? null;
+        if (is_array($cover)) {
+            $cover = $cover[0] ?? null;
+        }
+        $cover = filled($cover) ? (string) $cover : null;
+
+        return [
+            'menu_title' => (string) ($row['menu_title'] ?? ''),
+            'title' => (string) ($row['title'] ?? ''),
+            'cover_image' => $cover,
+        ];
     }
 
     /**

@@ -423,7 +423,7 @@ body:has(.sidebar) {
     }
 }
 
-body.route-about, body.route-services, body.route-news, body.route-services-show, body.route-projects-show, body.route-news-show, body.route-contact {
+body.route-about, body.route-services, body.route-news, body.route-services-show, body.route-projects-show, body.route-news-show, body.route-contact, body.route-partners {
     background: #C0C6AF;
 }
 
@@ -1043,8 +1043,6 @@ input[type="submit"]:hover {
     background-color: var(--color-white);
     color: var(--color-dark-one);
 }
-
-
 
 /* Black */
 
