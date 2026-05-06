@@ -14,7 +14,16 @@
             return $url;
         }
         if (\Illuminate\Support\Str::startsWith($url, '/')) {
-            return url($url);
+            $path = '/'.ltrim($url, '/');
+            $locales = config('cms.supported_locales', ['en', 'ka']);
+
+            foreach ($locales as $locale) {
+                if ($path === '/'.$locale || \Illuminate\Support\Str::startsWith($path, '/'.$locale.'/')) {
+                    return url($path);
+                }
+            }
+
+            return url('/'.app()->getLocale().$path);
         }
 
         return $fallback;

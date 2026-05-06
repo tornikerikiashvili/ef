@@ -6,7 +6,6 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -91,21 +90,6 @@ class ProjectForm
                             ->helperText('Optional thumbnail before play. If empty, the YouTube default thumbnail is used.'),
                     ])
                     ->columnSpanFull(),
-
-                Section::make('Featured')
-                    ->description('Show this project in the featured section on the homepage.')
-                    ->schema([
-                        Toggle::make('is_featured')
-                            ->label('Featured on homepage')
-                            ->default(false),
-                        TextInput::make('featured_order')
-                            ->label('Featured order')
-                            ->numeric()
-                            ->minValue(0)
-                            ->placeholder('Lower = first')
-                            ->helperText('Optional. Lower numbers appear first.'),
-                    ])
-                    ->columnSpan(1),
             ]);
     }
 

@@ -7,7 +7,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,13 +17,6 @@ class ProjectsTable
         return $table
             ->columns([
                 TextColumn::make('title')->searchable(),
-                IconColumn::make('is_featured')
-                    ->label('Featured')
-                    ->boolean(),
-                TextColumn::make('featured_order')
-                    ->label('Order')
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('categories_summary')
                     ->label('Categories')
                     ->toggleable()

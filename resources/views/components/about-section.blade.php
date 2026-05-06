@@ -5,6 +5,30 @@
     'link' => '',
 ])
 @php
+    $resolveHref = static function (?string $url, string $fallback): string {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return $fallback;
+        }
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+        if (\Illuminate\Support\Str::startsWith($url, '/')) {
+            $path = '/'.ltrim($url, '/');
+            $locales = config('cms.supported_locales', ['en', 'ka']);
+
+            foreach ($locales as $locale) {
+                if ($path === '/'.$locale || \Illuminate\Support\Str::startsWith($path, '/'.$locale.'/')) {
+                    return url($path);
+                }
+            }
+
+            return url('/'.app()->getLocale().$path);
+        }
+
+        return $fallback;
+    };
+
     $aboutTitle = filled($title) ? $title : 'Quality & Vision';
     $aboutText = filled($text)
         ? $text
@@ -12,7 +36,7 @@
     $imageUrl = filled($image)
         ? \Illuminate\Support\Facades\Storage::disk('public')->url($image)
         : asset('assets/img/more/7.png');
-    $buttonHref = filled($link) ? $link : route('about');
+    $buttonHref = $resolveHref($link, route('about'));
 @endphp
 <section class="wptb-about-two">
     <div class="container">
