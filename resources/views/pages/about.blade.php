@@ -164,9 +164,9 @@
                         </div>
                     @endif
 
-                    <div class="wptb-agency-experience--item text-white">
+                    {{-- <div class="wptb-agency-experience--item text-white">
                         <span>{{ $presidentYears }}+</span> {{ __('messages.years_experience') }}
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="col-lg-6">

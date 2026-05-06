@@ -103,16 +103,16 @@
                             $coverStyle = 'background-image: url('.json_encode($imgUrl).');';
                         @endphp
                         <div class="grid-item {{ $span }}">
-                            <div class="wptb-item--inner">
+                            <a href="{{ $itemUrl }}" class="wptb-item--inner" aria-label="{{ $item->title }}">
                                 <div class="wptb-item--image" style="{{ $coverStyle }}" role="img" aria-label="{{ $item->title }}"></div>
 
                                 <div class="wptb-item--holder">
                                     <div class="wptb-item--meta">
-                                        <h4><a href="{{ $itemUrl }}">{{ $item->title }}</a></h4>
+                                        <h4>{{ $item->title }}</h4>
                                         <p>{{ $metaLine }}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>
