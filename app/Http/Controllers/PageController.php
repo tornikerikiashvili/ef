@@ -134,8 +134,17 @@ class PageController extends Controller
                 ->orderByDesc('created_at')
                 ->get();
         } else {
+            // If a curated list exists, show it first but still include the remaining projects.
+            $curatedIds = $projects->pluck('id')->all();
+            $rest = Project::with(['categories', 'status'])
+                ->whereNotIn('id', $curatedIds)
+                ->orderByRaw('COALESCE(sort_order, 2147483647) ASC')
+                ->orderByDesc('created_at')
+                ->get();
+
             // Ensure relations exist for filters/classes.
             $projects->load(['categories', 'status']);
+            $projects = $projects->concat($rest)->values();
         }
 
         $categories = Category::orderBy('name')->get();

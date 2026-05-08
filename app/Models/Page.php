@@ -91,6 +91,12 @@ class Page extends Model
     {
         $locales = config('cms.supported_locales', ['en', 'ka']);
         $highlight = static fn (): array => ['title' => '', 'teaser' => '', 'link' => ''];
+        $contactCard = static fn (): array => [
+            'title' => '',
+            'value' => '',
+            'button_title' => '',
+            'button_link' => '',
+        ];
         $out = [
             'ids' => [],
             'about' => [],
@@ -101,6 +107,7 @@ class Page extends Model
             'news_ids' => [],
             'news_section' => [],
             'show_contact_form' => false,
+            'contact_cards' => [],
             'gallery_id' => null,
             'gallery_instagram_link' => '',
         ];
@@ -127,6 +134,8 @@ class Page extends Model
                 'title' => '',
                 'teaser' => '',
             ];
+
+            $out['contact_cards'][$locale] = [$contactCard(), $contactCard(), $contactCard()];
         }
 
         return $out;
@@ -919,6 +928,32 @@ class Page extends Model
 
         $showContactForm = filter_var($merged['show_contact_form'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
+        $contactCardsDefaults = is_array($defaults['contact_cards'] ?? null) ? $defaults['contact_cards'] : [];
+        $contactCardsStored = is_array($merged['contact_cards'] ?? null) ? $merged['contact_cards'] : [];
+        $ccBase = $contactCardsDefaults[$locale] ?? $contactCardsDefaults['en'] ?? [];
+        $ccEn = is_array($contactCardsStored['en'] ?? null) ? $contactCardsStored['en'] : [];
+        $ccLocalized = is_array($contactCardsStored[$locale] ?? null) ? $contactCardsStored[$locale] : [];
+        $contactCards = [];
+        for ($i = 0; $i < 3; $i++) {
+            $baseRow = is_array($ccBase[$i] ?? null) ? $ccBase[$i] : [];
+            $enRow = is_array($ccEn[$i] ?? null) ? $ccEn[$i] : [];
+            $locRow = is_array($ccLocalized[$i] ?? null) ? $ccLocalized[$i] : [];
+            $row = array_merge($baseRow, $enRow, $locRow);
+            if ($locale !== 'en') {
+                foreach (['title', 'value', 'button_title', 'button_link'] as $field) {
+                    if (($row[$field] ?? '') === '' && ($enRow[$field] ?? '') !== '') {
+                        $row[$field] = $enRow[$field];
+                    }
+                }
+            }
+            $contactCards[] = [
+                'title' => isset($row['title']) ? (string) $row['title'] : '',
+                'value' => isset($row['value']) ? (string) $row['value'] : '',
+                'button_title' => isset($row['button_title']) ? (string) $row['button_title'] : '',
+                'button_link' => isset($row['button_link']) ? (string) $row['button_link'] : '',
+            ];
+        }
+
         $galleryId = $merged['gallery_id'] ?? null;
         $galleryId = ($galleryId !== null && $galleryId !== '' && (int) $galleryId > 0) ? (int) $galleryId : null;
         $galleryPayload = null;
@@ -959,6 +994,7 @@ class Page extends Model
             ],
             'news_ids' => $newsIds,
             'show_contact_form' => $showContactForm,
+            'contact_cards' => $contactCards,
             'gallery_id' => $galleryId,
             'gallery_instagram_link' => (string) ($merged['gallery_instagram_link'] ?? ''),
             'gallery' => $galleryPayload,

@@ -29,9 +29,7 @@
         :section-title="$homePage['news_section']['title']"
         :section-teaser="$homePage['news_section']['teaser']"
     /> --}}
-    @if ($homePage['show_contact_form'])
-        <x-cta />
-    @endif
+    <x-cta />
     <x-instagram-gallery
         :images="data_get($homePage, 'gallery.images', [])"
         :instagram-url="$homePage['gallery_instagram_link'] ?? ''"

@@ -1,9 +1,10 @@
 @props([
     'url',
     'backgroundImage',
+    'container' => true,
 ])
 {{-- Same block as About page “BG Video” (wptb-video-player1) --}}
-<div {{ $attributes->class(['container', 'mr-top-100']) }}>
+<div {{ $attributes->class([$container ? 'container' : null, 'mr-top-100']) }}>
     <div class="wptb-video-player1 wow zoomIn" style="background-image: url('{{ $backgroundImage }}');">
         <div class="wptb-item--inner">
             <div class="wptb-item--holder">

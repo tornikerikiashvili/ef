@@ -195,6 +195,7 @@ class ManageHomePageSettings extends FilamentPage
             'news_ids',
             'news_section',
             'show_contact_form',
+            'contact_cards',
             'gallery_id',
             'gallery_instagram_link',
         ];
@@ -278,6 +279,25 @@ class ManageHomePageSettings extends FilamentPage
         }
 
         $merged['show_contact_form'] = filter_var($merged['show_contact_form'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        $merged['contact_cards'] = is_array($merged['contact_cards'] ?? null) ? $merged['contact_cards'] : [];
+        foreach (array_keys($defaults['contact_cards'] ?? []) as $ccLocale) {
+            if (! is_string($ccLocale)) {
+                continue;
+            }
+            $rows = is_array($merged['contact_cards'][$ccLocale] ?? null) ? $merged['contact_cards'][$ccLocale] : [];
+            $out = [];
+            for ($i = 0; $i < 3; $i++) {
+                $row = is_array($rows[$i] ?? null) ? $rows[$i] : [];
+                $out[] = [
+                    'title' => isset($row['title']) ? (string) $row['title'] : '',
+                    'value' => isset($row['value']) ? (string) $row['value'] : '',
+                    'button_title' => isset($row['button_title']) ? (string) $row['button_title'] : '',
+                    'button_link' => isset($row['button_link']) ? (string) $row['button_link'] : '',
+                ];
+            }
+            $merged['contact_cards'][$ccLocale] = $out;
+        }
 
         $gid = $merged['gallery_id'] ?? null;
         $merged['gallery_id'] = ($gid !== null && $gid !== '' && (int) $gid > 0) ? (int) $gid : null;
@@ -372,6 +392,37 @@ class ManageHomePageSettings extends FilamentPage
                                 ]),
                         ])
                         ->columns(1),
+                        Section::make('Partners')
+                        ->description('Section title per language; the same partner logos are shown for every language.')
+                        ->schema([
+                            Tabs::make($key.'_partners_section_locales')
+                                ->tabs(
+                                    collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
+                                        ->statePath('partners_section.'.$locale)
+                                        ->schema($this->partnersSectionTabFields())
+                                    )->all()
+                                )
+                                ->columns(1)
+                                ->extraAttributes([
+                                    'style' => 'background-color: #fff7ef',
+                                ]),
+                            Select::make('partner_logo_ids')
+                                ->label('Partner logos')
+                                ->multiple()
+                                ->searchable()
+                                ->preload()
+                                ->native(false)
+                                ->options(fn (): array => PartnerLogo::query()
+                                    ->orderBy('id')
+                                    ->get()
+                                    ->mapWithKeys(fn (PartnerLogo $partner): array => [
+                                        $partner->id => $partner->getTranslation('title', 'en')
+                                            ?: $partner->getTranslation('title', 'ka')
+                                            ?: ('Partner #'.$partner->id),
+                                    ])
+                                    ->all()),
+                        ])
+                        ->columns(1),
                     Section::make('Projects')
                         ->description('Section title per language; the same projects are shown for all languages.')
                         ->schema([
@@ -403,43 +454,42 @@ class ManageHomePageSettings extends FilamentPage
                                     ->all()),
                         ])
                         ->columns(1),
-                    Section::make('Partners')
-                        ->description('Section title per language; the same partner logos are shown for every language.')
+
+                    Section::make('Contact information')
+                        ->description('3 contact cards shown under the contact form (per language).')
                         ->schema([
-                            Tabs::make($key.'_partners_section_locales')
+                            Tabs::make($key.'_contact_cards_locales')
                                 ->tabs(
                                     collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
-                                        ->statePath('partners_section.'.$locale)
-                                        ->schema($this->partnersSectionTabFields())
+                                        ->schema([
+                                            Repeater::make('contact_cards.'.$locale)
+                                                ->label('Cards')
+                                                ->minItems(3)
+                                                ->maxItems(3)
+                                                ->reorderable(false)
+                                                ->addable(false)
+                                                ->deletable(false)
+                                                ->grid(['default' => 1, 'md' => 3])
+                                                ->schema([
+                                                    Group::make([
+                                                        TextInput::make('title')->label('Title')->maxLength(255),
+                                                        TextInput::make('value')->label('Value')->maxLength(255),
+                                                        TextInput::make('button_title')->label('Button title')->maxLength(255),
+                                                        TextInput::make('button_link')->label('Button link')->maxLength(2048),
+                                                    ])
+                                                        ->columns(1)
+                                                        ->extraAttributes([
+                                                            'class' => 'rounded-lg bg-zinc-100 p-4 ring-1 ring-zinc-950/5 dark:bg-zinc-900 dark:ring-white/10',
+                                                        ]),
+                                                ])
+                                                ->columnSpanFull(),
+                                        ])
                                     )->all()
                                 )
                                 ->columns(1)
                                 ->extraAttributes([
                                     'style' => 'background-color: #fff7ef',
                                 ]),
-                            Select::make('partner_logo_ids')
-                                ->label('Partner logos')
-                                ->multiple()
-                                ->searchable()
-                                ->preload()
-                                ->native(false)
-                                ->options(fn (): array => PartnerLogo::query()
-                                    ->orderBy('id')
-                                    ->get()
-                                    ->mapWithKeys(fn (PartnerLogo $partner): array => [
-                                        $partner->id => $partner->getTranslation('title', 'en')
-                                            ?: $partner->getTranslation('title', 'ka')
-                                            ?: ('Partner #'.$partner->id),
-                                    ])
-                                    ->all()),
-                        ])
-                        ->columns(1),
-                    Section::make('Contact form')
-                        ->description('Whether to show the contact form on the public home page.')
-                        ->schema([
-                            Toggle::make('show_contact_form')
-                                ->label('Show contact form on home')
-                                ->default(false),
                         ])
                         ->columns(1),
                     Section::make('Gallery')

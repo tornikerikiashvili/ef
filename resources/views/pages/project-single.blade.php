@@ -160,7 +160,7 @@
                             </div>
 
                             @if ($youtubeWatch)
-                                <x-wptb-video-section class="mt-4" :url="$youtubeWatch" :background-image="$projectVideoBgUrl" />
+                                <x-wptb-video-section class="mt-4" :url="$youtubeWatch" :background-image="$projectVideoBgUrl" :container="false" />
                             @endif
                         </div>
                     </div>
