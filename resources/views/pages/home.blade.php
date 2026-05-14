@@ -10,6 +10,7 @@
         :text="$homePage['about']['text']"
         :image="$homePage['about']['image']"
         :link="$homePage['about']['link']"
+        :video-url="$homePage['about']['video_url'] ?? ''"
     />
     {{-- <x-about-section
         :title="$homePage['about']['title']"

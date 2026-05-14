@@ -239,11 +239,16 @@ class ManageHomePageSettings extends FilamentPage
             if (is_array($image)) {
                 $image = $image[0] ?? null;
             }
+            $videoUrl = isset($row['video_url']) ? (string) $row['video_url'] : '';
+            if (strlen($videoUrl) > 2048) {
+                $videoUrl = substr($videoUrl, 0, 2048);
+            }
             $merged['about'][$aboutLocale] = [
                 'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'text' => isset($row['text']) ? (string) $row['text'] : '',
                 'image' => filled($image) ? (string) $image : null,
                 'link' => isset($row['link']) ? (string) $row['link'] : '',
+                'video_url' => $videoUrl,
             ];
         }
 
@@ -590,6 +595,12 @@ class ManageHomePageSettings extends FilamentPage
             TextInput::make('link')
                 ->label('Link')
                 ->maxLength(2048),
+            TextInput::make('video_url')
+                ->label('About section video (YouTube)')
+                ->maxLength(2048)
+                ->placeholder('https://www.youtube.com/watch?v=… or https://youtu.be/…')
+                ->helperText('Opens in a Fancybox popup when visitors click “Watch video” on the home about band.')
+                ->columnSpanFull(),
         ];
     }
 

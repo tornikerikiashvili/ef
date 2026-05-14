@@ -3,6 +3,7 @@
     'text' => '',
     'image' => null,
     'link' => '',
+    'videoUrl' => '',
 ])
 @php
     $resolveHref = static function (?string $url, string $fallback): string {
@@ -36,6 +37,8 @@
     $topCtaHref = $resolveHref($link, route('contact'));
     $exploreHref = $resolveHref($link, route('about'));
 
+    $youtubeWatch = \App\Models\Project::youtubeWatchUrl(trim((string) $videoUrl));
+
     $imageUrl = filled($image)
         ? \Illuminate\Support\Facades\Storage::disk('public')->url($image)
         : asset('assets/img/more/7.png');
@@ -47,6 +50,34 @@
     <section class="wptb-about-two">
         <div class="container">
 
+            <div class="wptb-heading">
+                <div class="wptb-item--inner">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <h1 class="wptb-item--title">{{ strip_tags($headlineTitle) }}</h1>
+                        </div>
+                        <div class="col-lg-5 text-lg-end">
+                            <div class="wptb-item--button">
+                                @if ($youtubeWatch)
+                                    <a href="{{ $youtubeWatch }}" class="btn btn-two creative text-uppercase cursor-no-grow" data-fancybox aria-label="{{ __('messages.project.watch_video') }}">
+                                        <span class="btn-wrap">
+                                            <span class="text-first">{{ __('messages.project.watch_video') }}</span>
+                                            <span class="text-second"><i class="bi bi-play-circle" aria-hidden="true"></i></span>
+                                        </span>
+                                    </a>
+                                @else
+                                    <a href="{{ $topCtaHref }}" class="btn btn-two creative text-uppercase">
+                                        <span class="btn-wrap">
+                                            <span class="text-first">{{ __('messages.project.watch_video') }}</span>
+                                            <span class="text-second"><i class="bi bi-play-circle" aria-hidden="true"></i></span>
+                                        </span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <div class="wptb-image-single wow fadeInUp">

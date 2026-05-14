@@ -328,6 +328,7 @@ class Page extends Model
                 'text' => '',
                 'image' => null,
                 'link' => '',
+                'video_url' => '',
             ];
             $out['projects_section'][$locale] = [
                 'title' => '',
@@ -1156,13 +1157,13 @@ class Page extends Model
 
         $aboutDefaults = is_array($defaults['about'] ?? null) ? $defaults['about'] : [];
         $aboutStored = is_array($merged['about'] ?? null) ? $merged['about'] : [];
-        $aboutBase = $aboutDefaults[$locale] ?? $aboutDefaults['en'] ?? ['title' => '', 'text' => '', 'image' => null, 'link' => ''];
+        $aboutBase = $aboutDefaults[$locale] ?? $aboutDefaults['en'] ?? ['title' => '', 'text' => '', 'image' => null, 'link' => '', 'video_url' => ''];
         $aboutEn = is_array($aboutStored['en'] ?? null) ? $aboutStored['en'] : [];
         $aboutLocalized = is_array($aboutStored[$locale] ?? null) ? $aboutStored[$locale] : [];
         $aboutRow = array_merge($aboutBase, $aboutEn, $aboutLocalized);
 
         if ($locale !== 'en') {
-            foreach (['title', 'text', 'link'] as $field) {
+            foreach (['title', 'text', 'link', 'video_url'] as $field) {
                 if (($aboutRow[$field] ?? '') === '' && ($aboutEn[$field] ?? '') !== '') {
                     $aboutRow[$field] = $aboutEn[$field];
                 }
@@ -1274,6 +1275,7 @@ class Page extends Model
                 'text' => (string) ($aboutRow['text'] ?? ''),
                 'image' => $image,
                 'link' => (string) ($aboutRow['link'] ?? ''),
+                'video_url' => (string) ($aboutRow['video_url'] ?? ''),
             ],
             'projects_section' => [
                 'title' => (string) ($projectsSectionRow['title'] ?? ''),
