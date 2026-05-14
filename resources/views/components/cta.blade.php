@@ -1,5 +1,6 @@
 @php
     $ctaTextureUrl = asset('assets/img/more/texture-2.svg');
+    $ctaTextureMobileUrl = asset('assets/img/more/texture-cta-mobile.svg');
     $homePage = \App\Models\Page::homePageContent();
     $cards = is_array($homePage['contact_cards'] ?? null) ? $homePage['contact_cards'] : [];
     $card0 = is_array($cards[0] ?? null) ? $cards[0] : [];
@@ -8,8 +9,13 @@
 @endphp
 <section class="wptb-contact-form style1">
     <div
-        class="wptb-item-layer both-version"
-        style="background-image: url({{ json_encode($ctaTextureUrl) }}); background-repeat: no-repeat; background-position: center; width: 100%; height: 100%;"
+        class="wptb-item-layer both-version d-none d-md-block"
+        style="background-image: url({{ json_encode($ctaTextureUrl) }}); background-repeat: no-repeat; background-position: center; background-size: cover; width: 100%; height: 100%;"
+        aria-hidden="true"
+    ></div>
+    <div
+        class="wptb-item-layer both-version d-block d-md-none"
+        style="background-image: url({{ json_encode($ctaTextureMobileUrl) }}); background-repeat: no-repeat; background-position: center; width: 100%; height: 100%;"
         aria-hidden="true"
     ></div>
     <div class="container">
