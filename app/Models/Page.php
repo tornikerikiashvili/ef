@@ -358,7 +358,8 @@ class Page extends Model
      *     image: string|null,
      *     locales: array<string, array{
      *       title: string,
-     *       content: string
+     *       content: string,
+     *       image_person_name: string
      *     }>
      *   },
      *   video_background_image: string|null,
@@ -415,6 +416,7 @@ class Page extends Model
             $out['president']['locales'][$locale] = [
                 'title' => '',
                 'content' => '',
+                'image_person_name' => '',
             ];
 
             $out['video'][$locale] = [
@@ -970,7 +972,7 @@ class Page extends Model
      *   cover: array{title: string, background_image: string|null},
      *   about: array{teaser: string, description: string, image_left: string|null, image_right: string|null},
      *   funfacts: array{label_1: string, value_1: int, label_2: string, value_2: int},
-     *   president: array{title: string, years_experience: int, image: string|null, content: string},
+     *   president: array{title: string, years_experience: int, image: string|null, content: string, image_person_name: string},
      *   video_background_image: string|null,
      *   video: array{url: string},
      *   body: array{title: string, text: string, image: string|null, video_url: string}
@@ -1037,7 +1039,7 @@ class Page extends Model
 
         $presLocalesDefaults = is_array(($defaults['president']['locales'] ?? null)) ? $defaults['president']['locales'] : [];
         $presLocalesStored = is_array(($presidentStored['locales'] ?? null)) ? $presidentStored['locales'] : [];
-        $presBase = $presLocalesDefaults[$baseLocale] ?? ['title' => '', 'content' => ''];
+        $presBase = $presLocalesDefaults[$baseLocale] ?? ['title' => '', 'content' => '', 'image_person_name' => ''];
         $presLocalized = is_array($presLocalesStored[$baseLocale] ?? null) ? $presLocalesStored[$baseLocale] : [];
         $presRow = array_merge($presBase, $presLocalized);
 
@@ -1105,6 +1107,7 @@ class Page extends Model
                 'years_experience' => $presYears,
                 'image' => $presImage,
                 'content' => $presidentContentHtml,
+                'image_person_name' => (string) ($presRow['image_person_name'] ?? ''),
             ],
             'video' => [
                 'url' => (string) ($videoRow['url'] ?? ''),

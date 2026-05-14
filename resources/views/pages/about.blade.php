@@ -72,6 +72,11 @@
         $presidentContent = data_get($aboutPage ?? [], 'president.content', '');
         $presidentContent = is_string($presidentContent) ? $presidentContent : '';
 
+        $presidentImagePersonName = data_get($aboutPage ?? [], 'president.image_person_name', '');
+        $presidentImagePersonName = filled($presidentImagePersonName) ? strip_tags((string) $presidentImagePersonName) : '';
+
+        $presidentImageAlt = $presidentImagePersonName !== '' ? $presidentImagePersonName : strip_tags($presidentTitle);
+
         $aboutVideoUrl = data_get($aboutPage ?? [], 'video.url');
         $aboutVideoUrl = filled($aboutVideoUrl) ? (string) $aboutVideoUrl : 'https://www.youtube.com/watch?v=SF4aHwxHtZ0';
 
@@ -173,7 +178,10 @@
                     <div class="wptb-image-single wow fadeInUp">
                         <div class="wptb-item--inner">
                             <div class="wptb-item--image">
-                                <img src="{{ $presidentImageUrl }}" alt="img">
+                                <img src="{{ $presidentImageUrl }}" alt="{{ $presidentImageAlt }}">
+                                @if ($presidentImagePersonName !== '')
+                                    <p class="wptb-image-single__person-name mb-0">{{ $presidentImagePersonName }}</p>
+                                @endif
                             </div>
                         </div>
                     </div>

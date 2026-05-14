@@ -175,9 +175,14 @@ class ManageAboutPageSettings extends FilamentPage
 
             $presLocales = is_array($merged['president']['locales'] ?? null) ? $merged['president']['locales'] : [];
             $presLocale = is_array($presLocales[$locale] ?? null) ? $presLocales[$locale] : [];
+            $imagePersonName = isset($presLocale['image_person_name']) ? (string) $presLocale['image_person_name'] : '';
+            if (strlen($imagePersonName) > 255) {
+                $imagePersonName = substr($imagePersonName, 0, 255);
+            }
             $merged['president']['locales'][$locale] = [
                 'title' => isset($presLocale['title']) ? (string) $presLocale['title'] : '',
                 'content' => Page::presidentLocaleBodyHtml($presLocale),
+                'image_person_name' => $imagePersonName,
             ];
 
             $video = is_array($merged['video'][$locale] ?? null) ? $merged['video'][$locale] : [];
@@ -323,7 +328,7 @@ class ManageAboutPageSettings extends FilamentPage
                         ])
                         ->columns(1),
                     Section::make('President section')
-                        ->description('Title and rich text (per language), plus shared experience years and image.')
+                        ->description('Title, rich text, and name shown above the portrait (per language), plus shared experience years and image.')
                         ->schema([
                             Group::make([
                                 TextInput::make('president.years_experience')
@@ -494,6 +499,11 @@ class ManageAboutPageSettings extends FilamentPage
             TextInput::make('title')
                 ->label('Title')
                 ->maxLength(65535),
+            TextInput::make('image_person_name')
+                ->label('Name on portrait')
+                ->maxLength(255)
+                ->helperText('Optional: caption on the president photo, bottom-right inside the image.')
+                ->columnSpanFull(),
             RichEditor::make('content')
                 ->label('Content')
                 ->columnSpanFull(),
