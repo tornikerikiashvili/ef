@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Middleware\SetAppLocale;
 use App\Http\Controllers\PageController;
+use App\Http\Middleware\SetAppLocale;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/' . config('cms.supported_locales')[0]);
+    return redirect('/'.config('cms.supported_locales')[0]);
 });
 
 Route::prefix('{locale}')
@@ -22,4 +22,7 @@ Route::prefix('{locale}')
         Route::get('/news', [PageController::class, 'news'])->name('news');
         Route::get('/news/{slug}', [PageController::class, 'newsSingle'])->name('news.show');
         Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+        Route::get('/legal/{document}', [PageController::class, 'legalDocument'])
+            ->whereIn('document', ['terms', 'privacy', 'cookies'])
+            ->name('legal.document');
     });

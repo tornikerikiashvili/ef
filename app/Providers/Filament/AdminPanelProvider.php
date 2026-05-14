@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 'Pages',
                 'Content',
                 'Taxonomies',
+                'Site configuration',
                 'Settings',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

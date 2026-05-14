@@ -27,6 +27,9 @@ class Page extends Model
     /** Partners listing page settings. */
     public const KEY_PARTNERS_PAGE = 'partners_page';
 
+    /** Legal / policy texts (terms, privacy, cookies), rich HTML per CMS locale. */
+    public const KEY_LEGAL_PAGES = 'legal_pages';
+
     /** @var list<string> */
     public const SEED_KEYS = [
         self::KEY_CONTACT_PAGE,
@@ -36,6 +39,7 @@ class Page extends Model
         self::KEY_PROJECTS_LISTING_PAGE,
         self::KEY_NEWS_LISTING_PAGE,
         self::KEY_PARTNERS_PAGE,
+        self::KEY_LEGAL_PAGES,
     ];
 
     /**
@@ -165,6 +169,10 @@ class Page extends Model
             self::KEY_CONTACT_PAGE => static::query()->firstOrCreate(
                 ['key' => self::KEY_CONTACT_PAGE],
                 ['payload' => static::defaultContactPayload()]
+            ),
+            self::KEY_LEGAL_PAGES => static::query()->firstOrCreate(
+                ['key' => self::KEY_LEGAL_PAGES],
+                ['payload' => static::defaultLegalPagesPayload()]
             ),
             default => null,
         };
@@ -543,6 +551,33 @@ class Page extends Model
     }
 
     /**
+     * Terms, privacy policy, and cookie policy body HTML (per CMS locale).
+     *
+     * @return array{
+     *   locales: array<string, array{terms: string, privacy: string, cookies: string}>
+     * }
+     */
+    public static function defaultLegalPagesPayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+        $out = [
+            'locales' => [],
+        ];
+        foreach ($locales as $locale) {
+            if (! is_string($locale)) {
+                continue;
+            }
+            $out['locales'][$locale] = [
+                'terms' => '',
+                'privacy' => '',
+                'cookies' => '',
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public static function defaultPayloadForKey(string $key): array
@@ -555,6 +590,7 @@ class Page extends Model
             self::KEY_PROJECTS_LISTING_PAGE => self::defaultProjectsListingPagePayload(),
             self::KEY_NEWS_LISTING_PAGE => self::defaultNewsListingPagePayload(),
             self::KEY_PARTNERS_PAGE => self::defaultPartnersPagePayload(),
+            self::KEY_LEGAL_PAGES => self::defaultLegalPagesPayload(),
         };
     }
 
@@ -653,6 +689,17 @@ class Page extends Model
     }
 
     /**
+     * Ensure the `legal_pages` row exists (terms / privacy / cookie policy copy).
+     */
+    public static function ensureLegalPagesBlock(): void
+    {
+        static::query()->firstOrCreate(
+            ['key' => self::KEY_LEGAL_PAGES],
+            ['payload' => static::defaultLegalPagesPayload()]
+        );
+    }
+
+    /**
      * Partners page settings for the current request locale (no cross-locale fallback).
      *
      * @return array{
@@ -688,6 +735,52 @@ class Page extends Model
             'menu_title' => (string) ($row['menu_title'] ?? ''),
             'title' => (string) ($row['title'] ?? ''),
             'cover_image' => $cover,
+        ];
+    }
+
+    /**
+     * Legal page bodies for the current request locale (English fallback for empty HTML).
+     *
+     * @return array{
+     *   terms: string,
+     *   privacy: string,
+     *   cookies: string
+     * }
+     */
+    public static function legalPagesContent(): array
+    {
+        static::ensureLegalPagesBlock();
+
+        $defaults = static::defaultLegalPagesPayload();
+        $stored = static::query()->where('key', self::KEY_LEGAL_PAGES)->value('payload');
+        $merged = is_array($stored) ? array_replace_recursive($defaults, $stored) : $defaults;
+
+        $locale = app()->getLocale();
+        $baseLocale = array_key_exists($locale, $defaults['locales'] ?? []) ? $locale : 'en';
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($merged['locales'] ?? null) ? $merged['locales'] : [];
+        $base = $localesDefaults[$baseLocale] ?? ['terms' => '', 'privacy' => '', 'cookies' => ''];
+        $en = is_array($localesStored['en'] ?? null) ? $localesStored['en'] : [];
+        $localized = is_array($localesStored[$baseLocale] ?? null) ? $localesStored[$baseLocale] : [];
+
+        if ($baseLocale !== 'en') {
+            $row = array_merge($base, $en, $localized);
+            foreach (['terms', 'privacy', 'cookies'] as $field) {
+                $current = trim(strip_tags((string) ($row[$field] ?? '')));
+                $fromEn = trim(strip_tags((string) ($en[$field] ?? '')));
+                if ($current === '' && $fromEn !== '') {
+                    $row[$field] = (string) ($en[$field] ?? '');
+                }
+            }
+        } else {
+            $row = array_merge($base, $localized);
+        }
+
+        return [
+            'terms' => (string) ($row['terms'] ?? ''),
+            'privacy' => (string) ($row['privacy'] ?? ''),
+            'cookies' => (string) ($row['cookies'] ?? ''),
         ];
     }
 

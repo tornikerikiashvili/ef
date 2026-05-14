@@ -16,6 +16,10 @@
         $projectsMenuTitle = (string) ($projectsSettings['menu_title'] ?? '');
         $projectsPageTitle = (string) ($projectsSettings['title'] ?? '');
 
+        $partnersSettings = \App\Models\Page::partnersPageContent();
+        $partnersMenuTitle = (string) ($partnersSettings['menu_title'] ?? '');
+        $partnersPageTitle = (string) ($partnersSettings['title'] ?? '');
+
         $newsSettings = \App\Models\Page::newsListingPageContent();
         $newsMenuTitle = (string) ($newsSettings['menu_title'] ?? '');
         $newsPageTitle = (string) ($newsSettings['title'] ?? '');
@@ -36,6 +40,7 @@
                                     <li class="menu-item"><a href="{{ route('about') }}">{{ filled($aboutMenuTitle) ? $aboutMenuTitle : (filled($aboutPageTitle) ? $aboutPageTitle : __('messages.nav.about')) }}</a></li>
                                     <li class="menu-item"><a href="{{ route('services') }}">{{ filled($servicesMenuTitle) ? $servicesMenuTitle : (filled($servicesPageTitle) ? $servicesPageTitle : __('messages.nav.services')) }}</a></li>
                                     <li class="menu-item"><a href="{{ route('projects') }}">{{ filled($projectsMenuTitle) ? $projectsMenuTitle : (filled($projectsPageTitle) ? $projectsPageTitle : __('messages.nav.projects')) }}</a></li>
+                                    <li class="menu-item"><a href="{{ route('partners') }}">{{ filled($partnersMenuTitle) ? $partnersMenuTitle : (filled($partnersPageTitle) ? $partnersPageTitle : __('messages.nav.partners')) }}</a></li>
                                     <li class="menu-item"><a href="{{ route('news') }}">{{ filled($newsMenuTitle) ? $newsMenuTitle : (filled($newsPageTitle) ? $newsPageTitle : __('messages.nav.news')) }}</a></li>
                                     <li class="menu-item"><a href="{{ route('contact') }}">{{ filled($contactMenuTitle) ? $contactMenuTitle : (filled($contactPageTitle) ? $contactPageTitle : __('messages.nav.contact')) }}</a></li>
                                 </ul>
@@ -55,8 +60,9 @@
                         <div class="footer-widget text-md-end">
                             <div class="footer-nav">
                                 <ul>
-                                    <li class="menu-item"><a href="{{ route('news') }}">{{ __('messages.footer.recent_posts') }}</a></li>
-                                    <li class="menu-item"><a href="{{ route('contact') }}">{{ __('messages.nav.contact') }}</a></li>
+                                    <li class="menu-item"><a href="{{ route('legal.document', ['document' => 'terms']) }}">{{ __('messages.footer.terms_and_conditions') }}</a></li>
+                                    <li class="menu-item"><a href="{{ route('legal.document', ['document' => 'privacy']) }}">{{ __('messages.footer.privacy_policy') }}</a></li>
+                                    <li class="menu-item"><a href="{{ route('legal.document', ['document' => 'cookies']) }}">{{ __('messages.footer.cookie_policy') }}</a></li>
                                 </ul>
                             </div>
                         </div>

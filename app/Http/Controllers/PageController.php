@@ -522,4 +522,42 @@ class PageController extends Controller
     {
         return view('pages.contact');
     }
+
+    public function legalDocument(string $locale, string $document)
+    {
+        $allowed = ['terms', 'privacy', 'cookies'];
+        if (! in_array($document, $allowed, true)) {
+            abort(404);
+        }
+
+        $content = Page::legalPagesContent();
+        $body = (string) ($content[$document] ?? '');
+
+        $pageTitle = match ($document) {
+            'terms' => __('messages.legal.terms_title'),
+            'privacy' => __('messages.legal.privacy_title'),
+            'cookies' => __('messages.legal.cookies_title'),
+            default => '',
+        };
+
+        $plain = trim(strip_tags($body));
+        $metaDescription = $plain !== ''
+            ? Str::limit($plain, 160)
+            : __('messages.legal.meta_fallback');
+
+        $recordSeoForHead = [
+            'meta_title' => $pageTitle.' - Ef',
+            'meta_description' => $metaDescription,
+            'og_title' => $pageTitle,
+            'og_description' => $metaDescription,
+            'og_image' => null,
+        ];
+
+        return view('pages.legal-document', [
+            'document' => $document,
+            'pageTitle' => $pageTitle,
+            'body' => $body,
+            'recordSeoForHead' => $recordSeoForHead,
+        ]);
+    }
 }
