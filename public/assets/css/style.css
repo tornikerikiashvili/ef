@@ -1692,3 +1692,25 @@ body.theme-style--light:not(.theme-style--olive) .totop a {
     box-shadow: 0px 0px 3px #a6a182;
 }
 
+/* Mobile burger menu: aside drawer uses a higher z-index than .mr_menu; force it hidden while menu is open. */
+body.mr_menu_active .aside_info_wrapper {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    right: -400px !important;
+    transform: scale(0) !important;
+    opacity: 0;
+}
+
+/* Below xl: aside opener is hidden but still precedes .header_search in DOM, so the theme's
+   `.wptb-element + .wptb-element::before` divider still paints on the lang block — remove it. */
+@media (max-width: 1199.98px) {
+    .header .header_right_part .header_search.wptb-element {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .header .header_right_part .header_search.wptb-element::before {
+        content: none !important;
+        display: none !important;
+    }
+}

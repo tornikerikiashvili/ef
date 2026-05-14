@@ -296,10 +296,6 @@
         font-size: var(--fs-17);
     }
 
-    .header .header_search {
-        display: none;
-    }
-
     .header .header_right_part {
         margin-left: 30px;
     }

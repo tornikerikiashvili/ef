@@ -5,8 +5,6 @@
 
     $igName = (string) ($ig['name'] ?? '');
     $igUrl = (string) ($ig['url'] ?? '');
-    $facebookUrl = (string) ($social['facebook_url'] ?? '');
-    $linkedinUrl = (string) ($social['linkedin_url'] ?? '');
 
     $email = (string) ($contact['email'] ?? '');
     $phone = (string) ($contact['phone'] ?? '');
@@ -105,15 +103,7 @@
         <h6>// Follow Us</h6>
         <div class="social-box style-square">
             <ul>
-                @if(filled($facebookUrl))
-                    <li><a href="{{ $facebookUrl }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a></li>
-                @endif
-                @if(filled($igUrl))
-                    <li><a href="{{ $igUrl }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a></li>
-                @endif
-                @if(filled($linkedinUrl))
-                    <li><a href="{{ $linkedinUrl }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a></li>
-                @endif
+                @include('partials.social-link-items', ['anchorIcons' => false])
             </ul>
         </div>
     </div>

@@ -60,13 +60,14 @@
                     </div>
                 </div>
 
-                <div class="header_right_part d-flex align-items-center">
-                    <div class="aside_open wptb-element">
+                <div class="header_right_part d-flex align-items-center gap-2 gap-xl-0">
+                    {{-- Desktop: aside (Instagram / contact drawer). Mobile: hidden — language sits in this slot instead. --}}
+                    <div class="aside_open wptb-element d-none d-xl-block">
                         <div class="aside-open--inner">
                             <span></span><span></span><span></span>
                         </div>
                     </div>
-                    <div class="header_search wptb-element">
+                    <div class="header_search wptb-element order-first order-xl-0 me-auto me-xl-0">
                         <a href="{{ $langSwitchUrl }}" class="modal_search_icon lang-switch-trigger" title="{{ $langSwitchTitle }}" aria-label="{{ $langSwitchTitle }}"><span class="lang-switch-trigger__text">{{ $langSwitchLabel }}</span></a>
                     </div>
                     <button type="button" class="mr_menu_toggle wptb-element d-xl-none">

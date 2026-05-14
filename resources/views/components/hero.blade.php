@@ -75,9 +75,7 @@
     <div class="wptb-right-pane">
         <div class="social-box style-oval">
             <ul>
-                <li><a href="#" class="bi bi-facebook" aria-label="Facebook"></a></li>
-                <li><a href="#" class="bi bi-instagram" aria-label="Instagram"></a></li>
-                <li><a href="#" class="bi bi-twitter-x" aria-label="X"></a></li>
+                @include('partials.social-link-items', ['anchorIcons' => true])
             </ul>
         </div>
     </div>

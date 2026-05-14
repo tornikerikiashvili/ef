@@ -271,6 +271,7 @@ class Page extends Model
             ],
             'facebook_url' => '',
             'linkedin_url' => '',
+            'youtube_url' => '',
         ];
         $out['google_map_embed'] = '';
 
@@ -1329,6 +1330,7 @@ class Page extends Model
                     ],
                     'facebook_url' => isset($social['facebook_url']) ? (string) $social['facebook_url'] : '',
                     'linkedin_url' => isset($social['linkedin_url']) ? (string) $social['linkedin_url'] : '',
+                    'youtube_url' => isset($social['youtube_url']) ? (string) $social['youtube_url'] : '',
                 ],
                 'google_map_embed' => isset($merged['google_map_embed']) ? (string) $merged['google_map_embed'] : '',
             ]);

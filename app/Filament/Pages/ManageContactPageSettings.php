@@ -115,6 +115,7 @@ class ManageContactPageSettings extends FilamentPage
             ],
             'facebook_url' => isset($social['facebook_url']) ? (string) $social['facebook_url'] : '',
             'linkedin_url' => isset($social['linkedin_url']) ? (string) $social['linkedin_url'] : '',
+            'youtube_url' => isset($social['youtube_url']) ? (string) $social['youtube_url'] : '',
         ];
 
         $merged['google_map_embed'] = isset($merged['google_map_embed']) ? (string) $merged['google_map_embed'] : '';
@@ -231,6 +232,11 @@ class ManageContactPageSettings extends FilamentPage
                     ->label('LinkedIn link')
                     ->url()
                     ->maxLength(2048),
+                TextInput::make('social.youtube_url')
+                    ->label('YouTube link')
+                    ->url()
+                    ->maxLength(2048)
+                    ->placeholder('https://www.youtube.com/@yourchannel'),
 
                 Textarea::make('google_map_embed')
                     ->label('Google Map embed code')

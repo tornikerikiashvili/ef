@@ -61,6 +61,9 @@ Description: Kimono - Photography Agency
         // Active Mobile Responsive Menu : Add Class in body tag
         $('.mr_menu_toggle').on('click', function(e) {
             $('body').addClass('mr_menu_active');
+            // Aside contact drawer (z-index above mr_menu) must not sit on top of the burger menu.
+            $('.aside_info_wrapper').removeClass('show');
+            $('.aside_open').removeClass('close');
             e.stopPropagation();
             e.preventDefault();
         });
@@ -105,6 +108,7 @@ Description: Kimono - Photography Agency
         // Aside info bar
         $('.aside_open').on("click", function(e) {
             e.preventDefault();
+            $('body').removeClass('mr_menu_active');
             $(this).addClass('close');
             $('.aside_info_wrapper').addClass('show');
         });

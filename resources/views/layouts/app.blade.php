@@ -100,9 +100,7 @@
         <h6>Find Our Page</h6>
         <div class="social-box">
             <ul>
-                <li><a href="#"><i class="bi bi-facebook"></i></a></li>
-                <li><a href="#"><i class="bi bi-instagram"></i></a></li>
-                <li><a href="#"><i class="bi bi-linkedin"></i></a></li>
+                @include('partials.social-link-items', ['anchorIcons' => false])
             </ul>
         </div>
     </div>
