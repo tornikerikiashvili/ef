@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     @php
-        $defaultSiteTitle = 'Ef - Photography Agency';
-        $defaultSiteDesc = 'Ef - Photography Agency';
+        $defaultSiteTitle = 'Element FIT-OUT | FIT-OUT WORKS';
+        $defaultSiteDesc = 'Element FIT-OUT | FIT-OUT WORKS';
         $sectionTitle = trim((string) $__env->yieldContent('title', $defaultSiteTitle));
         $sectionDesc = trim((string) $__env->yieldContent('meta_description', $defaultSiteDesc));
         $cms = is_array($recordSeoForHead ?? null)
