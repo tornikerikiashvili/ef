@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Gallery;
 use App\Models\Page;
 use App\Models\PartnerLogo;
@@ -16,7 +17,6 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page as FilamentPage;
 use Filament\Schemas\Components\Actions;
@@ -34,6 +34,8 @@ use UnitEnum;
 
 class ManageHomePageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Home';
@@ -198,6 +200,7 @@ class ManageHomePageSettings extends FilamentPage
             'contact_cards',
             'gallery_id',
             'gallery_instagram_link',
+            'seo',
         ];
 
         foreach (array_keys($defaults) as $locale) {
@@ -309,7 +312,7 @@ class ManageHomePageSettings extends FilamentPage
             $merged['gallery_instagram_link'] = substr($merged['gallery_instagram_link'], 0, 2048);
         }
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -320,25 +323,25 @@ class ManageHomePageSettings extends FilamentPage
             ->components([
                 Group::make([
                     Section::make('Menu')
-                    ->description('Menu label (per language). Used in header/footer navigation.')
-                    ->schema([
-                        Tabs::make($key.'_menu_locales')
-                            ->tabs(
-                                collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
-                                    ->statePath($locale)
-                                    ->schema([
-                                        TextInput::make('menu_title')
-                                            ->label('Menu title')
-                                            ->maxLength(255),
-                                    ])
-                                )->all()
-                            )
-                            ->columns(1)
-                            ->extraAttributes([
-                                'style' => 'background-color: #fff7ef',
-                            ]),
-                    ])
-                    ->columns(1),
+                        ->description('Menu label (per language). Used in header/footer navigation.')
+                        ->schema([
+                            Tabs::make($key.'_menu_locales')
+                                ->tabs(
+                                    collect(config('cms.supported_locales', ['en', 'ka']))->map(fn (string $locale) => Tab::make(Str::upper($locale))
+                                        ->statePath($locale)
+                                        ->schema([
+                                            TextInput::make('menu_title')
+                                                ->label('Menu title')
+                                                ->maxLength(255),
+                                        ])
+                                    )->all()
+                                )
+                                ->columns(1)
+                                ->extraAttributes([
+                                    'style' => 'background-color: #fff7ef',
+                                ]),
+                        ])
+                        ->columns(1),
                     Section::make('Featured services')
                         ->description('Choose which services appear in the home hero.')
                         ->schema([
@@ -392,7 +395,7 @@ class ManageHomePageSettings extends FilamentPage
                                 ]),
                         ])
                         ->columns(1),
-                        Section::make('Partners')
+                    Section::make('Partners')
                         ->description('Section title per language; the same partner logos are shown for every language.')
                         ->schema([
                             Tabs::make($key.'_partners_section_locales')
@@ -517,6 +520,7 @@ class ManageHomePageSettings extends FilamentPage
                                 ->helperText('URL for the “Follow on Instagram” button next to the gallery images on the home page.'),
                         ])
                         ->columns(1),
+                    $this->pageSeoSectionBlock($key),
                 ])
                     ->statePath($key),
             ]);

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -27,6 +28,8 @@ use UnitEnum;
 
 class ManageAboutPageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'About';
@@ -246,7 +249,7 @@ class ManageAboutPageSettings extends FilamentPage
         }
         $merged['cover_image'] = filled($coverImage) ? (string) $coverImage : null;
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -371,6 +374,7 @@ class ManageAboutPageSettings extends FilamentPage
                                 ]),
                         ])
                         ->columns(1),
+                    $this->pageSeoSectionBlock($key),
                 ])
                     ->statePath($key),
             ]);

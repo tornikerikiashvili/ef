@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -24,6 +25,8 @@ use UnitEnum;
 
 class ManagePartnersPageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Partners';
@@ -99,7 +102,7 @@ class ManagePartnersPageSettings extends FilamentPage
             ];
         }
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -138,6 +141,7 @@ class ManagePartnersPageSettings extends FilamentPage
                                 ->columnSpanFull(),
                         ])
                         ->columns(1),
+                    $this->pageSeoSectionBlock($key),
                 ])
                     ->statePath($key),
             ]);
@@ -170,4 +174,3 @@ class ManagePartnersPageSettings extends FilamentPage
             ]);
     }
 }
-

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Gallery;
 use App\Models\Page;
 use BackedEnum;
@@ -27,6 +28,8 @@ use UnitEnum;
 
 class ManageContactPageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Contact';
@@ -116,7 +119,7 @@ class ManageContactPageSettings extends FilamentPage
 
         $merged['google_map_embed'] = isset($merged['google_map_embed']) ? (string) $merged['google_map_embed'] : '';
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -131,6 +134,7 @@ class ManageContactPageSettings extends FilamentPage
                     ->description('Used on the public contact page.')
                     ->schema($this->contactMediaAndSocialFields())
                     ->columns(2),
+                $this->pageSeoSectionForStandaloneStatePath(Page::KEY_CONTACT_PAGE),
             ]);
     }
 

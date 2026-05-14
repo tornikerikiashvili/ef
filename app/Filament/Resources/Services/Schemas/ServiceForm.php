@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
+use App\Filament\Support\ResourceSeoFormSchema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -62,11 +63,12 @@ class ServiceForm
                             ->columnSpanFull(),
                     ])
                     ->columnSpan(1),
+                ResourceSeoFormSchema::section('service_seo_locales', 'services'),
             ]);
     }
 
     /**
-     * @return array<int, \Filament\Forms\Components\TextInput|\Filament\Forms\Components\RichEditor>
+     * @return array<int, TextInput|RichEditor>
      */
     protected static function translatableFields(): array
     {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasResourceTranslations;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Service extends Model
 {
@@ -14,6 +15,11 @@ class Service extends Model
         'title',
         'short_teaser',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
         'cover_photo',
         'gallery',
         'is_featured_in_hero',
@@ -30,6 +36,10 @@ class Service extends Model
         'title',
         'short_teaser',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
     ];
 
     protected static function booted(): void
@@ -42,10 +52,10 @@ class Service extends Model
                     ? $model->title
                     : $model->getTranslation('title', 'en', false);
                 $title = $title ?: 'service';
-                $model->slug = \Illuminate\Support\Str::slug($title);
+                $model->slug = Str::slug($title);
                 $i = 1;
                 while (static::where('slug', $model->slug)->where('id', '!=', $model->id)->exists()) {
-                    $model->slug = \Illuminate\Support\Str::slug($title) . '-' . $i++;
+                    $model->slug = Str::slug($title).'-'.$i++;
                 }
             }
         });

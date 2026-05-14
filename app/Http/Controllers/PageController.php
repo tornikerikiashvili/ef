@@ -10,12 +10,136 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\SiteSetting;
 use App\Models\Status;
+use App\Support\RecordSeoForHead;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
+    public function search(Request $request, string $locale)
+    {
+        $q = trim((string) $request->query('q', ''));
+
+        if (mb_strlen($q) < 2) {
+            return response()->json([
+                'query' => $q,
+                'results' => [],
+            ]);
+        }
+
+        $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q).'%';
+
+        $services = Service::query()
+            ->where(fn ($query) => $this->whereTranslatedLike($query, ['title', 'short_teaser', 'text_content'], $locale, $like)
+                ->orWhere('slug', 'like', $like))
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn (Service $service): array => $this->searchResult(
+                type: __('messages.nav.services'),
+                title: $this->localizedField($service, 'title', $locale),
+                excerpt: $this->localizedField($service, 'short_teaser', $locale) ?: $this->localizedField($service, 'text_content', $locale),
+                url: route('services.show', ['locale' => $locale, 'slug' => $service->slug ?? $service->id]),
+                image: $service->cover_photo ? Storage::disk('public')->url($service->cover_photo) : asset('assets/img/projects/3/1.jpg'),
+            ));
+
+        $projects = Project::query()
+            ->where(fn ($query) => $this->whereTranslatedLike($query, ['title', 'client', 'location', 'status_text', 'text_content'], $locale, $like)
+                ->orWhere('slug', 'like', $like))
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn (Project $project): array => $this->searchResult(
+                type: __('messages.nav.projects'),
+                title: $this->localizedField($project, 'title', $locale),
+                excerpt: $this->localizedField($project, 'client', $locale)
+                    ?: $this->localizedField($project, 'location', $locale)
+                    ?: $this->localizedField($project, 'text_content', $locale),
+                url: route('projects.show', ['locale' => $locale, 'slug' => $project->slug ?? $project->id]),
+                image: $this->projectSearchImage($project),
+            ));
+
+        $news = News::query()
+            ->where(fn ($query) => $this->whereTranslatedLike($query, ['title', 'teaser', 'text_content'], $locale, $like)
+                ->orWhere('slug', 'like', $like))
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
+            ->limit(5)
+            ->get()
+            ->map(fn (News $newsItem): array => $this->searchResult(
+                type: __('messages.nav.news'),
+                title: $this->localizedField($newsItem, 'title', $locale),
+                excerpt: $this->localizedField($newsItem, 'teaser', $locale) ?: $this->localizedField($newsItem, 'text_content', $locale),
+                url: route('news.show', ['locale' => $locale, 'slug' => $newsItem->slug ?? $newsItem->id]),
+                image: $newsItem->cover_photo ? Storage::disk('public')->url($newsItem->cover_photo) : asset('assets/img/blog/1.jpg'),
+            ));
+
+        return response()->json([
+            'query' => $q,
+            'results' => $services
+                ->concat($projects)
+                ->concat($news)
+                ->take(12)
+                ->values(),
+        ]);
+    }
+
+    private function whereTranslatedLike($query, array $fields, string $locale, string $like)
+    {
+        $locales = array_values(array_unique([$locale, 'en', 'ka']));
+
+        foreach ($fields as $field) {
+            foreach ($locales as $searchLocale) {
+                $query->orWhere($field.'->'.$searchLocale, 'like', $like);
+            }
+        }
+
+        return $query;
+    }
+
+    private function localizedField($model, string $field, string $locale): string
+    {
+        if (method_exists($model, 'getTranslation')) {
+            foreach (array_values(array_unique([$locale, 'en', 'ka'])) as $searchLocale) {
+                $value = $model->getTranslation($field, $searchLocale, false);
+
+                if (filled($value)) {
+                    return (string) $value;
+                }
+            }
+        }
+
+        $value = $model->{$field} ?? '';
+
+        return is_string($value) ? $value : '';
+    }
+
+    private function searchResult(string $type, string $title, string $excerpt, string $url, string $image): array
+    {
+        $title = html_entity_decode(trim(strip_tags($title)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $excerpt = html_entity_decode(trim(strip_tags($excerpt)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return [
+            'type' => $type,
+            'title' => filled($title) ? $title : $type,
+            'excerpt' => Str::limit($excerpt, 120),
+            'url' => $url,
+            'image' => $image,
+        ];
+    }
+
+    private function projectSearchImage(Project $project): string
+    {
+        $gallery = is_array($project->gallery ?? null) ? $project->gallery : [];
+        $imagePath = $gallery[0] ?? $project->cover_photo;
+
+        return $imagePath
+            ? Storage::disk('public')->url($imagePath)
+            : asset('assets/img/projects/3/1.jpg');
+    }
+
     public function home()
     {
         $homePage = Page::homePageContent();
@@ -120,7 +244,13 @@ class PageController extends Controller
             ->limit(4)
             ->get();
 
-        return view('pages.service-single', compact('service', 'prevService', 'nextService', 'relatedServices'));
+        return view('pages.service-single', [
+            'service' => $service,
+            'prevService' => $prevService,
+            'nextService' => $nextService,
+            'relatedServices' => $relatedServices,
+            'recordSeoForHead' => RecordSeoForHead::forService($service),
+        ]);
     }
 
     public function projects()
@@ -194,7 +324,13 @@ class PageController extends Controller
             ->limit(4)
             ->get();
 
-        return view('pages.project-single', compact('project', 'prevProject', 'nextProject', 'relatedProjects'));
+        return view('pages.project-single', [
+            'project' => $project,
+            'prevProject' => $prevProject,
+            'nextProject' => $nextProject,
+            'relatedProjects' => $relatedProjects,
+            'recordSeoForHead' => RecordSeoForHead::forProject($project),
+        ]);
     }
 
     public function partners()
@@ -376,7 +512,10 @@ class PageController extends Controller
             abort(404);
         }
 
-        return view('pages.news-single', compact('newsItem'));
+        return view('pages.news-single', [
+            'newsItem' => $newsItem,
+            'recordSeoForHead' => RecordSeoForHead::forNews($newsItem),
+        ]);
     }
 
     public function contact()

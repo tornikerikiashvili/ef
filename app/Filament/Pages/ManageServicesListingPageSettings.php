@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Page;
 use App\Models\Service;
 use BackedEnum;
@@ -27,6 +28,8 @@ use UnitEnum;
 
 class ManageServicesListingPageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'Services';
@@ -130,7 +133,7 @@ class ManageServicesListingPageSettings extends FilamentPage
             ];
         }
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -233,6 +236,7 @@ class ManageServicesListingPageSettings extends FilamentPage
                                 ->extraAttributes(['style' => 'background-color: #fff7ef']),
                         ])
                         ->columns(1),
+                    $this->pageSeoSectionBlock($key),
                 ])
                     ->statePath($key),
             ]);

@@ -38,6 +38,200 @@ class Page extends Model
         self::KEY_PARTNERS_PAGE,
     ];
 
+    /**
+     * Optional SEO stored on each `pages` row payload under `seo.locales` (per supported CMS locale).
+     *
+     * @return array{locales: array<string, array{
+     *   meta_title: string,
+     *   meta_description: string,
+     *   og_title: string,
+     *   og_description: string,
+     *   og_image: string|null
+     * }>}
+     */
+    public static function defaultSeoPayload(): array
+    {
+        $locales = config('cms.supported_locales', ['en', 'ka']);
+        $out = [
+            'locales' => [],
+        ];
+        foreach ($locales as $locale) {
+            if (! is_string($locale)) {
+                continue;
+            }
+            $out['locales'][$locale] = [
+                'meta_title' => '',
+                'meta_description' => '',
+                'og_title' => '',
+                'og_description' => '',
+                'og_image' => null,
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * Normalize and merge `seo` into a page payload (call at end of each page settings normalizer).
+     *
+     * @param  array<string, mixed>  $merged
+     * @return array<string, mixed>
+     */
+    public static function normalizeSeoInPagePayload(array $merged): array
+    {
+        $defaults = static::defaultSeoPayload();
+        $seo = is_array($merged['seo'] ?? null) ? $merged['seo'] : [];
+
+        // Legacy: flat `seo.*` fields (pre localized SEO) → one locale row (prefer English).
+        if ($seo !== [] && ! is_array($seo['locales'] ?? null)) {
+            $img = $seo['og_image'] ?? null;
+            if (is_array($img)) {
+                $img = $img[0] ?? null;
+            }
+            $legacy = [
+                'meta_title' => isset($seo['meta_title']) ? (string) $seo['meta_title'] : '',
+                'meta_description' => isset($seo['meta_description']) ? (string) $seo['meta_description'] : '',
+                'og_title' => isset($seo['og_title']) ? (string) $seo['og_title'] : '',
+                'og_description' => isset($seo['og_description']) ? (string) $seo['og_description'] : '',
+                'og_image' => filled($img) ? (string) $img : null,
+            ];
+            $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+            $targetLocale = array_key_exists('en', $localesDefaults)
+                ? 'en'
+                : (string) (array_key_first($localesDefaults) ?: 'en');
+            $seo = ['locales' => [$targetLocale => $legacy]];
+        }
+
+        $localesDefaults = is_array($defaults['locales'] ?? null) ? $defaults['locales'] : [];
+        $localesStored = is_array($seo['locales'] ?? null) ? $seo['locales'] : [];
+        $mergedLocales = [];
+
+        foreach (array_keys($localesDefaults) as $locale) {
+            if (! is_string($locale)) {
+                continue;
+            }
+            $base = $localesDefaults[$locale];
+            $stored = is_array($localesStored[$locale] ?? null) ? $localesStored[$locale] : [];
+            $row = array_replace($base, $stored);
+
+            $row['meta_title'] = isset($row['meta_title']) ? (string) $row['meta_title'] : '';
+            if (strlen($row['meta_title']) > 255) {
+                $row['meta_title'] = substr($row['meta_title'], 0, 255);
+            }
+
+            $row['meta_description'] = isset($row['meta_description']) ? (string) $row['meta_description'] : '';
+            if (strlen($row['meta_description']) > 65535) {
+                $row['meta_description'] = substr($row['meta_description'], 0, 65535);
+            }
+
+            $row['og_title'] = isset($row['og_title']) ? (string) $row['og_title'] : '';
+            if (strlen($row['og_title']) > 255) {
+                $row['og_title'] = substr($row['og_title'], 0, 255);
+            }
+
+            $row['og_description'] = isset($row['og_description']) ? (string) $row['og_description'] : '';
+            if (strlen($row['og_description']) > 65535) {
+                $row['og_description'] = substr($row['og_description'], 0, 65535);
+            }
+
+            $img = $row['og_image'] ?? null;
+            if (is_array($img)) {
+                $img = $img[0] ?? null;
+            }
+            $row['og_image'] = filled($img) ? (string) $img : null;
+
+            $mergedLocales[$locale] = $row;
+        }
+
+        $merged['seo'] = [
+            'locales' => $mergedLocales,
+        ];
+
+        return $merged;
+    }
+
+    /**
+     * Ensure a `pages` row exists for CMS-backed routes that expose SEO.
+     */
+    public static function ensurePageBlockForKey(string $pageKey): void
+    {
+        match ($pageKey) {
+            self::KEY_HOME_PAGE => static::ensureHomePageBlock(),
+            self::KEY_ABOUT_PAGE => static::ensureAboutPageBlock(),
+            self::KEY_SERVICES_LISTING_PAGE => static::ensureServicesListingPageBlock(),
+            self::KEY_PROJECTS_LISTING_PAGE => static::ensureProjectsListingPageBlock(),
+            self::KEY_NEWS_LISTING_PAGE => static::ensureNewsListingPageBlock(),
+            self::KEY_PARTNERS_PAGE => static::ensurePartnersPageBlock(),
+            self::KEY_CONTACT_PAGE => static::query()->firstOrCreate(
+                ['key' => self::KEY_CONTACT_PAGE],
+                ['payload' => static::defaultContactPayload()]
+            ),
+            default => null,
+        };
+    }
+
+    /**
+     * SEO fields for the current app locale (with English fallback for empty strings), for public HTML head.
+     *
+     * @return array{
+     *   meta_title: string,
+     *   meta_description: string,
+     *   og_title: string,
+     *   og_description: string,
+     *   og_image: string|null
+     * }
+     */
+    public static function resolvedPublicSeoForPageKey(string $pageKey): array
+    {
+        static::ensurePageBlockForKey($pageKey);
+
+        $defaults = static::defaultPayloadForKey($pageKey);
+        $stored = static::query()->where('key', $pageKey)->value('payload');
+        $merged = array_replace_recursive($defaults, is_array($stored) ? $stored : []);
+        $merged = static::normalizeSeoInPagePayload($merged);
+
+        $seo = is_array($merged['seo'] ?? null) ? $merged['seo'] : [];
+        $locales = is_array($seo['locales'] ?? null) ? $seo['locales'] : [];
+        $defaultLocales = static::defaultSeoPayload()['locales'];
+
+        $locale = app()->getLocale();
+        if (! is_string($locale) || ! array_key_exists($locale, $defaultLocales)) {
+            $locale = array_key_exists('en', $defaultLocales) ? 'en' : (string) (array_key_first($defaultLocales) ?: 'en');
+        }
+
+        $base = $defaultLocales[$locale] ?? [
+            'meta_title' => '',
+            'meta_description' => '',
+            'og_title' => '',
+            'og_description' => '',
+            'og_image' => null,
+        ];
+        $localized = is_array($locales[$locale] ?? null) ? $locales[$locale] : [];
+        $row = array_merge($base, $localized);
+
+        if ($locale !== 'en' && array_key_exists('en', $defaultLocales)) {
+            $enBase = $defaultLocales['en'];
+            $enLocalized = is_array($locales['en'] ?? null) ? $locales['en'] : [];
+            $enRow = array_merge($enBase, $enLocalized);
+            foreach (['meta_title', 'meta_description', 'og_title', 'og_description'] as $field) {
+                if (($row[$field] ?? '') === '' && ($enRow[$field] ?? '') !== '') {
+                    $row[$field] = $enRow[$field];
+                }
+            }
+            if (! filled($row['og_image'] ?? null) && filled($enRow['og_image'] ?? null)) {
+                $row['og_image'] = $enRow['og_image'];
+            }
+        }
+
+        return [
+            'meta_title' => (string) ($row['meta_title'] ?? ''),
+            'meta_description' => (string) ($row['meta_description'] ?? ''),
+            'og_title' => (string) ($row['og_title'] ?? ''),
+            'og_description' => (string) ($row['og_description'] ?? ''),
+            'og_image' => filled($row['og_image'] ?? null) ? (string) $row['og_image'] : null,
+        ];
+    }
+
     protected $fillable = [
         'key',
         'payload',
@@ -68,6 +262,7 @@ class Page extends Model
             ];
         }
 
+        $out['seo'] = static::defaultSeoPayload();
         $out['gallery_id'] = null;
         $out['social'] = [
             'instagram' => [
@@ -98,6 +293,7 @@ class Page extends Model
             'button_link' => '',
         ];
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'ids' => [],
             'about' => [],
             'project_ids' => [],
@@ -165,6 +361,7 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'menu' => [],
             'cover_image' => null,
             'cover' => [],
@@ -239,6 +436,7 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'cover_image' => null,
             'video_background_image' => null,
             'services' => [],
@@ -273,6 +471,7 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'cover_image' => null,
             'projects' => [],
             'locales' => [],
@@ -300,6 +499,7 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'cover_image' => null,
             'news' => [],
             'locales' => [],
@@ -326,6 +526,7 @@ class Page extends Model
         $locales = config('cms.supported_locales', ['en', 'ka']);
 
         $out = [
+            'seo' => static::defaultSeoPayload(),
             'cover_image' => null,
             'locales' => [],
         ];

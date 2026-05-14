@@ -20,6 +20,11 @@ class Project extends Model
         'location',
         'status_text',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
         'status_id',
         'cover_photo',
         'gallery',
@@ -43,6 +48,10 @@ class Project extends Model
         'location',
         'status_text',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
     ];
 
     public function categories(): BelongsToMany

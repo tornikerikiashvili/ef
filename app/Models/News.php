@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasResourceTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class News extends Model
 {
@@ -15,6 +16,11 @@ class News extends Model
         'title',
         'teaser',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
         'news_category_id',
         'published_at',
         'is_featured',
@@ -34,6 +40,10 @@ class News extends Model
         'title',
         'teaser',
         'text_content',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
     ];
 
     public function newsCategory(): BelongsTo
@@ -53,10 +63,10 @@ class News extends Model
             if (empty($model->slug) && $model->title) {
                 $title = is_string($model->title) ? $model->title : $model->getTranslation('title', 'en', false);
                 $title = $title ?: 'post';
-                $model->slug = \Illuminate\Support\Str::slug($title);
+                $model->slug = Str::slug($title);
                 $i = 1;
                 while (static::where('slug', $model->slug)->where('id', '!=', $model->id)->exists()) {
-                    $model->slug = \Illuminate\Support\Str::slug($title) . '-' . $i++;
+                    $model->slug = Str::slug($title).'-'.$i++;
                 }
             }
         });

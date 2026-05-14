@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\News\Schemas;
 
+use App\Filament\Support\ResourceSeoFormSchema;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -91,11 +92,12 @@ class NewsForm
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
+                ResourceSeoFormSchema::section('news_seo_locales', 'news'),
             ]);
     }
 
     /**
-     * @return array<int, \Filament\Forms\Components\TextInput|\Filament\Forms\Components\RichEditor>
+     * @return array<int, TextInput|RichEditor>
      */
     protected static function translatableFields(): array
     {

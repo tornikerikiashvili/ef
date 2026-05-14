@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\News;
 use App\Models\Page;
 use BackedEnum;
@@ -26,6 +27,8 @@ use UnitEnum;
 
 class ManageNewsListingPageSettings extends FilamentPage
 {
+    use ProvidesPageSeoFormComponents;
+
     protected static string|UnitEnum|null $navigationGroup = 'Pages';
 
     protected static ?string $title = 'News';
@@ -111,7 +114,7 @@ class ManageNewsListingPageSettings extends FilamentPage
             ];
         }
 
-        return $merged;
+        return Page::normalizeSeoInPagePayload($merged);
     }
 
     public function form(Schema $schema): Schema
@@ -170,6 +173,7 @@ class ManageNewsListingPageSettings extends FilamentPage
                                     ->all()),
                         ])
                         ->columns(1),
+                    $this->pageSeoSectionBlock($key),
                 ])
                     ->statePath($key),
             ]);

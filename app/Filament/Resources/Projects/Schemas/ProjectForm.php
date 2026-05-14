@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use App\Filament\Support\ResourceSeoFormSchema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -90,6 +91,7 @@ class ProjectForm
                             ->helperText('Optional thumbnail before play. If empty, the YouTube default thumbnail is used.'),
                     ])
                     ->columnSpanFull(),
+                ResourceSeoFormSchema::section('project_seo_locales', 'projects'),
             ]);
     }
 

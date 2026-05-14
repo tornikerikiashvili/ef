@@ -4,13 +4,53 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <meta name="description" content="@yield('meta_description', 'Ef - Photography Agency')">
+    @php
+        $defaultSiteTitle = 'Ef - Photography Agency';
+        $defaultSiteDesc = 'Ef - Photography Agency';
+        $sectionTitle = trim((string) $__env->yieldContent('title', $defaultSiteTitle));
+        $sectionDesc = trim((string) $__env->yieldContent('meta_description', $defaultSiteDesc));
+        $cms = is_array($recordSeoForHead ?? null)
+            ? ($recordSeoForHead)
+            : (is_array($cmsPageSeo ?? null) ? $cmsPageSeo : null);
+        $headTitle = ($cms !== null && filled($cms['meta_title'] ?? null))
+            ? $cms['meta_title']
+            : ($sectionTitle !== '' ? $sectionTitle : $defaultSiteTitle);
+        $headDesc = ($cms !== null && filled($cms['meta_description'] ?? null))
+            ? $cms['meta_description']
+            : ($sectionDesc !== '' ? $sectionDesc : $defaultSiteDesc);
+        $ogTitle = ($cms !== null && filled($cms['og_title'] ?? null)) ? $cms['og_title'] : $headTitle;
+        $ogDesc = ($cms !== null && filled($cms['og_description'] ?? null)) ? $cms['og_description'] : $headDesc;
+        $ogImagePath = ($cms !== null && filled($cms['og_image'] ?? null)) ? $cms['og_image'] : null;
+        $ogImageUrl = filled($ogImagePath) ? \Illuminate\Support\Facades\Storage::disk('public')->url($ogImagePath) : null;
+        $canonicalUrl = url()->current();
+    @endphp
+
+    {{-- Standard document meta (name= only; not Open Graph) --}}
+    <title>{{ e($headTitle) }}</title>
+    <meta name="title" content="{{ e($headTitle) }}">
+    <meta name="description" content="{{ e($headDesc) }}">
     <meta name="author" content="">
+
+    {{-- Open Graph (property=og:* only) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ e($ogTitle) }}">
+    <meta property="og:description" content="{{ e($ogDesc) }}">
+    <meta property="og:url" content="{{ e($canonicalUrl) }}">
+    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
+    @if(filled($ogImageUrl))
+        <meta property="og:image" content="{{ e($ogImageUrl) }}">
+    @endif
+
+    {{-- Twitter card (name=twitter:* — separate from og:*) --}}
+    <meta name="twitter:card" content="{{ filled($ogImageUrl) ? 'summary_large_image' : 'summary' }}">
+    <meta name="twitter:title" content="{{ e($ogTitle) }}">
+    <meta name="twitter:description" content="{{ e($ogDesc) }}">
+    @if(filled($ogImageUrl))
+        <meta name="twitter:image" content="{{ e($ogImageUrl) }}">
+    @endif
 
     <link href="{{ asset('assets/img/favicon.png') }}" rel="shortcut icon" type="image/png">
     <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
-
-    <title>@yield('title', 'Ef - Photography Agency')</title>
 
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     @stack('styles')
