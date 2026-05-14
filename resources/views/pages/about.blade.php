@@ -86,7 +86,7 @@
             <div class="row">
                 <div class="col-xl-8">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 d-none d-md-block">
                             <div class="wptb-image-single wow fadeInUp">
                                 <div class="wptb-item--inner">
                                     <div class="wptb-item--image">
@@ -96,7 +96,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 ps-md-0 mt-5">
+                        <div class="col-md-6 ps-md-0">
                             <div class="wptb-about--text">
                                 <p class="about_teaser wptb-about--text-one mb-4">{{ $aboutTeaser }}</p>
                                 <div class="about_description">{!! $aboutDescription !!}</div>
