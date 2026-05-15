@@ -135,54 +135,7 @@
                 </div>
             </div>
 
-            <div class="wptb-office-address mr-top-100">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="wptb-icon-box1 wow fadeInLeft">
-                            <div class="wptb-item--inner flex-start">
-                                <div class="wptb-item--icon"><i class="bi bi-globe"></i></div>
-                                <div class="wptb-item--holder">
-                                    <h3 class="wptb-item--title">{{ __('messages.cta.office.website_title') }}</h3>
-                                    <p class="wptb-item--description">www.example.com</p>
-                                    <a href="https://www.example.com" class="wptb-item--link" rel="noopener noreferrer">
-                                        {{ __('messages.cta.office.visit_now') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 px-md-5">
-                        <div class="wptb-icon-box1 wow fadeInLeft">
-                            <div class="wptb-item--inner flex-start">
-                                <div class="wptb-item--icon"><i class="bi bi-phone"></i></div>
-                                <div class="wptb-item--holder">
-                                    <h3 class="wptb-item--title">{{ __('messages.cta.office.book_us') }}</h3>
-                                    <p class="wptb-item--description">+995 555 123 456</p>
-                                    <a href="tel:+995555123456" class="wptb-item--link">
-                                        {{ __('messages.cta.office.call_now') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="wptb-icon-box1 wow fadeInLeft">
-                            <div class="wptb-item--inner flex-start">
-                                <div class="wptb-item--icon"><i class="bi bi-geo-alt"></i></div>
-                                <div class="wptb-item--holder">
-                                    <h3 class="wptb-item--title">{{ __('messages.cta.office.studio_address') }}</h3>
-                                    <p class="wptb-item--description">{{ __('messages.cta.office.address_placeholder') }}</p>
-                                    <a href="{{ $googleMapsExternalUrl }}" class="wptb-item--link" target="_blank" rel="noopener noreferrer">
-                                        {{ __('messages.cta.office.view_map') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <x-contact-office-cards :map-fallback-href="$googleMapsExternalUrl" />
         </div>
     </section>
 @endsection

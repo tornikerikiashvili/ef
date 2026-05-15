@@ -6,9 +6,18 @@
     $igName = (string) ($ig['name'] ?? '');
     $igUrl = (string) ($ig['url'] ?? '');
 
-    $email = (string) ($contact['email'] ?? '');
-    $phone = (string) ($contact['phone'] ?? '');
-    $address = (string) ($contact['address'] ?? '');
+    $homePage = \App\Models\Page::homePageContent();
+    $contactCards = is_array($homePage['contact_cards'] ?? null) ? $homePage['contact_cards'] : [];
+    $emailCard = is_array($contactCards[0] ?? null) ? $contactCards[0] : [];
+    $phoneCard = is_array($contactCards[1] ?? null) ? $contactCards[1] : [];
+    $addressCard = is_array($contactCards[2] ?? null) ? $contactCards[2] : [];
+
+    $email = (string) ($emailCard['value'] ?? '');
+    $phone = (string) ($phoneCard['value'] ?? '');
+    $address = (string) ($addressCard['value'] ?? '');
+    $emailHref = filled($emailCard['button_link'] ?? null) ? (string) $emailCard['button_link'] : (filled($email) ? 'mailto:'.$email : '');
+    $phoneHref = filled($phoneCard['button_link'] ?? null) ? (string) $phoneCard['button_link'] : (filled($phone) ? 'tel:'.preg_replace('/[^0-9+]/', '', $phone) : '');
+    $addressHref = filled($addressCard['button_link'] ?? null) ? (string) $addressCard['button_link'] : route('contact');
 
     $galleryId = $contact['gallery_id'] ?? null;
     $galleryId = ($galleryId !== null && $galleryId !== '' && (int) $galleryId > 0) ? (int) $galleryId : null;
@@ -67,8 +76,8 @@
                 <div class="wptb-item--icon"><i class="bi bi-envelope"></i></div>
                 <div class="wptb-item--holder">
                     <p class="wptb-item--description">
-                        @if(filled($email))
-                            <a href="mailto:{{ $email }}">{{ $email }}</a>
+                        @if(filled($email) && filled($emailHref))
+                            <a href="{{ $emailHref }}">{{ $email }}</a>
                         @else
                             <a href="{{ route('contact') }}">{{ __('messages.nav.contact') }}</a>
                         @endif
@@ -81,7 +90,11 @@
                 <div class="wptb-item--icon"><i class="bi bi-geo-alt"></i></div>
                 <div class="wptb-item--holder">
                     <p class="wptb-item--description">
-                        <a href="{{ route('contact') }}">{{ filled($address) ? $address : 'Address' }}</a>
+                        @if(filled($address) && filled($addressHref))
+                            <a href="{{ $addressHref }}" @if(str_starts_with($addressHref, 'http')) target="_blank" rel="noopener noreferrer" @endif>{{ $address }}</a>
+                        @else
+                            <a href="{{ route('contact') }}">{{ __('messages.nav.contact') }}</a>
+                        @endif
                     </p>
                 </div>
             </div>
@@ -91,8 +104,8 @@
                 <div class="wptb-item--icon"><i class="bi bi-telephone"></i></div>
                 <div class="wptb-item--holder">
                     <p class="wptb-item--description">
-                        @if(filled($phone))
-                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a>
+                        @if(filled($phone) && filled($phoneHref))
+                            <a href="{{ $phoneHref }}">{{ $phone }}</a>
                         @else
                             <a href="{{ route('contact') }}">{{ __('messages.nav.contact') }}</a>
                         @endif

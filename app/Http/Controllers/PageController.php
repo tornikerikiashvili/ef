@@ -337,7 +337,7 @@ class PageController extends Controller
     {
         $settings = Page::partnersPageContent();
 
-        $partnerLogos = PartnerLogo::orderBy('id')->get();
+        $partnerLogos = Page::orderedPartnerLogos($settings['partner_logo_ids']);
 
         $headerBg = $settings['cover_image']
             ? Storage::disk('public')->url($settings['cover_image'])

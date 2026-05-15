@@ -4,9 +4,11 @@ namespace App\Filament\Pages;
 
 use App\Filament\Concerns\ProvidesPageSeoFormComponents;
 use App\Models\Page;
+use App\Models\PartnerLogo;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page as FilamentPage;
@@ -102,6 +104,16 @@ class ManagePartnersPageSettings extends FilamentPage
             ];
         }
 
+        $partnerLogoIds = $merged['partner_logo_ids'] ?? [];
+        $outPartnerIds = [];
+        foreach (is_array($partnerLogoIds) ? $partnerLogoIds : [] as $id) {
+            if ($id === null || $id === '') {
+                continue;
+            }
+            $outPartnerIds[] = (int) $id;
+        }
+        $merged['partner_logo_ids'] = array_values(array_unique($outPartnerIds));
+
         return Page::normalizeSeoInPagePayload($merged);
     }
 
@@ -139,6 +151,26 @@ class ManagePartnersPageSettings extends FilamentPage
                                 ->visibility('public')
                                 ->image()
                                 ->columnSpanFull(),
+                        ])
+                        ->columns(1),
+                    Section::make('Partner logos')
+                        ->description('Choose which logos appear on the page. Display order follows the order you select them.')
+                        ->schema([
+                            Select::make('partner_logo_ids')
+                                ->label('Partner logos')
+                                ->multiple()
+                                ->searchable()
+                                ->preload()
+                                ->native(false)
+                                ->options(fn (): array => PartnerLogo::query()
+                                    ->orderBy('id')
+                                    ->get()
+                                    ->mapWithKeys(fn (PartnerLogo $partner): array => [
+                                        $partner->id => $partner->getTranslation('title', 'en')
+                                            ?: $partner->getTranslation('title', 'ka')
+                                            ?: ('Partner #'.$partner->id),
+                                    ])
+                                    ->all()),
                         ])
                         ->columns(1),
                     $this->pageSeoSectionBlock($key),

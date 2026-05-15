@@ -97,9 +97,6 @@ class ManageContactPageSettings extends FilamentPage
                 'menu_title' => isset($row['menu_title']) ? (string) $row['menu_title'] : '',
                 'title' => isset($row['title']) ? (string) $row['title'] : '',
                 'intro' => isset($row['intro']) ? (string) $row['intro'] : '',
-                'email' => isset($row['email']) ? (string) $row['email'] : '',
-                'phone' => isset($row['phone']) ? (string) $row['phone'] : '',
-                'address' => isset($row['address']) ? (string) $row['address'] : '',
             ];
         }
 
@@ -128,7 +125,7 @@ class ManageContactPageSettings extends FilamentPage
         return $this->defaultForm($schema)
             ->components([
                 Section::make('Contact page copy')
-                    ->description('Intro and contact details (per language). Shown on the public contact page.')
+                    ->description('Intro text (per language). Phone, email, and address are managed under Home → Contact information.')
                     ->schema($this->localeTabsForContactBlock())
                     ->columns(1),
                 Section::make('Media & social links')
@@ -185,16 +182,6 @@ class ManageContactPageSettings extends FilamentPage
                 ->label('Intro')
                 ->rows(5)
                 ->columnSpanFull(),
-            TextInput::make('email')
-                ->label('Email')
-                ->email()
-                ->maxLength(255),
-            TextInput::make('phone')
-                ->label('Phone')
-                ->maxLength(255),
-            TextInput::make('address')
-                ->label('Address')
-                ->maxLength(65535),
         ];
     }
 

@@ -264,9 +264,6 @@ class Page extends Model
                 'menu_title' => '',
                 'title' => '',
                 'intro' => '',
-                'email' => '',
-                'phone' => '',
-                'address' => '',
             ];
         }
 
@@ -530,6 +527,7 @@ class Page extends Model
     /**
      * @return array{
      *   cover_image: string|null,
+     *   partner_logo_ids: list<int>,
      *   locales: array<string, array{menu_title: string, title: string}>
      * }
      */
@@ -540,6 +538,7 @@ class Page extends Model
         $out = [
             'seo' => static::defaultSeoPayload(),
             'cover_image' => null,
+            'partner_logo_ids' => [],
             'locales' => [],
         ];
 
@@ -708,7 +707,8 @@ class Page extends Model
      * @return array{
      *   menu_title: string,
      *   title: string,
-     *   cover_image: string|null
+     *   cover_image: string|null,
+     *   partner_logo_ids: list<int>
      * }
      */
     public static function partnersPageContent(): array
@@ -734,10 +734,14 @@ class Page extends Model
         }
         $cover = filled($cover) ? (string) $cover : null;
 
+        $partnerLogoIds = $merged['partner_logo_ids'] ?? [];
+        $partnerLogoIds = array_values(array_unique(array_filter(array_map('intval', is_array($partnerLogoIds) ? $partnerLogoIds : []))));
+
         return [
             'menu_title' => (string) ($row['menu_title'] ?? ''),
             'title' => (string) ($row['title'] ?? ''),
             'cover_image' => $cover,
+            'partner_logo_ids' => $partnerLogoIds,
         ];
     }
 
@@ -1402,7 +1406,7 @@ class Page extends Model
 
         if ($key === self::KEY_CONTACT_PAGE) {
             if ($locale !== 'en') {
-                foreach (['menu_title', 'title', 'intro', 'email', 'phone', 'address'] as $field) {
+                foreach (['menu_title', 'title', 'intro'] as $field) {
                     $current = $result[$field] ?? null;
                     if (($current === null || $current === '') && array_key_exists($field, $en)) {
                         $fromEn = $en[$field];
