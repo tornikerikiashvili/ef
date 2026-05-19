@@ -93,7 +93,23 @@ Description:
     
 
 		$(function() {
-			$('.effect-fly .grid-item ').each( function() { $(this).hoverdir(); } );
+			var $flyItems = $('.effect-fly .grid-item');
+			var useHoverDir = window.matchMedia('(min-width: 992px) and (hover: hover)').matches;
+
+			if (useHoverDir) {
+				$flyItems.each(function () {
+					$(this).hoverdir();
+				});
+			} else {
+				$flyItems.addClass('grid-item--hover-active');
+				$flyItems.find('.wptb-item--holder').css({
+					display: 'flex',
+					top: 0,
+					left: 0,
+					opacity: 1,
+					visibility: 'visible',
+				});
+			}
 		});
 
 		$(".effect-tilt .grid-item").tilt({

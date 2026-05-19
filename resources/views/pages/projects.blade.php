@@ -26,6 +26,18 @@
         color: #fff;
     }
 
+    /* Touch / narrow viewports: keep hoverdir overlay visible (no mouse hover). */
+    @media (max-width: 991.98px), (hover: none) {
+        .projects-listing--olive .effect-fly .grid-item--hover-active .wptb-item--holder,
+        .projects-listing--olive .effect-fly .grid-item .wptb-item--holder {
+            display: flex !important;
+            top: 0 !important;
+            left: 0 !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    }
+
 </style>
 @endpush
 
