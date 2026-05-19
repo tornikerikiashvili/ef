@@ -131,7 +131,7 @@ class ManageContactPageSettings extends FilamentPage
                     ->schema($this->localeTabsForContactBlock())
                     ->columns(1),
                 Section::make('Media & social links')
-                    ->description('Used on the public contact page.')
+                    ->description('Gallery for the aside drawer. Instagram name/link appear in the aside drawer, mobile menu, and footer.')
                     ->schema($this->contactMediaAndSocialFields())
                     ->columns(2),
                 $this->pageSeoSectionForStandaloneStatePath(Page::KEY_CONTACT_PAGE),
@@ -214,9 +214,11 @@ class ManageContactPageSettings extends FilamentPage
 
                 TextInput::make('social.instagram.name')
                     ->label('Instagram name')
+                    ->helperText('Shown next to the icon in the aside drawer (e.g. @yourhandle).')
                     ->maxLength(255),
                 TextInput::make('social.instagram.url')
                     ->label('Instagram link')
+                    ->helperText('Full profile URL; makes the name clickable in the aside.')
                     ->url()
                     ->maxLength(2048),
 

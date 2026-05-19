@@ -829,7 +829,7 @@ body {
 .projects-status-filter option,
 .burger-menu-title,
 .form-label,
-.news-filters-actions__buttons .btn {
+.news-filters-actions__buttons .btn, .aside_close, .aside_info_inner h6 {
     font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
     font-feature-settings: "case" on!important;
     text-transform: uppercase!important;
