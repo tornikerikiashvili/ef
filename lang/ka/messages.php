@@ -11,6 +11,12 @@ return [
         'news' => 'სიახლეები',
         'contact' => 'კონტაქტი',
         'explore_us' => 'გაგვიცანით',
+        'menu' => 'მენიუ',
+        'contact_us' => 'დაგვიკავშირდით',
+        'find_our_page' => 'იპოვეთ ჩვენ',
+        'close' => 'დახურვა',
+        'instagram' => 'ინსტაგრამი',
+        'follow_us' => 'გამოგვყევით',
     ],
     'language' => 'ენა',
     'lang_abbr_georgian' => 'GE',
@@ -44,6 +50,19 @@ return [
     'filters' => [
         'all' => 'ყველა',
         'status' => 'სტატუსი',
+    ],
+    'news' => [
+        'filters' => [
+            'date' => 'თარიღი',
+            'all_time' => 'მთელი პერიოდი',
+            'last_week' => 'ბოლო კვირა',
+            'last_month' => 'ბოლო თვე',
+            'last_year' => 'ბოლო წელი',
+            'keyword' => 'საკვანძო სიტყვა',
+            'search_placeholder' => 'ძიება…',
+            'filter' => 'ფილტრი',
+            'clear' => 'გასუფთავება',
+        ],
     ],
     'categories' => [
         // დაამატეთ კატეგორიების თარგმანები სლაგის მიხედვით, მაგ.:

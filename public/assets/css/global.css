@@ -826,10 +826,13 @@ body {
 .btn, .wptb-item--link, .wptb-swiper-navigation.style3 .wptb-swiper-arrow:after,
 .projects-status-filter,
 .projects-status-filter select,
-.projects-status-filter option {
+.projects-status-filter option,
+.burger-menu-title,
+.form-label,
+.news-filters-actions__buttons .btn {
     font-family: "FiraGO", "Noto Sans Georgian", "Sora", sans-serif !important;
-    font-feature-settings: "case" on;
-    text-transform: uppercase;
+    font-feature-settings: "case" on!important;
+    text-transform: uppercase!important;
 }
 
 .projects-status-filter__label {
@@ -857,13 +860,32 @@ body {
 }
 
 .news-filters-actions {
-   height: 57px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.news-filters-actions__buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
 }
 
 .news-filters-actions .btn {
-    height: 100%; /* matches Bootstrap .form-control */
-    padding: 0.375rem 0.75rem;
-    min-width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 57px;
+    height: auto;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+    word-break: break-word;
+    text-transform: none;
+    font-feature-settings: normal;
 }
 
 /* Projects category filter buttons */

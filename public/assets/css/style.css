@@ -1728,6 +1728,39 @@ body.theme-style--light:not(.theme-style--olive) .totop a {
     box-shadow: 0px 0px 3px #a6a182;
 }
 
+/* Aside drawer: scrollable body so footer/social links stay reachable on short viewports. */
+.aside_info_wrapper.show {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+}
+
+.aside_info_wrapper.show .aside_close,
+.aside_info_wrapper.show .aside_logo {
+    flex-shrink: 0;
+}
+
+.aside_info_wrapper.show .aside_info_inner {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 16px;
+}
+
+.aside_info_wrapper.show .aside_info_inner::-webkit-scrollbar {
+    width: 4px;
+}
+
+.aside_info_wrapper.show .aside_info_inner::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
 /* Mobile burger menu: aside drawer uses a higher z-index than .mr_menu; force it hidden while menu is open. */
 body.mr_menu_active .aside_info_wrapper {
     visibility: hidden !important;
@@ -1748,5 +1781,14 @@ body.mr_menu_active .aside_info_wrapper {
     .header .header_right_part .header_search.wptb-element::before {
         content: none !important;
         display: none !important;
+    }
+
+    .aside_info_wrapper.show {
+        width: min(100vw, 400px);
+        padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    }
+
+    .aside_info_wrapper.show .aside_close {
+        margin-bottom: 24px;
     }
 }

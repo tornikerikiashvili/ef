@@ -66,22 +66,24 @@
     <div class="container">
 
         <form method="GET" action="{{ route('news', ['locale' => app()->getLocale()]) }}" class="row g-3 align-items-end mb-4">
-            <div class="col-12 col-md-4">
-                <label for="news-range" class="form-label mb-1">Date</label>
+            <div class="col-12 col-md-3">
+                <label for="news-range" class="form-label mb-1">{{ __('messages.news.filters.date') }}</label>
                 <select id="news-range" name="range" class="form-select no-nice-select">
-                    <option value="">All time</option>
-                    <option value="week" @selected(($range ?? '') === 'week')>Last week</option>
-                    <option value="month" @selected(($range ?? '') === 'month')>Last month</option>
-                    <option value="year" @selected(($range ?? '') === 'year')>Last year</option>
+                    <option value="">{{ __('messages.news.filters.all_time') }}</option>
+                    <option value="week" @selected(($range ?? '') === 'week')>{{ __('messages.news.filters.last_week') }}</option>
+                    <option value="month" @selected(($range ?? '') === 'month')>{{ __('messages.news.filters.last_month') }}</option>
+                    <option value="year" @selected(($range ?? '') === 'year')>{{ __('messages.news.filters.last_year') }}</option>
                 </select>
             </div>
-            <div class="col-12 col-md-6">
-                <label for="news-q" class="form-label mb-1">Keyword</label>
-                <input id="news-q" type="text" name="q" value="{{ $q ?? '' }}" class="form-control" placeholder="Search…">
+            <div class="col-12 col-md-5">
+                <label for="news-q" class="form-label mb-1">{{ __('messages.news.filters.keyword') }}</label>
+                <input id="news-q" type="text" name="q" value="{{ $q ?? '' }}" class="form-control" placeholder="{{ __('messages.news.filters.search_placeholder') }}">
             </div>
-            <div class="col-12 col-md-2 d-flex gap-2 news-filters-actions">
-                <button type="submit" class="btn flex-fill" style="min-width: auto;">Filter</button>
-                <a href="{{ route('news', ['locale' => app()->getLocale()]) }}" class="btn gray flex-fill" style="min-width: auto;">Clear</a>
+            <div class="col-12 col-md-4 news-filters-actions">
+                <div class="news-filters-actions__buttons">
+                    <button type="submit" class="btn">{{ __('messages.news.filters.filter') }}</button>
+                    <a href="{{ route('news', ['locale' => app()->getLocale()]) }}" class="btn gray">{{ __('messages.news.filters.clear') }}</a>
+                </div>
             </div>
         </form>
 

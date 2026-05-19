@@ -11,6 +11,12 @@ return [
         'news' => 'News',
         'contact' => 'Contact',
         'explore_us' => 'Explore us',
+        'menu' => 'Menu',
+        'contact_us' => 'Contact Us',
+        'find_our_page' => 'Find Our Page',
+        'close' => 'Close',
+        'instagram' => 'Instagram',
+        'follow_us' => 'Follow Us',
     ],
     'language' => 'Language',
     'lang_abbr_georgian' => 'GE',
@@ -44,6 +50,19 @@ return [
     'filters' => [
         'all' => 'All',
         'status' => 'Status',
+    ],
+    'news' => [
+        'filters' => [
+            'date' => 'Date',
+            'all_time' => 'All time',
+            'last_week' => 'Last week',
+            'last_month' => 'Last month',
+            'last_year' => 'Last year',
+            'keyword' => 'Keyword',
+            'search_placeholder' => 'Search…',
+            'filter' => 'Filter',
+            'clear' => 'Clear',
+        ],
     ],
     'categories' => [
         // Add per-category translations keyed by category slug, e.g.:

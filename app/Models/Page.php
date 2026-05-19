@@ -264,6 +264,8 @@ class Page extends Model
                 'menu_title' => '',
                 'title' => '',
                 'intro' => '',
+                'email' => '',
+                'address' => '',
             ];
         }
 
@@ -1306,6 +1308,47 @@ class Page extends Model
     }
 
     /**
+     * Email, phone, and address from Home → Contact information (3 cards).
+     *
+     * @return array{
+     *   email: string,
+     *   email_href: string,
+     *   phone: string,
+     *   phone_href: string,
+     *   address: string,
+     *   address_href: string
+     * }
+     */
+    public static function homeContactCardDetails(): array
+    {
+        $cards = self::homePageContent()['contact_cards'] ?? [];
+        $card = static fn (int $index): array => is_array($cards[$index] ?? null) ? $cards[$index] : [];
+
+        $emailCard = $card(0);
+        $phoneCard = $card(1);
+        $addressCard = $card(2);
+
+        $email = (string) ($emailCard['value'] ?? '');
+        $phone = (string) ($phoneCard['value'] ?? '');
+        $address = (string) ($addressCard['value'] ?? '');
+
+        return [
+            'email' => $email,
+            'email_href' => filled($emailCard['button_link'] ?? null)
+                ? (string) $emailCard['button_link']
+                : (filled($email) ? 'mailto:'.$email : ''),
+            'phone' => $phone,
+            'phone_href' => filled($phoneCard['button_link'] ?? null)
+                ? (string) $phoneCard['button_link']
+                : (filled($phone) ? 'tel:'.preg_replace('/[^0-9+]/', '', $phone) : ''),
+            'address' => $address,
+            'address_href' => filled($addressCard['button_link'] ?? null)
+                ? (string) $addressCard['button_link']
+                : route('contact'),
+        ];
+    }
+
+    /**
      * @param  list<int|string>  $ids
      * @return Collection<int, Service>
      */
@@ -1406,7 +1449,7 @@ class Page extends Model
 
         if ($key === self::KEY_CONTACT_PAGE) {
             if ($locale !== 'en') {
-                foreach (['menu_title', 'title', 'intro'] as $field) {
+                foreach (['menu_title', 'title', 'intro', 'email', 'address'] as $field) {
                     $current = $result[$field] ?? null;
                     if (($current === null || $current === '') && array_key_exists($field, $en)) {
                         $fromEn = $en[$field];

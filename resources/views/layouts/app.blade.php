@@ -78,26 +78,39 @@
     <div class="mr_menu" data-lenis-prevent>
         <button type="button" class="mr_menu_close"><i class="bi bi-x-lg"></i></button>
         <div class="logo"></div>
-        <h6>Menu</h6>
+        <h6 class="burger-menu-title">{{ __('messages.nav.menu') }}</h6>
         <div class="mr_navmenu"></div>
-        <h6>Contact Us</h6>
+        @php
+            $contactPage = \App\Models\Page::payloadFor(\App\Models\Page::KEY_CONTACT_PAGE);
+            $menuEmail = (string) ($contactPage['email'] ?? '');
+            $menuAddress = (string) ($contactPage['address'] ?? '');
+        @endphp
+        <h6 class="burger-menu-title">{{ __('messages.nav.contact_us') }}</h6>
+        @if(filled($menuEmail))
         <div class="wptb-icon-box1 style2">
             <div class="wptb-item--inner flex-start">
                 <div class="wptb-item--icon"><i class="bi bi-envelope"></i></div>
                 <div class="wptb-item--holder">
-                    <p class="wptb-item--description"><a href="mailto:info@example.com">info@example.com</a></p>
+                    <p class="wptb-item--description">
+                        <a href="mailto:{{ $menuEmail }}">{{ $menuEmail }}</a>
+                    </p>
                 </div>
             </div>
         </div>
+        @endif
+        @if(filled($menuAddress))
         <div class="wptb-icon-box1 style2">
             <div class="wptb-item--inner flex-start">
                 <div class="wptb-item--icon"><i class="bi bi-geo-alt"></i></div>
                 <div class="wptb-item--holder">
-                    <p class="wptb-item--description"><a href="{{ route('contact') }}">Address</a></p>
+                    <p class="wptb-item--description">
+                        <a href="{{ route('contact') }}">{{ $menuAddress }}</a>
+                    </p>
                 </div>
             </div>
         </div>
-        <h6>Find Our Page</h6>
+        @endif
+        <h6 class="burger-menu-title">{{ __('messages.nav.find_our_page') }}</h6>
         <div class="social-box">
             <ul>
                 @include('partials.social-link-items', ['anchorIcons' => false])

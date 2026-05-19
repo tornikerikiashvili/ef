@@ -6,18 +6,14 @@
     $igName = (string) ($ig['name'] ?? '');
     $igUrl = (string) ($ig['url'] ?? '');
 
-    $homePage = \App\Models\Page::homePageContent();
-    $contactCards = is_array($homePage['contact_cards'] ?? null) ? $homePage['contact_cards'] : [];
-    $emailCard = is_array($contactCards[0] ?? null) ? $contactCards[0] : [];
-    $phoneCard = is_array($contactCards[1] ?? null) ? $contactCards[1] : [];
-    $addressCard = is_array($contactCards[2] ?? null) ? $contactCards[2] : [];
+    $email = (string) ($contact['email'] ?? '');
+    $address = (string) ($contact['address'] ?? '');
+    $emailHref = filled($email) ? 'mailto:'.$email : '';
+    $addressHref = route('contact');
 
-    $email = (string) ($emailCard['value'] ?? '');
-    $phone = (string) ($phoneCard['value'] ?? '');
-    $address = (string) ($addressCard['value'] ?? '');
-    $emailHref = filled($emailCard['button_link'] ?? null) ? (string) $emailCard['button_link'] : (filled($email) ? 'mailto:'.$email : '');
-    $phoneHref = filled($phoneCard['button_link'] ?? null) ? (string) $phoneCard['button_link'] : (filled($phone) ? 'tel:'.preg_replace('/[^0-9+]/', '', $phone) : '');
-    $addressHref = filled($addressCard['button_link'] ?? null) ? (string) $addressCard['button_link'] : route('contact');
+    $homeContact = \App\Models\Page::homeContactCardDetails();
+    $phone = $homeContact['phone'];
+    $phoneHref = $homeContact['phone_href'];
 
     $galleryId = $contact['gallery_id'] ?? null;
     $galleryId = ($galleryId !== null && $galleryId !== '' && (int) $galleryId > 0) ? (int) $galleryId : null;
@@ -31,13 +27,13 @@
 @endphp
 
 <div class="aside_info_wrapper" data-lenis-prevent>
-    <button class="aside_close">Close <i class="bi bi-x-lg"></i></button>
+    <button class="aside_close">{{ __('messages.nav.close') }}<i class="bi bi-x-lg"></i></button>
     <div class="aside_logo logo">
         <a href="{{ route('home') }}" class="light_logo"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></a>
-        <a href="{{ route('home') }}" class="dark_logo"><img src="{{ asset('assets/img/logo-dark.svg') }}" alt="logo"></a>
+        <a href="{{ route('home') }}" class="dark_logo"><img src="{{ asset(app()->getLocale() === 'ka' ? 'assets/img/logomainKA.svg' : 'assets/img/logomain.svg') }}" alt="logo"></a>
     </div>
     <div class="aside_info_inner">
-        <h6>// Instagram</h6>
+        <h6>{{ __('messages.nav.instagram') }}</h6>
         <div class="insta-logo">
             <i class="bi bi-instagram"></i>
             @if(filled($igUrl))
@@ -113,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <h6>// Follow Us</h6>
+        <h6>{{__('messages.nav.follow_us')}}</h6>
         <div class="social-box style-square">
             <ul>
                 @include('partials.social-link-items', ['anchorIcons' => false])
