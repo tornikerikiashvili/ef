@@ -5,13 +5,21 @@
 
 @section('content')
     @php
-        // Default pin (Tbilisi). Change later to your real coordinates.
+        $contactPage = \App\Models\Page::payloadFor(\App\Models\Page::KEY_CONTACT_PAGE);
+        $googleMapEmbed = trim((string) ($contactPage['google_map_embed'] ?? ''));
+        if ($googleMapEmbed !== '') {
+            $googleMapEmbed = preg_replace('#<script\b[^>]*>.*?</script>#is', '', $googleMapEmbed) ?? $googleMapEmbed;
+        }
+
+        // Default pin (Tbilisi) when no CMS embed is saved.
         $mapLat = 41.7151;
         $mapLng = 44.8271;
-
-        // Google Maps embed (no API key required).
         $googleMapsEmbedSrc = 'https://www.google.com/maps?q=' . $mapLat . ',' . $mapLng . '&z=15&output=embed';
         $googleMapsExternalUrl = 'https://www.google.com/maps?q=' . $mapLat . ',' . $mapLng . '&z=15';
+
+        if ($googleMapEmbed !== '' && preg_match('/src=["\']([^"\']+)["\']/', $googleMapEmbed, $m)) {
+            $googleMapsExternalUrl = html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
     @endphp
 
     @push('styles')
@@ -43,13 +51,17 @@
 
     <div class="container">
         <div class="contact-map" aria-label="Map">
-            <iframe
-                src="{{ $googleMapsEmbedSrc }}"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen
-                title="Map"
-            ></iframe>
+            @if(filled($googleMapEmbed))
+                {!! $googleMapEmbed !!}
+            @else
+                <iframe
+                    src="{{ $googleMapsEmbedSrc }}"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                    title="Map"
+                ></iframe>
+            @endif
         </div>
     </div>
 

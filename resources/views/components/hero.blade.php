@@ -35,11 +35,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @if($service->cover_photo)
-                                <a class="wptb-image-popup" href="{{ $coverUrl }}" data-fancybox="gallery">
-                                    <i class="bi bi-arrows-fullscreen"></i>
-                                </a>
-                            @endif
                         </div>
                     </div>
                     @endforeach
@@ -60,9 +55,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="wptb-image-popup" href="{{ asset('assets/img/slider/45.jpg') }}" data-fancybox="gallery">
-                                <i class="bi bi-arrows-fullscreen"></i>
-                            </a>
                         </div>
                     </div>
                 @endif

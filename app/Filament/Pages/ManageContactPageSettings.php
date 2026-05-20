@@ -238,7 +238,7 @@ class ManageContactPageSettings extends FilamentPage
 
                 Textarea::make('google_map_embed')
                     ->label('Google Map embed code')
-                    ->helperText('Paste the iframe embed code from Google Maps.')
+                    ->helperText('In Google Maps: Share → Embed a map → copy the full <iframe>…</iframe> HTML and paste it here. It appears at the top of the public Contact page.')
                     ->rows(5)
                     ->columnSpanFull(),
             ])->statePath($key),
