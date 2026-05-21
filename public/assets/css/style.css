@@ -1792,3 +1792,49 @@ body.mr_menu_active .aside_info_wrapper {
         margin-bottom: 24px;
     }
 }
+
+/* EN (logomain.svg) vs KA (logomainKA.svg) use different viewBox sizes; unify rendered size everywhere .logo appears. */
+.header .logo a img,
+.mr_menu .logo a img,
+.aside_info_wrapper .aside_logo a img,
+.footer .logo img {
+    width: auto;
+    max-width: 200px;
+    height: 48px;
+    max-height: 48px;
+    min-width: 0;
+    object-fit: contain;
+    object-position: left center;
+}
+
+.aside_info_wrapper .aside_logo a img {
+    object-position: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.mr_menu .logo a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+}
+
+.mr_menu .logo a img {
+    object-position: center;
+}
+
+@media screen and (max-width: 1199.98px) {
+    .header .logo,
+    .header.sticky .logo {
+        max-width: 200px;
+    }
+
+    .header .logo a img,
+    .mr_menu .logo a img {
+        height: 42px;
+        max-height: 42px;
+        max-width: min(100%, 180px);
+    }
+}
