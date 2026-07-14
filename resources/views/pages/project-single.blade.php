@@ -53,6 +53,24 @@
         min-width: 96px;
         height: 96px;
     }
+
+    @media (max-width: 767.98px) {
+        .blog-details .wptb-page-links--desktop {
+            display: none;
+        }
+
+        .blog-details .wptb-page-links--mobile {
+            margin-top: 40px;
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .blog-details .wptb-page-links--mobile {
+            display: none;
+        }
+    }
 </style>
 @endpush
 @php
@@ -107,20 +125,9 @@
                                 <p>{{ __('messages.project.client') }}: {{ $project->client }}</p>
                             @endif
 
-                            <div class="wptb-page-links">
+                            <div class="wptb-page-links wptb-page-links--desktop">
                                 <div class="wptb-pge-link--item previous">
-                                    @if ($prevProject)
-                                        <a href="{{ route('projects.show', ['slug' => $prevProject->slug ?? $prevProject->id]) }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.previous') }}</span></a>
-                                    @else
-                                        <a href="{{ route('projects') }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.back_to_projects') }}</span></a>
-                                    @endif
-                                </div>
-                                <div class="wptb-pge-link--item next">
-                                    @if ($nextProject)
-                                        <a href="{{ route('projects.show', ['slug' => $nextProject->slug ?? $nextProject->id]) }}"><span>{{ __('messages.project.next') }}</span> <i class="bi bi-arrow-right"></i></a>
-                                    @else
-                                        <a href="{{ route('projects') }}"><span>{{ __('messages.project.back_to_projects') }}</span> <i class="bi bi-arrow-right"></i></a>
-                                    @endif
+                                    <a href="{{ route('projects') }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.back_to_projects') }}</span></a>
                                 </div>
                             </div>
                         </div>
@@ -164,12 +171,19 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="col-12 wptb-page-links wptb-page-links--mobile">
+                        <div class="wptb-pge-link--item previous">
+                            <a href="{{ route('projects') }}"><i class="bi bi-arrow-left"></i> <span>{{ __('messages.project.back_to_projects') }}</span></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         @if ($relatedProjects->isNotEmpty())
             <div class="pd-top-100">
+                <h3 class="mb-4">{{ __('messages.project.related_projects') }}</h3>
                 <div class="effect-tilt">
                     <div class="grid grid-4 gutter-5 clearfix">
                         <div class="grid-sizer"></div>
